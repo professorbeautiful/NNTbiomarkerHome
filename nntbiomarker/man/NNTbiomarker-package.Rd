@@ -3,38 +3,29 @@
 \alias{NNTbiomarker}
 \docType{package}
 \title{
-What the package does (short line)
-~~ package title ~~
+Plan a biomarker validation study by focusing on desired clinical actionability.
 }
 \description{
-More about what it does (maybe more than one line)
-~~ A concise (1-5 lines) description of the package ~~
+Clarifying what performance would suffice if the test is to improve medical care makes it possible to design meaningful validation studies.
 }
 \details{
 \tabular{ll}{
 Package: \tab NNTbiomarker\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2015-03-09\cr
+Version: \tab 0.1\cr
+Date: \tab 2015-03-21\cr
 License: \tab What license is it under?\cr
 }
-~~ An overview of how to use the package, including the most important functions ~~
-}
+This package bases the design of a biomarker study on the idea of "number needed to treat" (NNT). It postulates a "range of discomfort" for NNT, within which the clinical decision is uncomfortable for a treating physician.  provides a \code{shiny} window for eliciting the boundaries of the range of number needed to  }
 \author{
-Who wrote it
+Roger Day
 
-Maintainer: Who to complain to <yourfault@somewhere.net>
-~~ The author and/or maintainer of the package ~~
+Maintainer: Roger Day <day01@pitt.edu>
 }
 \references{
-~~ Literature or other references for background information ~~
+See author for unpublished manuscript.
 }
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R documentation directory ~~
 \keyword{ package }
-\seealso{
-~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
-}
 \examples{
 ~~ simple examples of the most important functions ~~
 }
