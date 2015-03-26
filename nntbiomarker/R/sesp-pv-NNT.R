@@ -10,7 +10,16 @@
 #Actually we choose N LARGER so that WAITing is definitely, comfortably the right thing.
 #E(loss | treat) = (NNTpos-1) * L[A,H]  >> E(loss | wait) = 1 * L[W,D]
 
-
+#' sesp.from.pv.feasible
+#'
+#' Computes sensitivity and specificity from  predictive values.
+#'
+#' @param ppv Positive predictive value
+#' @param npv Negative predictive value
+#' @param prev Prevalence (prior probability)
+#' @param feasible Only return results in [0,1]. Default=TRUE
+#' @return c(ppv=ppv, npv=npv, sp=sp, se=se)
+#' @
 sesp.from.pv.feasible = function(ppv, npv, prev, feasible=TRUE) {
   if(feasible) {   ### make sure that feassible results are returned.
     if(ppv < prev) {
@@ -26,11 +35,23 @@ sesp.from.pv.feasible = function(ppv, npv, prev, feasible=TRUE) {
   npv.odds = npv/(1-npv)
   ppv.odds = ppv/(1-ppv)
   saved.options = options(digits=4)
+  # This is the contra-Bayes theorem.
   sp = npv.odds*(odds-ppv.odds)/(1-npv.odds*ppv.odds)
   se = ppv.odds/odds*(1-sp)
   return(c(ppv=ppv, npv=npv, sp=sp, se=se))
 }
 
+#' sesp.from.pv
+#'
+#' Computes sensitivity and specificity from  predictive values.
+#'
+#' @param ppv Positive predictive value
+#' @param npv Negative predictive value
+#' @param pv Alternative input of ppv and npv, in matrix or named vector.
+#' @param prev Prevalence (prior probability)
+#' @return c(se=se,sp=sp)
+#' @aliases pv.to.sesp
+#'
 sesp.from.pv = pv.to.sesp = function(ppv=0.1, npv=0.7, pv, prev=0.2){
   if(!missing(pv)) {
     if(is.matrix(pv)) {
@@ -56,6 +77,17 @@ sesp.from.pv = pv.to.sesp = function(ppv=0.1, npv=0.7, pv, prev=0.2){
   return(c(se=se,sp=sp))
 }
 
+#' pv.from.sesp
+#'
+#' Computes predictive values from sensitivity and specificity.
+#'
+#' @param se Positive predictive value
+#' @param sp Negative predictive value
+#' @param sesp Alternative input for se and sp, as matrix or named vector.
+#' @param prev Prevalence (prior probability). Default =  0.001
+#' @return c(ppv=ppv, npv=npv)
+#' @aliases sesp.to.pv
+#'
 pv.from.sesp = sesp.to.pv = function(se=0.8, sp=0.8, sesp, prev=0.001) {
   if(!missing(sesp)) {
     if(is.matrix(sesp)) {
@@ -79,7 +111,16 @@ pv.from.sesp = sesp.to.pv = function(se=0.8, sp=0.8, sesp, prev=0.001) {
 }
 
 
-
+#' NNT.from.pv
+#'
+#' Compute NNT values from predictive values.
+#'
+#' @param ppv Positive predictive value
+#' @param npv Negative predictive value
+#' @param pv Alternative input of ppv and npv, in matrix or named vector.
+#' @aliases pv.to.NNT
+#' @return c(NNTpos=NNTpos, NNTneg=NNTneg)
+#'
 NNT.from.pv = pv.to.NNT = function(ppv, npv, pv) {
   if(!missing(pv)) {
     if(is.matrix(pv)) {
@@ -98,7 +139,7 @@ NNT.from.pv = pv.to.NNT = function(ppv, npv, pv) {
   }
   NNTpos = 1/as.vector(ppv)
   NNTneg = 1/(1-as.vector(npv))
-  if(length(ppv) > 1) 
+  if(length(ppv) > 1)
     return(cbind(NNTpos=NNTpos, NNTneg=NNTneg))
   return(c(NNTpos=NNTpos, NNTneg=NNTneg))
 }
@@ -118,22 +159,45 @@ NNT.to.pv = pv.from.NNT = function(NNTpos, NNTneg, NNT, prev, calculate.se.sp=F)
       NNTpos = NNT["NNTpos"];   NNTneg = NNT["NNTneg"]
     }
     else stop("pv.from.NNT: NNT must be matrix or vector")
-  }  
+  }
   ppv.odds = 1/(NNTpos-1)
   ppv = as.vector(ppv.odds/(1+ppv.odds))
   npv.odds = (NNTneg-1)/1
   npv = as.vector(npv.odds/(1+npv.odds))
-  if(length(ppv) > 1) 
+  if(length(ppv) > 1)
     return(cbind(ppv=ppv, npv=npv))
   return(c(ppv=ppv, npv=npv))
 }
 
+#' NNT.to.sesp
+#'
+#' Compute sensitivity aand specificity from NNT values.
+#'
+#' @param NNTpos NNT for a positive test result
+#' @param NNTneg NNT for a negative test result
+#' @param NNT Alternative way in input NNT values (matrix or vector)
+#' @param prev Prevalence (prior probability)
+#' @return c(se=se, sp=sp)
+#' @aliases sesp.from.NNT
+#'
 NNT.to.sesp = sesp.from.NNT = function(NNTpos, NNTneg, NNT, prev) {
   if(!missing(NNT))
-    sesp.from.pv(pv=pv.from.NNT(NNT=NNT), prev=prev) 
+    sesp.from.pv(pv=pv.from.NNT(NNT=NNT), prev=prev)
   else
-    sesp.from.pv(pv=pv.from.NNT(NNTpos, NNTneg), prev=prev) 
+    sesp.from.pv(pv=pv.from.NNT(NNTpos, NNTneg), prev=prev)
 }
+
+#' NNT.from.sesp
+#'
+#' Compute NNT values from sensitivity aand specificity.
+#'
+#' @param se Positive predictive value
+#' @param sp Negative predictive value
+#' @param sesp Alternative input for se and sp, as matrix or named vector.
+#' @param prev Prevalence (prior probability)
+#' @return c(NNTpos=NNTpos, NNTneg=NNTneg)
+#' @aliases sesp.from.NNT
+#'
 
 NNT.from.sesp = sesp.to.NNT = function(se, sp, sesp, prev) {
   if(!missing(sesp))

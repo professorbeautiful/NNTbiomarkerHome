@@ -1,3 +1,30 @@
+#' achievable.se.sp
+#'
+#' For a retrospective study design, given a prevalence value,
+#' produce a plot displaying the achievable contours of
+#' either predictive values or NNT values.
+#' The calculation uses the "contra-Bayes" theorem, sesp.from.pv.
+#'
+#' @param the.prev Prevalence (prior probability)
+#' @param axes Should the axes be predictive values ("pv") or NNT values? Default is "pv".
+#' @param sesp.seq Sequence of values at which the sensitivity and specificity will be explored.
+#' @param drawNNTaxes=TRUE,
+#' @param drawPVaxes=FALSE,
+#' @param drawArrows=TRUE,
+#' @param drawTable=TRUE,
+#' @param latexTable=TRUE,
+#' @param placePointLabels=TRUE, ### A, B, C, ...
+#' @param cexText=0.5,
+#' @param cexSubtitle=0.5,
+#' @param cexTitle=0.7,
+#' @param y0arrow=0.25,
+#' @param lwdArrow=1,
+#' @param ltyArrow=2,
+#' @param title=FALSE,
+#' @param  mtext=FALSE,
+#' @param  contours=TRUE,
+#' @return The predictive values when sensitivity equals specificity:  sesp.to.pv(cbind(sesp.seq,sesp.seq), prev=the.prev))
+
 achievable.se.sp = function(the.prev = 0.5,
                             axes=c("pv", "NNT"),
                             sesp.seq = seq(0.5, 1, 0.10),
@@ -15,7 +42,7 @@ achievable.se.sp = function(the.prev = 0.5,
                             ltyArrow=2,
                             title=FALSE, mtext=FALSE, contours=TRUE,
                             ...) {
-  if(axes[1] == "NNT") 
+  if(axes[1] == "NNT")
     diagFun = function(se, sp, prev){
       pv = sesp.to.pv(se, sp, prev=the.prev)
       print(pv)
@@ -24,7 +51,7 @@ achievable.se.sp = function(the.prev = 0.5,
       return(NNT)
     }
   else
-    diagFun = function(se,sp,prev) 
+    diagFun = function(se,sp,prev)
       sesp.to.pv(se, sp, prev = the.prev)
   diagonal.values = diagFun(se=sesp.seq, sp=sesp.seq,
                             prev=the.prev)
@@ -35,18 +62,18 @@ achievable.se.sp = function(the.prev = 0.5,
   if(is.null(ylim))   ylim = c(max(0, 1 - (1-min(diagonal.values[ , 2]))), 1)
   xlim = unlist(as.list(theCall[["xlim"]])[-1])
   if(is.null(xlim))  xlim = 0:1
-  plot(diagonal.values, type="l", lwd=2,    	
-       xlab=if(axes[1]=="pv") "positive predictive value" 
+  plot(diagonal.values, type="l", lwd=2,
+       xlab=if(axes[1]=="pv") "positive predictive value"
        else expression(bolditalic(NNT[Pos])),
-       ylab=if(axes[1]=="pv") "negative predictive value" 
+       ylab=if(axes[1]=="pv") "negative predictive value"
        else expression(bolditalic(NNT[Neg])),
-       ...)	
+       ...)
   if(contours) {
-    for(se in sesp.seq) 
+    for(se in sesp.seq)
       lines((diagFun(se=rep(se, length(sesp.seq)), sp=sesp.seq, prev=the.prev)),
             lwd=2, col="blue")
     for(sp in sesp.seq)
-      lines((diagFun(se=sesp.seq, sp=rep(sp, length(sesp.seq)), prev=the.prev)), 
+      lines((diagFun(se=sesp.seq, sp=rep(sp, length(sesp.seq)), prev=the.prev)),
             lwd=2, col="red")
   }
   if(placePointLabels) {
@@ -57,11 +84,11 @@ achievable.se.sp = function(the.prev = 0.5,
          col="white", cex=0.9)
   }
   #   if(drawArrows){
-  #     x0positions = seq(xlim[1]+0.1*(xlim[2]-xlim[1]), 
+  #     x0positions = seq(xlim[1]+0.1*(xlim[2]-xlim[1]),
   #                       xlim[2]-0.1*(xlim[2]-xlim[1]), along=sesp.seq)
   #     arrows(x0=x0positions,
   #            y0=rep( par()$usr[3] + (par()$usr[4]-par()$usr[3])*y0arrow,	length(sesp.seq)),
-  #            x1=diagonal.values[1, ], 
+  #            x1=diagonal.values[1, ],
   #            y1=diagonal.values[2, ],
   #            lwd=lwdArrow, lty=ltyArrow, length=0.1, angle=10)
   #   }
@@ -84,23 +111,23 @@ achievable.se.sp = function(the.prev = 0.5,
            "sp=\nppv=\nnpv=\nNNTpos=\nNNTneg="
     )
   }
-  
+
   #     text(pos=1, x0positions, cex=cexText,
   #          rep( par()$usr[3] + (par()$usr[4]-par()$usr[3])*(y0arrow*0.8),
   #               length(sesp.seq)),
   #          sesp.seq %&% "\n" %&%
   #            sesp.seq %&% "\n" %&%
   #            signif(digits=3, diagonal.values[1, ] ) %&%
-  #            "\n" %&% signif(digits=3, diagonal.values[2, ]) 
-  #          %&% "\n" %&% NNTpos 
+  #            "\n" %&% signif(digits=3, diagonal.values[2, ])
+  #          %&% "\n" %&% NNTpos
   #          %&% "\n" %&% NNTneg
   #     )
   #   }
-  if(latexTable) 
+  if(latexTable)
     print(xtable(digits=3, t(data.frame(
       sensitivity=sesp.seq, specificity=sesp.seq,
       PPV=PV[ , "ppv"],
-      NPV=PV[ , "npv"], 
+      NPV=PV[ , "npv"],
       NNTpos=NNTpos,
       NNTneg=NNTneg
     ))))
