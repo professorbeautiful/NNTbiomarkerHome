@@ -77,8 +77,9 @@ achievable.se.sp = function(the.prev = 0.5,
             lwd=2, col="red")
   }
   if(placePointLabels) {
-    points(diagonal.values, col="black", pch=pch("sci"), cex=2.7)
-    text(diagonal.values, labels=LETTERS[1:nrow(diagonal.values)], 
+    solidcircle = 16
+    points(diagonal.values, col="black", pch=solidcircle, cex=2.7)
+    text(diagonal.values, labels=LETTERS[1:nrow(diagonal.values)],
 #        vfont=c("serif", "bold"),
          font=4, family="serif",
          col="white", cex=0.9)
