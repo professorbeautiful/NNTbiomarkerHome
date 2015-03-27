@@ -42,6 +42,7 @@ achievable.se.sp = function(the.prev = 0.5,
                             ltyArrow=2,
                             title=FALSE, mtext=FALSE, contours=TRUE,
                             ...) {
+  require("xtable")
   if(axes[1] == "NNT")
     diagFun = function(se, sp, prev){
       pv = sesp.to.pv(se, sp, prev=the.prev)
@@ -99,8 +100,8 @@ achievable.se.sp = function(the.prev = 0.5,
       PV = NNT.to.pv(NNTpos, NNTneg)
     }
     else {
-      NNTpos = signif(digits=3, NNT.from.pv(pv=diagonal.values)[,1 ])
-      NNTneg = signif(digits=3, NNT.from.pv(pv=diagonal.values)[,2 ])
+      NNTpos = signif(digits=3, NNT.from.pv(pv=diagonal.values)$NNTpos)
+      NNTneg = signif(digits=3, NNT.from.pv(pv=diagonal.values)$NNTneg)
       PV = diagonal.values
     }
   cat("PV\n"); print(PV)
@@ -125,13 +126,13 @@ achievable.se.sp = function(the.prev = 0.5,
   #     )
   #   }
   if(latexTable)
-    print(xtable(digits=3, t(data.frame(
+    xtable(digits=3, t(data.frame(
       sensitivity=sesp.seq, specificity=sesp.seq,
       PPV=PV[ , "ppv"],
       NPV=PV[ , "npv"],
       NNTpos=NNTpos,
       NNTneg=NNTneg
-    ))))
+    )))
   if(title)
     title(paste("prevalence = ", the.prev), cex=cexTitle)
   if(mtext)
@@ -139,21 +140,24 @@ achievable.se.sp = function(the.prev = 0.5,
       "orange (steeper) lines: fixed sensitivity", "\n",
       "    blue (gentler) lines: fixed specificity", collapse=" "
     ), side=3, cex=cexSubtitle)
-  if(drawNNTaxes) {
-    #1=below, 2=left, 3=above and 4=right.
-    yaxp = par()$yaxp
-    verticalTickMarks = seq(yaxp[1], yaxp[2], length=yaxp[3] + 1) [-(yaxp[3]+1)][-1]
-    xaxp = par()$xaxp
-    horizontalTickMarks = seq(xaxp[1], xaxp[2], length=xaxp[3] + 1) [-(xaxp[3]+1)][-1]
-    NNT_ = NNT.from.ppv.npv(horizontalTickMarks, verticalTickMarks)
-    NNTpos = NNT[grep("LB", names(NNT))]
-    NNTneg = NNT[grep("UB", names(NNT))]
-    mtext(expression(NNTpos %->% phantom(0)), at=xaxp[1], line=1, side=3)
-    mtext(expression(NNTneg %->% phantom(0)), at=yaxp[1], line=1, side=4)
-    axis(3, at=horizontalTickMarks, labels=round(NNTpos, 2))
-    axis(4, at=verticalTickMarks, labels=round(NNTneg, 2))
-  }
+  if(drawNNTaxes) drawNNTaxes()
   return(invisible(sesp.to.pv(cbind(sesp.seq,sesp.seq), prev=the.prev)))
 }
 # END  achievable.se.sp()
+
+drawNNTaxes = function() {
+  #1=below, 2=left, 3=above and 4=right.
+  yaxp = par()$yaxp
+  verticalTickMarks = seq(yaxp[1], yaxp[2], length=yaxp[3] + 1) [-(yaxp[3]+1)][-1]
+  xaxp = par()$xaxp
+  horizontalTickMarks = seq(xaxp[1], xaxp[2], length=xaxp[3] + 1) [-(xaxp[3]+1)][-1]
+  NNT_ = NNT.from.pv(ppv = horizontalTickMarks, npv = verticalTickMarks)
+  NNTpos = NNT_$"NNTpos"
+  NNTneg = NNT_$"NNTneg"
+  mtext(expression(NNTpos %->% phantom(0)), at=xaxp[1], line=1, side=3)
+  mtext(expression(NNTneg %->% phantom(0)), at=yaxp[1], line=1, side=4)
+  axis(3, at=horizontalTickMarks, labels=round(NNTpos, 2))
+  axis(4, at=verticalTickMarks, labels=round(NNTneg, 2))
+}
+
 

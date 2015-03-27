@@ -139,8 +139,8 @@ NNT.from.pv = pv.to.NNT = function(ppv, npv, pv) {
   }
   NNTpos = 1/as.vector(ppv)
   NNTneg = 1/(1-as.vector(npv))
-  if(length(ppv) > 1)
-    return(cbind(NNTpos=NNTpos, NNTneg=NNTneg))
+  if(length(ppv) > 1 | length(npv) > 1)
+    return(list(NNTpos=NNTpos, NNTneg=NNTneg))
   return(c(NNTpos=NNTpos, NNTneg=NNTneg))
 }
 
