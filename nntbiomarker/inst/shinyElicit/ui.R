@@ -1,4 +1,6 @@
-#stepsTable <- read.csv("SteppingStoneTable.csv")  ## TODO
+#####  shinyElicit ui
+
+stepsTable <- read.csv("SteppingStoneTable.csv")  ## TODO
 #stepsTable[2,2] <- "Who are the patients you want to help? What is the clinical decision? What are the clinical options?"
 
 shinyUI(basicPage(
@@ -6,7 +8,7 @@ shinyUI(basicPage(
   hr(),
   h2("Defining the clinical scenario"),
   h3("Who are the patients you want to help? What is the clinical decision? What are the clinical options?"),
-  textInput(inputId = "who", label = "Intended beneficiaries"),
+  tags$textarea(id = "who", label = "Intended beneficiaries"),
   hr(),
   h2("Principal goal"),
   h3("What NNT s for the BestToAct and BestToWait groups would make the decision clear-cut?"),
@@ -15,6 +17,7 @@ shinyUI(basicPage(
   numericInput("NNTupper", label = "NNTupper",
                value=20, min = 10, max=100, step=1),
   hr(),
+  plotOutput(outputId = "plotDiscomfort"),
   numericInput("NNTpos", label = "NNTpos, must be smaller than NNTlower",
                value=2, min = 1, step=1),
   numericInput("NNTneg", value=20, label = "NNTneg, must be larger than NNTupper", min = 1, step=1),
