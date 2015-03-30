@@ -4,6 +4,7 @@ stepsTable <- read.csv("SteppingStoneTable.csv")  ## TODO
 #stepsTable[2,2] <- "Who are the patients you want to help? What is the clinical decision? What are the clinical options?"
 
 shinyUI(basicPage(
+  uiOutput("debugTools"),
   h1("Biomarker validation study design support"),
   hr(),
   h2("Defining the clinical scenario"),
