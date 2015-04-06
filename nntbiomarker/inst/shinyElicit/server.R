@@ -6,6 +6,9 @@ shinyServer(function(input, output, session) {
 
   #source("conveniences.R", local=TRUE)
   source("../debugTools.R", local=TRUE)
+
+  output$steps = renderTable(xtable(stepsTable))
+
   source("plotDiscomfort.R", local=TRUE)
   NNTgap = 1
   observe( {
