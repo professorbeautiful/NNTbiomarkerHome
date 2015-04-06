@@ -1,6 +1,8 @@
 rValues = reactiveValues()
 thisSession <<- session
 
+`%between%` = function(a,b) (a >= b[1] & a <= b[2])
+
 wasClicked =  function(button) {
   if(exists("input"))
     if(!is.null(button) ) {
