@@ -1,30 +1,40 @@
 #####  shinyElicit ui
 
-stepsTable <- read.csv("SteppingStoneTable.csv")  ## TODO
-#stepsTable[2,2] <- "Who are the patients you want to help? What is the clinical decision? What are the clinical options?"
-
-shinyUI(basicPage(
+shinyUI(fluidPage(
   uiOutput("debugTools"),
   h1("Biomarker validation study design support"),
   hr(),
-  h2("Defining the clinical scenario"),
-  h3("Who are the patients you want to help? What is the clinical decision? What are the clinical options?"),
-  tags$textarea(id = "who", label = "Intended beneficiaries"),
+  tableOutput("steps"),
   hr(),
-  h2("Principal goal"),
-  h3("What NNT s for the BestToAct and BestToWait groups would make the decision clear-cut?"),
-  numericInput("NNTlower", label = "NNTlower",
-               value=2, min = 1, max=10, step=1),
-  numericInput("NNTupper", label = "NNTupper",
-               value=20, min = 10, max=100, step=1),
-  hr(),
-  plotOutput(outputId = "plotDiscomfort"),
-  numericInput("NNTpos", label = "NNTpos, must be smaller than NNTlower",
-               value=2, min = 1, step=1),
-  numericInput("NNTneg", value=20, label = "NNTneg, must be larger than NNTupper", min = 1, step=1),
-  numericInput("samplesize", label = "sample size",
-               value=30, min = 10, max=1000, step = 1),
-  numericInput("prevalence", label = "prevalence",
-               value=0.5, min = 0.01, max=1, step = 0.01),
-  hr()
-))
+  div(style="overflow:scroll;height:400px;background:lightgrey",
+    sectionHeader(1),
+    tags$textarea(id = "who", label = "Intended beneficiaries"),
+    tags$textarea(id = "options", label = "Decision choices (two)"),
+    completedButton(1),
+    hr(),
+    sectionHeader(2),
+    fluidRow(
+      column(2, HTML("&nbsp;")),
+      column(5, numericInput("NNTlower", label = "NNTlower",
+                             value=7, min = 1, max=10, step=1)),
+      column(5, numericInput("NNTupper", label = "NNTupper",
+                             value=17, min = 10, max=100, step=1))
+    ),
+    fluidRow(
+      column(2, HTML("&nbsp;")),
+      column(5, numericInput("NNTpos", label = "NNTpos, must be smaller than NNTlower",
+                             value=6, min = 1, step=1)),
+      column(5, numericInput("NNTneg", value=18, label = "NNTneg, must be larger than NNTupper", min = 1, step=1))
+    ),
+    plotOutput(outputId = "plotDiscomfort"),
+    numericInput("samplesize", label = "sample size",
+                 value=30, min = 10, max=1000, step = 1),
+    numericInput("prevalence", label = "prevalence",
+                 value=0.5, min = 0.01, max=1, step = 0.01),
+    hr(),
+    sectionHeader(3),
+    sectionHeader(4),
+    sectionHeader(5),
+    sectionHeader(6)
+  )
+  ))
