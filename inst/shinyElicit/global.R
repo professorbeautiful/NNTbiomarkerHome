@@ -3,8 +3,8 @@ options(error=function(){
   })
 
 #stepsTableInitial = read.csv("SteppingStoneTable.csv", stringsAsFactors=F)[-1,]  ## TODO
-data(stepsTableInitial)
-
+#data(stepsTableInitial)
+source("stepsTableInitial.dmp", local=T)
 stepsTableInitial <- data.frame(`Done?`= "Not yet done", stepsTableInitial)
 names(stepsTableInitial) = c("Done?", "Stepping stone", "Question")
 rownames(stepsTableInitial) = paste0('(', 1:nrow(stepsTableInitial) , ')')
