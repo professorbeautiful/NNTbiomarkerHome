@@ -1,17 +1,13 @@
-stepsTable <- read.csv("SteppingStoneTable.csv", stringsAsFactors=F)[-1,]  ## TODO
-stepsTable[2,2] <- "Who are the patients you want to help?\n What are the clinical options?"
-stepsTable <- data.frame(`Done?`= "Not yet done", stepsTable[-1])
-names(stepsTable) = c("Done?", "Stepping stone", "Question")
-rownames(stepsTable) = paste0('(', 1:nrow(stepsTable) , ')')
+options(error=function(){
+  cat("Recovering!\n"); recover()
+  })
 
-rValues = reactiveValues(doneLabels = rep("Not yet done", nrow(stepsTable)))
+#stepsTableInitial = read.csv("SteppingStoneTable.csv", stringsAsFactors=F)[-1,]  ## TODO
+data(stepsTableInitial)
 
-sectionHeader = function(number) {
-  list(h2(paste0('(', number, ') ',
-                 stepsTable[number, "Stepping stone"])),
-       h3(stepsTable[number, "Question"]))
-}
+stepsTableInitial <- data.frame(`Done?`= "Not yet done", stepsTableInitial)
+names(stepsTableInitial) = c("Done?", "Stepping stone", "Question")
+rownames(stepsTableInitial) = paste0('(', 1:nrow(stepsTableInitial) , ')')
+
 buttonLabelValues = c("Not yet done", "Done")
-completedButton = function(number) {
-  actionButton("completed" %&% number, label = rValues$doneLabels[number])
-}
+

@@ -1,4 +1,5 @@
 require("shiny")
+require("NNTbiomarker")
 
 shinyServer(function(input, output) {
   require("xtable")
