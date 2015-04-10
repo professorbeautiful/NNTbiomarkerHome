@@ -28,10 +28,11 @@ shinyServer(
     observe({
         newValue <- input[["stepStatus" %&% number]]
         catn("Toggling stepStatus" %&% number %&% " = " %&% newValue)
-#         isolate({ # necessary, or else crash!
-#        #    rValues$stepsTable[number, "Done?"] = newValue
-#            catn("New value in stepsTable: ", rValues$stepsTable[number, `Done?`] )
-#         })
+        isolate({ # necessary, or else crash!
+           rValues$stepsTable[number, "Done?"] = newValue
+           catn("New value in stepsTable: ",
+                rValues$stepsTable[number, "Done?"] )
+        })
       }
     )
   #}

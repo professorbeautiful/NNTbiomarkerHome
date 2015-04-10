@@ -6,6 +6,8 @@ options(error=function(){
 #data(stepsTableInitial)
 source("stepsTableInitial.dmp", local=T)
 rownames(stepsTableInitial) = NULL
+stepsTableInitial[[1]] = as.character(stepsTableInitial[[1]])
+
 buttonLabelValues = c("Not yet done", "Done")
 
 completedToggle = function(number) {
