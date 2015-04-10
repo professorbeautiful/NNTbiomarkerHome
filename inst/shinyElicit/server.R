@@ -15,40 +15,26 @@ shinyServer(
     doneLabels = rep(buttonLabelValues[1], nrow(stepsTableInitial))
   )
 
-  output$steps = renderTable({(rValues$stepsTable)})
+  output$steps = renderTable({
+    #catn("Calling renderTable on stepsTable");
+    rValues$stepsTable
+  })
 
-  for(number in 1:nrow(stepTable)) {
-    output[["Question" %&% number]] = textOutput("Question" %&% number)
-  }
-
-  sectionHeader = function(number) {
-    list(h2(paste0('(', number, ') ',
-                   textOutput(stepsTableInitial[number, "Stepping stone"]))),
-         h3(textOutput("Question" %&% number, stepsTableInitial[iStep, "Question"])),
-#         completedToggle(number)
+#  for(number in 1:nrow(stepsTableInitial)) {
+#     output[["completedText" %&% number]] =
+#       renderText({ rValues$stepsTable[number, "Done?"]
+#                    })
+    number = 1
+    observe({
+        newValue <- input[["stepStatus" %&% number]]
+        catn("Toggling stepStatus" %&% number %&% " = " %&% newValue)
+#         isolate({ # necessary, or else crash!
+#        #    rValues$stepsTable[number, "Done?"] = newValue
+#            catn("New value in stepsTable: ", rValues$stepsTable[number, `Done?`] )
+#         })
+      }
     )
-  }
-#   completedToggle = function(number) {
-#     span(
-#       radioButtons("stepStatus" %&% number,
-#                    label="Is this step done?", choices=c("Not yet", "Done"))
-# #       textOutput(outputId = "completedText" %&% number,
-# #                  "Not yet done."),
-# #       actionButton("completed" %&% number,
-# #                    label = "")
-#     )
-#   }
-#   for(iStep in 1:nrow(stepsTableInitial)) {
-# #     output[["completedText" %&% number]] =
-# #       renderText({ rValues$stepsTable[number, `Done?`]
-# #                    })
-#     observeEvent(input[["stepStatus" %&% number]], ## radio buttons
-#                  function() {
-#                    rValues$stepTable[number, `Done?`] =
-#                      input[["stepStatus" %&% number]]
-#                  }
-#     )
-#   }
+  #}
   source("plotDiscomfort.R", local=TRUE)
 
   NNTgap = 1

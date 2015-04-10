@@ -1,14 +1,14 @@
 stepsTableInitial <-
 structure(list(`Done?` = structure(c(1L, 1L, 1L, 1L, 1L, 1L, 
-1L), class = "factor", .Label = "Not yet done"), `Stepping stone` = 1:7, 
-    Question = c("Defining the clinical scenario", "Defining the NNT discomfort zone", 
-    "Choosing NNT's outside this zone", "Defining how patients would benefit", 
-    "Classification performance needed", "Prospective study requirements", 
-    "Retrospective study requirements"), `NA` = c("Who are the patients? \\nWhat are the clinical options?", 
-    "What region of NNTs make both \"treat\" and \"wait\" uncomfortable?", 
-    "What NNT s for the BestToAct and BestToWait groups would make the decision clear-cut?", 
-    "Specifically how will patients be helped by a test that achieves these NNT s?", 
-    "What predictive values do these NNT s correspond to?", "Given these NNT s, how large should a prospective study be, and how long the follow-up?", 
-    "Given a prevalence, what sensitivity and specificity do we hope for, and what should the sample sizes be to estimate them sufficiently?"
-    )), .Names = c("Done?", "Stepping stone", "Question", NA), row.names = c("(1)", 
-"(2)", "(3)", "(4)", "(5)", "(6)", "(7)"), class = "data.frame")
+1L), class = "factor", .Label = "Not yet done"), `Stepping stone` = c("Defining the clinical scenario", 
+"Defining the NNT discomfort zone", "Choosing NNT's outside this zone", 
+"Defining how patients would benefit", "Classification performance needed", 
+"Prospective study requirements", "Retrospective study requirements"
+), Question = c("Who are the patients? \\nWhat are the clinical options?", 
+"What region of NNTs make both \"treat\" and \"wait\" uncomfortable?", 
+"What NNT s for the BestToAct and BestToWait groups would make the decision clear-cut?", 
+"Specifically how will patients be helped by a test that achieves these NNT s?", 
+"What predictive values do these NNT s correspond to?", "Given these NNT s, how large should a prospective study be, and how long the follow-up?", 
+"Given a prevalence, what sensitivity and specificity do we hope for, and what should the sample sizes be to estimate them sufficiently?"
+)), .Names = c("Done?", "Stepping stone", "Question"), row.names = c(NA, 
+-7L), class = "data.frame")

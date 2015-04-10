@@ -7,12 +7,10 @@ shinyUI(fluidPage(
   tableOutput("steps"),
   hr(),
   div(style="overflow:scroll;height:400px;background:lightgrey",
-#    sectionHeader(1),
+    sectionHeader(1),
     tags$textarea(id = "who", label = "Intended beneficiaries"),
     tags$textarea(id = "options", label = "Decision choices (two)"),
-#    completedToggle(1),
-    hr(),
-#    sectionHeader(2),
+    sectionHeader(2),
     fluidRow(
       column(2, HTML("&nbsp;")),
       column(5, numericInput("NNTlower", label = "NNTlower",
@@ -35,6 +33,7 @@ shinyUI(fluidPage(
     sectionHeader(3),
     sectionHeader(4),
     sectionHeader(5),
-    sectionHeader(6)
+    sectionHeader(6),
+    sectionHeader(7)
   )
   ))
