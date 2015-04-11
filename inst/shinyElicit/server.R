@@ -9,7 +9,7 @@ shinyServer(
     thisSession <<- session
 
   #source("conveniences.R", local=TRUE)
-  source("../debugTools.R", local=TRUE)
+  source("debugTools.R", local=TRUE)
 
   rValues = reactiveValues(
     stepsTable = stepsTableInitial )
