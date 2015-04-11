@@ -8,8 +8,9 @@ shinyUI(fluidPage(
   hr(),
   div(style="overflow:scroll;height:400px;background:lightgrey",
     sectionHeader(1),
-    tags$textarea(id = "who", label = "Intended beneficiaries"),
-    tags$textarea(id = "options", label = "Decision choices (two)"),
+    span("Intended beneficiaries", tags$textarea(id = "who"),
+         "         Decision choices (two)", tags$textarea(id = "options" )
+         ),
     sectionHeader(2),
     fluidRow(
       column(2, HTML("&nbsp;")),
