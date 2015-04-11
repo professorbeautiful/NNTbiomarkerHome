@@ -11,31 +11,32 @@ shinyServer(
   source("../debugTools.R", local=TRUE)
 
   rValues = reactiveValues(
-    stepsTable = stepsTableInitial,
-    doneLabels = rep(buttonLabelValues[1], nrow(stepsTableInitial))
-  )
+    stepsTable = stepsTableInitial )
 
   output$steps = renderTable({
     #catn("Calling renderTable on stepsTable");
     rValues$stepsTable
   })
 
-#  for(number in 1:nrow(stepsTableInitial)) {
-#     output[["completedText" %&% number]] =
-#       renderText({ rValues$stepsTable[number, "Done?"]
-#                    })
-    number = 1
-    observe({
-        newValue <- input[["stepStatus" %&% number]]
-        catn("Toggling stepStatus" %&% number %&% " = " %&% newValue)
-        isolate({ # necessary, or else crash!
-           rValues$stepsTable[number, "Done?"] = newValue
-           catn("New value in stepsTable: ",
-                rValues$stepsTable[number, "Done?"] )
-        })
-      }
+  #  for(number in 1:nrow(stepsTableInitial)) {
+  #     output[["completedText" %&% number]] =
+  #       renderText({ rValues$stepsTable[number, "Done?"]
+  #                    })
+  obs = function(number)
+    assign("obs" %&% number,
+           observe({
+             newValue <- input[["stepStatus" %&% number]]
+             catn("Toggling stepStatus" %&% number %&% " = " %&% newValue)
+             isolate({ # necessary, or else crash!
+               rValues$stepsTable[number, "Done?"] = newValue
+               catn("New value in stepsTable: ",
+                    rValues$stepsTable[number, "Done?"] )
+             })
+           }
+           )
     )
-  #}
+  lapply(1:7, obs)  ### for loop won't work.
+      ### ### must assign, or else only the last will take.
   source("plotDiscomfort.R", local=TRUE)
 
   NNTgap = 1

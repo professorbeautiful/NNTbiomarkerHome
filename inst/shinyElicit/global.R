@@ -1,6 +1,6 @@
-options(error=function(){
-  cat("Recovering!\n"); recover()
-  })
+# options(error=function(){
+#   cat("Recovering!\n"); recover()
+#   })
 
 #stepsTableInitial = read.csv("SteppingStoneTable.csv", stringsAsFactors=F)[-1,]  ## TODO
 #data(stepsTableInitial)
@@ -8,7 +8,6 @@ source("stepsTableInitial.dmp", local=T)
 rownames(stepsTableInitial) = NULL
 stepsTableInitial[[1]] = as.character(stepsTableInitial[[1]])
 
-buttonLabelValues = c("Not yet done", "Done")
 
 completedToggle = function(number) {
   span(
