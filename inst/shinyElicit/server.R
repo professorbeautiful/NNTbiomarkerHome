@@ -6,6 +6,7 @@ shinyServer(
   #   shinyServerFunction)
   # shinyServerFunction = (
   function(input, output, session) {
+    thisSession <<- session
 
   #source("conveniences.R", local=TRUE)
   source("../debugTools.R", local=TRUE)
