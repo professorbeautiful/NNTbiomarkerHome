@@ -36,10 +36,6 @@ shinyUI(fluidPage(
       column(5, numericInput("NNTneg", value=18, label = "NNTneg, must be larger than NNTupper", min = 1, step=1))
     ),
     plotOutput(outputId = "plotDiscomfort"),
-    numericInput("samplesize", label = "sample size",
-                 value=30, min = 10, max=1000, step = 1),
-    numericInput("prevalence", label = "prevalence",
-                 value=0.5, min = 0.01, max=1, step = 0.01),
     hr(),
     sectionHeader(3),
     sectionHeader(4),
@@ -50,6 +46,8 @@ shinyUI(fluidPage(
     plotOutput("contraBayesPlot", hoverId="contraBayesPlot_hover"),
     tableOutput("selectedNNTPosNeg"),
     sectionHeader(5),
+    numericInput("samplesize", label = "sample size",
+                 value=30, min = 10, max=1000, step = 1),
     sectionHeader(6),
     sectionHeader(7)
   )
