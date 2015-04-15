@@ -43,7 +43,12 @@ shinyUI(fluidPage(
     hr(),
     sectionHeader(3),
     sectionHeader(4),
-
+    h3("Achievable sensitivity and specificity"),
+    ## TODO: input$prevalence is not changing.
+    numericInput("prevalence", label = "prevalence",
+                 value=0.5, min = 0, max=1, step = 0.05),
+    plotOutput("contraBayesPlot", hoverId="contraBayesPlot_hover"),
+    tableOutput("selectedNNTPosNeg"),
     sectionHeader(5),
     sectionHeader(6),
     sectionHeader(7)

@@ -5,11 +5,13 @@ plotDiscomfort = function(
     NNTlower = 7,
     NNTupper = 16,
     NNTpos = NNTlower-1,
-    NNTneg=NNTupper+1){
+    NNTneg=NNTupper+1,
+    drawAxes=T,
+    drawPosNeg=F){
 
   rightSideLimit = max(NNTneg * 1.15, NNTneg + 3)
   plot(c(1,rightSideLimit), c(0,0.16), pch="",
-       axes=F, xlab="", ylab="")
+       axes=drawAxes, xlab="", ylab="")
 
   #abline(v=c(1,NNTlower,NNTupper))
   actBarLeft = 1
@@ -52,12 +54,14 @@ plotDiscomfort = function(
        "NNTlower", pos=1, cex=2, col="red")
   text(discomfortBarRight, barY-barHeight/2,
        "NNTupper", pos=1, cex=2, col="red")
-  points(NNTpos, barY+barHeight/1.8, cex=3, pch=24, bg="darkgreen")
-  points(NNTneg, barY+barHeight/1.8, cex=3, pch=24, bg="darkgreen")
-  text(NNTpos, barY+barHeight/1.6,
-       "NNTpos", pos=3, cex=2, col="darkgreen")
-  text(NNTneg, barY+barHeight/1.6,
-       "NNTneg", pos=3, cex=2, col="darkgreen")
+  if(drawPosNeg) {
+    points(NNTpos, barY+barHeight/1.8, cex=3, pch=24, bg="darkgreen")
+    points(NNTneg, barY+barHeight/1.8, cex=3, pch=24, bg="darkgreen")
+    text(NNTpos, barY+barHeight/1.6,
+         "NNTpos", pos=3, cex=2, col="darkgreen")
+    text(NNTneg, barY+barHeight/1.6,
+         "NNTneg", pos=3, cex=2, col="darkgreen")
+  }
 }
 
 #plotDiscomfort()

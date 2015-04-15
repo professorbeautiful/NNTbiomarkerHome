@@ -10,6 +10,7 @@ shinyServer(
 
   #source("conveniences.R", local=TRUE)
   source("debugTools.R", local=TRUE)
+  source("contraBayesPlot.R", local=TRUE)
 
   rValues = reactiveValues(
     stepsTable = stepsTableInitial )
