@@ -1,9 +1,19 @@
 #####  shinyElicit ui
 
 shinyUI(fluidPage(
+  tags$head(tags$script(HTML('
+      Shiny.addCustomMessageHandler("jsCode",
+        function(message) {
+          console.log(message)
+          eval(message.code);
+        }
+      );
+    '))),
   uiOutput("debugTools"),
   h1("Biomarker validation study design support"),
   hr(),
+  actionButton(inputId = "reportButton",
+               label = "When all steps are Done, \nclick here for report."),
   tableOutput("steps"),
   hr(),
   div(style="overflow:scroll;height:400px;background:lightgrey",
@@ -33,6 +43,7 @@ shinyUI(fluidPage(
     hr(),
     sectionHeader(3),
     sectionHeader(4),
+
     sectionHeader(5),
     sectionHeader(6),
     sectionHeader(7)

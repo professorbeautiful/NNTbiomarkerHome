@@ -36,8 +36,22 @@ shinyServer(
            }
            )
     )
-  lapply(1:7, obs)  ### for loop won't work.
+  lapply(1:7, obs)  ###
       ### ### must assign, or else only the last will take.
+
+  observe({
+    if(input$who == "" | input$options == "")
+      disableActionButton("stepStatus1", session)
+  })
+  observe({
+    if(!all(sapply(1:7,
+                   function(n) "Done"==
+                     input[["stepStatus" %&% n]])))
+      disableActionButton("reportButton", session)
+    else
+      enableActionButton("reportButton", session)
+  })
+
   source("plotDiscomfort.R", local=TRUE)
 
   NNTgap = 1
