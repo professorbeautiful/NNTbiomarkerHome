@@ -1,16 +1,24 @@
 
 plotDiscomfort = function(
-    barHeight = 0.05,
-    barY = 0.1,
+    barHeight = 0.15,
+    barY = 0.65,
     NNTlower = 7,
     NNTupper = 16,
     NNTpos = NNTlower-1,
     NNTneg=NNTupper+1,
-    drawAxes=T,
-    drawPosNeg=F){
+    drawAxes=F,
+    drawPosNeg=T){
 
+  labelCex = 2.0
+  triangleDown = 25
+  numbersY = 0.1
+  YtriangleDown = 0.25
+  triangleUpPch = 24
+  YnntLowerUpper = numbersY+0.2
+  YnntPosNeg = 0.85
+  YtriangleUp = 0.8
   rightSideLimit = max(NNTneg * 1.15, NNTneg + 3)
-  plot(c(1,rightSideLimit), c(0,0.16), pch="",
+  plot(c(1,rightSideLimit), c(0,1), pch="",
        axes=drawAxes, xlab="", ylab="")
 
   #abline(v=c(1,NNTlower,NNTupper))
@@ -20,7 +28,7 @@ plotDiscomfort = function(
   actBarWidth = actBarRight - actBarLeft
   symbols(actBarX, barY, inches=F,
           rectangles=matrix(c(actBarWidth, barHeight), nrow=1), bg="green", add=T)
-  text(actBarX, barY, "Act!", cex=1.5)
+  text(actBarX, barY, "Act!", cex=labelCex)
 
   discomfortBarLeft = NNTlower
   discomfortBarRight = NNTupper
@@ -29,7 +37,7 @@ plotDiscomfort = function(
   symbols(discomfortBarX, barY, inches=F,
           rectangles=matrix(c(discomfortBarWidth, barHeight), nrow=1),
           bg="red", add=T)
-  text(discomfortBarX, barY, "discomfort range", cex=1.5)
+  text(discomfortBarX, barY, "discomfort range", cex=labelCex)
 
   waitBarLeft = NNTupper
   waitBarRight = rightSideLimit
@@ -38,28 +46,27 @@ plotDiscomfort = function(
   symbols(waitBarX, barY, inches=F,
           rectangles=matrix(c(waitBarWidth, barHeight), nrow=1),
           bg="green", add=T)
-  text(waitBarX, barY, "Wait!", cex=1.5)
+  text(waitBarX, barY, "Wait!", cex=  labelCex)
 
-  numbersY = 0.02
-  text(1:rightSideLimit, numbersY, 1:rightSideLimit, cex=1.5,
+  text(1:rightSideLimit, numbersY, 1:rightSideLimit, cex=labelCex,
        col=c("black", "red")
        [1+(1:rightSideLimit) %between% c(NNTlower, NNTupper)]
   )
   symbols(c(NNTupper, NNTlower), c(numbersY,numbersY),
           circles=c(0.2,0.2),
   inches=F, add=T, fg="red", xpd=F)
-  points(NNTlower, 0.05, cex=3, pch=25, bg="red")
-  points(NNTupper, 0.05, cex=3, pch=25, bg="red")
+  points(NNTlower, YnntLowerUpper, cex=3, pch=triangleDown, bg="red")
+  points(NNTupper, YnntLowerUpper, cex=3, pch=triangleDown, bg="red")
   text(discomfortBarLeft, barY-barHeight/2,
        "NNTlower", pos=1, cex=2, col="red")
   text(discomfortBarRight, barY-barHeight/2,
        "NNTupper", pos=1, cex=2, col="red")
   if(drawPosNeg) {
-    points(NNTpos, barY+barHeight/1.8, cex=3, pch=24, bg="darkgreen")
-    points(NNTneg, barY+barHeight/1.8, cex=3, pch=24, bg="darkgreen")
-    text(NNTpos, barY+barHeight/1.6,
+    points(NNTpos, YtriangleUp, cex=3, pch=triangleUpPch, bg="darkgreen")
+    points(NNTneg, YtriangleUp, cex=3, pch=triangleUpPch, bg="darkgreen")
+    text(NNTpos, YnntPosNeg,
          "NNTpos", pos=3, cex=2, col="darkgreen")
-    text(NNTneg, barY+barHeight/1.6,
+    text(NNTneg, YnntPosNeg,
          "NNTneg", pos=3, cex=2, col="darkgreen")
   }
 }

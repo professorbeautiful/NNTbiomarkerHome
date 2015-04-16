@@ -81,11 +81,13 @@ shinyServer(
                        max = input$NNTneg-NNTgap)
   })
   output$plotDiscomfort = renderPlot({
-  plotDiscomfort(  NNTlower = input$NNTlower,
+    plotDiscomfort(  NNTlower = input$NNTlower,
                    NNTupper = input$NNTupper,
                    NNTpos = input$NNTpos,
                    NNTneg = input$NNTneg)
-  })
+    },
+    height=280
+  )
 })
 #debug(shinyServerFunction)
 #shinyServer(shinyServerFunction)
