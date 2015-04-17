@@ -26,7 +26,7 @@ shinyServer(
   #     output[["completedText" %&% number]] =
   #       renderText({ rValues$stepsTable[number, "Done?"]
   #                    })
-  obs = function(number)
+  obs = function(number) {
     assign("obs" %&% number,
            observe({
              newValue <- input[["stepStatus" %&% number]]
@@ -39,7 +39,16 @@ shinyServer(
            }
            )
     )
-  lapply(1:7, obs)  ###
+#     cat("obs" %&% number %&% " is where? ",
+#         find("obs" %&% number))
+#     print(getAnywhere("obs" %&% number))
+  }
+  obsList = lapply(1:7, obs)
+  # find(obs1) # not found!
+  #print(identical(obs1, obs2))
+  #print(identical(obs1, obsList[[1]]))
+  #print(identical(obsList[[1]], obsList[[7]]))
+  ###
       ### ### must assign, or else only the last will take.
 
   observe({
