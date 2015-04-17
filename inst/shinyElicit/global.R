@@ -30,7 +30,8 @@ enableActionButton <- function(id,session) {
 
 completedToggle = function(number) {
   span(
-    radioButtons("stepStatus" %&% number,
+    radioButtons(  inline=TRUE, ### FAILS!
+                 "stepStatus" %&% number,
                  label="Is this step done?", choices=c("Not yet", "Done"))
     #       textOutput(outputId = "completedText" %&% number,
     #                  "Not yet done."),

@@ -16,7 +16,7 @@ shinyUI(fluidPage(
                label = "When all steps are Done, \nclick here for report."),
   tableOutput("steps"),
   hr(),
-  div(style="overflow:scroll;height:400px;background:lightgrey",
+  div(style="position:relative;overflow:scroll;height:400px;background:lightgrey",
     sectionHeader(1),
     span("Intended beneficiaries", tags$textarea(id = "who"),
          "         Decision choices (two)", tags$textarea(id = "options" )
