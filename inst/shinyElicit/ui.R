@@ -13,8 +13,14 @@ shinyUI(fluidPage(
   h1("Biomarker validation study design support"),
   hr(),
   actionButton(inputId = "reportButton",
-               label = "When all steps are Done, \nclick here for report."),
-  tableOutput("steps"),
+               label = "When all steps are Done, you can click here for a report. (In Progress)"),
+  div(style="background:darkGrey",
+      checkboxInput(inputId='stepTableCheckbox', value=FALSE,
+                    label=em(strong("NNT design table of stepping stones"))),
+      conditionalPanel('input.stepTableCheckbox',
+                       tableOutput("steps")
+      )
+  ),
   hr(),
   div(style="position:relative;overflow:scroll;height:400px;background:lightgrey",
     sectionHeader(1,
