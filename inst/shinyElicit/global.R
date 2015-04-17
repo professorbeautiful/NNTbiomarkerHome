@@ -40,13 +40,15 @@ completedToggle = function(number) {
   )
 }
 
-sectionHeader = function(number) {
+sectionHeader = function(number, content) {
   list(hr(),
        h2(paste0('(', number, ') ',
                  stepsTableInitial[number, "Stepping stone"])),
        h3("Question " %&% number, ": ",
           stepsTableInitial[number, "Question"]),
-       completedToggle(number)
+       content,
+       completedToggle(number),
+       hr()
   )
 }
 

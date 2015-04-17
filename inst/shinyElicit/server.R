@@ -2,6 +2,8 @@
 
 require("shiny")
 require("xtable")
+require("NNTbiomarker")
+
 shinyServer(
   #   shinyServerFunction)
   # shinyServerFunction = (
@@ -81,14 +83,22 @@ shinyServer(
                        max = input$NNTneg-NNTgap)
   })
   output$plotDiscomfort = renderPlot({
-    plotDiscomfort(  NNTlower = input$NNTlower,
+    plotDiscomfort(drawPosNeg=FALSE,
+                   NNTlower = input$NNTlower,
+                   NNTupper = input$NNTupper)
+  },
+  height=280
+  )
+  output$plotNNTgoals = renderPlot({
+    plotDiscomfort(drawPosNeg=TRUE,
+                   NNTlower = input$NNTlower,
                    NNTupper = input$NNTupper,
                    NNTpos = input$NNTpos,
                    NNTneg = input$NNTneg)
     },
     height=280
   )
-})
+  })
 #debug(shinyServerFunction)
 #shinyServer(shinyServerFunction)
 

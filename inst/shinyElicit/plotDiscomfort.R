@@ -4,8 +4,8 @@ plotDiscomfort = function(
     barY = 0.65,
     NNTlower = 7,
     NNTupper = 16,
-    NNTpos = NNTlower-1,
-    NNTneg=NNTupper+1,
+    NNTpos = 1,
+    NNTneg=NNTupper*1.5,
     drawAxes=F,
     drawPosNeg=T){
 
@@ -54,7 +54,7 @@ plotDiscomfort = function(
   )
   symbols(c(NNTupper, NNTlower), c(numbersY,numbersY),
           circles=c(0.2,0.2),
-  inches=F, add=T, fg="red", xpd=F)
+          inches=F, add=T, fg="red", xpd=F)
   points(NNTlower, YnntLowerUpper, cex=3, pch=triangleDown, bg="red")
   points(NNTupper, YnntLowerUpper, cex=3, pch=triangleDown, bg="red")
   text(discomfortBarLeft, barY-barHeight/2,
