@@ -25,9 +25,9 @@ shinyUI(fluidPage(
   div(style="position:relative;overflow:scroll;height:1200px;background:lightgrey",
       sectionHeader(1,
                     div(style="vertical-align:middle;font-size:150%",
-                        HTML(str_dup("&nbsp;", 15)),
+                        HTML(stringr::str_dup("&nbsp;", 15)),
                         "Intended beneficiaries", tags$textarea(id = "who"),
-                        HTML(str_dup("&nbsp;", 15)),
+                        HTML(stringr::str_dup("&nbsp;", 15)),
                         " Decision choices (two)", tags$textarea(id = "options" )
                     )),
       sectionHeader(2, div(

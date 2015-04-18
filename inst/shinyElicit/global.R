@@ -39,7 +39,7 @@ completedToggle = function(number) {
       column(8, div(style=toggleLabelStyle,
           HTML("Is this step done?")
           ),
-           HTML(str_dup("&nbsp;", 1)),
+           HTML(stringr::str_dup("&nbsp;", 1)),
            radioButtons(  inline=TRUE,
                    ### inline requires in shinyUI a tags$head adding script for Shiny.addCustomMessageHandler("jsCode")
                    "stepStatus" %&% number,
