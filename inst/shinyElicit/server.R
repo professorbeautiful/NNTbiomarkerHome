@@ -4,9 +4,7 @@ require("shiny")
 require("xtable")
 require("NNTbiomarker")
 
-shinyServer(
-  #   shinyServerFunction)
-  # shinyServerFunction = (
+shinyServerFunction =
   function(input, output, session) {
     thisSession <<- session
 
@@ -43,7 +41,7 @@ shinyServer(
 #         find("obs" %&% number))
 #     print(getAnywhere("obs" %&% number))
   }
-  obsList = lapply(1:7, obs)
+  obsList = lapply(1:nrow(stepsTableInitial), obs)
   # find(obs1) # not found!
   #print(identical(obs1, obs2))
   #print(identical(obs1, obsList[[1]]))
@@ -56,7 +54,7 @@ shinyServer(
       disableActionButton("stepStatus1", session)
   })
   observe({
-    if(!all(sapply(1:7,
+    if(!all(sapply(1:nrow(stepsTableInitial),
                    function(n) "Done"==
                      input[["stepStatus" %&% n]])))
       disableActionButton("reportButton", session)
@@ -95,8 +93,8 @@ shinyServer(
     plotDiscomfort(drawPosNeg=FALSE,
                    NNTlower = input$NNTlower,
                    NNTupper = input$NNTupper)
-  },
-  height=280
+  }
+  #, height=280
   )
   output$plotNNTgoals = renderPlot({
     plotDiscomfort(drawPosNeg=TRUE,
@@ -104,11 +102,11 @@ shinyServer(
                    NNTupper = input$NNTupper,
                    NNTpos = input$NNTpos,
                    NNTneg = input$NNTneg)
-    },
-    height=280
+    }
+    #, height=280
   )
-  })
+  }
 #debug(shinyServerFunction)
-#shinyServer(shinyServerFunction)
+shinyServer(func=shinyServerFunction)
 
 

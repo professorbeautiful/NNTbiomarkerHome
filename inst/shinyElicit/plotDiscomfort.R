@@ -1,25 +1,31 @@
 
 plotDiscomfort = function(
-    barHeight = 0.15,
-    barY = 0.65,
     NNTlower = 7,
     NNTupper = 16,
     NNTpos = 1,
     NNTneg=NNTupper*1.5,
-    drawAxes=F,
+    drawAxes=T,
     drawPosNeg=T){
 
   labelCex = 2.0
-  triangleDown = 25
-  numbersY = 0.1
-  YtriangleDown = 0.25
   triangleUpPch = 24
-  YnntLowerUpper = numbersY+0.2
-  YnntPosNeg = 0.85
-  YtriangleUp = 0.8
+  triangleDownPch = 25
+  numbersY = 0.5
+  YtriangleDown = 1.5
+  YnntLowerUpper = 2.5
+  barY = 3; barHeight = 1
+  YtriangleUp = 4
+  YnntPosNeg = 5
   rightSideLimit = max(NNTneg * 1.15, NNTneg + 3)
-  plot(c(1,rightSideLimit), c(0,1), pch="",
-       axes=drawAxes, xlab="", ylab="")
+  par( mar=c(0.01,0.01,0.01,0.01) #mgp=c(0,0,0)
+       #oma=c(0,0,0,0) # does nothing
+       #omd=c(0,0,0,0) # fig margins too wide
+       )
+  YlimUpper = ifelse(drawPosNeg, 7, 4)
+  plot(c(1,rightSideLimit), c(0, YlimUpper), pch="",
+       axes=drawAxes, xlab="", ylab="",
+       #mai=c(0,0,0,0),
+       )
 
   #abline(v=c(1,NNTlower,NNTupper))
   actBarLeft = 1
@@ -53,13 +59,13 @@ plotDiscomfort = function(
        [1+(1:rightSideLimit) %between% c(NNTlower, NNTupper)]
   )
   symbols(c(NNTupper, NNTlower), c(numbersY,numbersY),
-          circles=c(0.2,0.2),
+          circles=c(0.4,0.4),
           inches=F, add=T, fg="red", xpd=F)
-  points(NNTlower, YnntLowerUpper, cex=3, pch=triangleDown, bg="red")
-  points(NNTupper, YnntLowerUpper, cex=3, pch=triangleDown, bg="red")
-  text(discomfortBarLeft, barY-barHeight/2,
+  points(NNTlower, YtriangleDown, cex=3, pch=triangleDownPch, bg="red")
+  points(NNTupper, YtriangleDown, cex=3, pch=triangleDownPch, bg="red")
+  text(discomfortBarLeft, YnntLowerUpper,
        "NNTlower", pos=1, cex=2, col="red")
-  text(discomfortBarRight, barY-barHeight/2,
+  text(discomfortBarRight, YnntLowerUpper,
        "NNTupper", pos=1, cex=2, col="red")
   if(drawPosNeg) {
     points(NNTpos, YtriangleUp, cex=3, pch=triangleUpPch, bg="darkgreen")

@@ -22,43 +22,54 @@ shinyUI(fluidPage(
       )
   ),
   hr(),
-  div(style="position:relative;overflow:scroll;height:400px;background:lightgrey",
-    sectionHeader(1,
-    span("Intended beneficiaries", tags$textarea(id = "who"),
-         "         Decision choices (two)", tags$textarea(id = "options" )
-    )),
-    sectionHeader(2, div(
-      fluidRow(
-        column(2, HTML("&nbsp;")),
-        column(5, numericInput("NNTlower", label = "NNTlower",
-                               value=7, min = 1, max=10, step=1)),
-        column(5, numericInput("NNTupper", label = "NNTupper",
-                               value=17, min = 10, max=100, step=1))
-      ),
-      plotOutput(outputId = "plotDiscomfort")
-    )),
-    sectionHeader(3, div(
-                  fluidRow(
-                    column(2, HTML("&nbsp;")),
-                    column(5, numericInput("NNTpos", label = "NNTpos, must be smaller than NNTlower",
-                                           value=6, min = 1, step=1)),
-                    column(5, numericInput("NNTneg", value=18, label = "NNTneg, must be larger than NNTupper", min = 1, step=1))
-                  ),
-                  plotOutput(outputId = "plotNNTgoals")
-    )),
-    sectionHeader(4, div(
-      h3("Achievable sensitivity and specificity"),
-      ## TODO: input$prevalence is not changing.
-      numericInput("prevalence", label = "prevalence",
-                   value=0.5, min = 0, max=1, step = 0.05),
-      plotOutput("contraBayesPlot", hoverId="contraBayesPlot_hover"),
-      tableOutput("selectedNNTPosNeg")
-    )),
-    sectionHeader(5,  div(
-      numericInput("samplesize", label = "sample size",
-                   value=30, min = 10, max=1000, step = 1)
-    )),
-    sectionHeader(6, "TBD"),
-    sectionHeader(7, "TBD")
-  )
-  ))
+  div(style="position:relative;overflow:scroll;height:1200px;background:lightgrey",
+      sectionHeader(1,
+                    div(style="vertical-align:middle;font-size:150%",
+                        HTML(str_dup("&nbsp;", 15)),
+                        "Intended beneficiaries", tags$textarea(id = "who"),
+                        HTML(str_dup("&nbsp;", 15)),
+                        " Decision choices (two)", tags$textarea(id = "options" )
+                    )),
+      sectionHeader(2, div(
+        fluidRow(
+          column(2, HTML("&nbsp;")),
+          column(5, numericInput("NNTlower", label = "NNTlower",
+                                 value=7, min = 1, max=10, step=1)),
+          column(5, numericInput("NNTupper", label = "NNTupper",
+                                 value=17, min = 10, max=100, step=1))
+        ),
+        plotOutput(outputId = "plotDiscomfort",
+                   height='200px')
+      )),
+      sectionHeader(3, div(
+        fluidRow(
+          column(2, HTML("&nbsp;")),
+          column(5, numericInput("NNTpos", label = "NNTpos, must be smaller than NNTlower",
+                                 value=6, min = 1, step=1)),
+          column(5, numericInput("NNTneg", value=18, label = "NNTneg, must be larger than NNTupper", min = 1, step=1))
+        ),
+        plotOutput(outputId = "plotNNTgoals",
+                   height='250px')
+      )),
+      sectionHeader(4, div(
+        "DELETE ME"
+      )),
+      sectionHeader(5,  div(
+        numericInput("samplesize", label = "sample size",
+                     value=30, min = 10, max=1000, step = 1)
+      )),
+      sectionHeader(6, "TBD"),
+      sectionHeader(7, div(
+        h3("Required sensitivity and specificity"),
+        ## TODO: input$prevalence is not changing.
+        numericInput("prevalence", label = "prevalence",
+                     value=0.5, min = 0, max=1, step = 0.05),
+        fluidRow(column(6,
+                        plotOutput("contraBayesPlot",
+                                   hoverId="contraBayesPlot_hover",
+                                   width='100%')),
+                 column(6, tableOutput("selectedNNTPosNeg"))
+        )
+      ))  ### end 7
+  ) # end scroll pane
+))

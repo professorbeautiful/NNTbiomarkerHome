@@ -29,26 +29,42 @@ enableActionButton <- function(id,session) {
 
 
 completedToggle = function(number) {
-  span(
-    radioButtons(  inline=TRUE, ### FAILS!
-                 "stepStatus" %&% number,
-                 label="Is this step done?", choices=c("Not yet", "Done"))
-    #       textOutput(outputId = "completedText" %&% number,
-    #                  "Not yet done."),
-    #       actionButton("completed" %&% number,
-    #                    label = "")
+  toggleLabelStyle =
+    "color:#0099FF;vertical-align:top;text-align:left;font-size:150%;font-style:italic"
+  div(
+    hr(),
+    fluidRow(
+      column(2, ""),
+      #HTML(str_dup("&nbsp;", 15)),
+      column(8, div(style=toggleLabelStyle,
+          HTML("Is this step done?")
+          ),
+           HTML(str_dup("&nbsp;", 1)),
+           radioButtons(  inline=TRUE,
+                   ### inline requires in shinyUI a tags$head adding script for Shiny.addCustomMessageHandler("jsCode")
+                   "stepStatus" %&% number,
+                   label=NULL, choices=c("Not yet", "Done"))
+      )
+    )
   )
 }
 
 sectionHeader = function(number, content) {
-  list(hr(),
-       h2(paste0('(', number, ') ',
-                 stepsTableInitial[number, "Stepping stone"])),
-       h3("Question " %&% number, ": ",
-          stepsTableInitial[number, "Question"]),
-       content,
-       completedToggle(number),
-       hr()
+  div(#class = "well container-fluid",
+      style="border: 2px solid;
+        padding: 10px;
+        background: #dddddd;
+        border-top-left-radius: 2em",
+      list(hr(),
+           h2(paste0('(', number, ') ',
+                     stepsTableInitial[number, "Stepping stone"])),
+           h3("Question " %&% number, ": ",
+              stepsTableInitial[number, "Question"]),
+           div(style="margin-bottom:0.5cm",
+               content),
+           completedToggle(number),
+           hr()
+      )
   )
 }
 
