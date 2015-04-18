@@ -20,7 +20,7 @@ hoverData = reactive({
   the.prev = input$prevalence
   nnt = NNT.from.pv(ppv = ppv, npv=npv)
   sesp = sesp.from.pv(ppv = ppv, npv=npv, prev=the.prev)
-  result = try(silent = TRUE, t(data.frame(
+  result = try(silent = TRUE, (data.frame(
     sensitivity=sesp["se"], specificity=sesp["sp"],
     PPV=ppv,
     NPV=npv,
@@ -29,7 +29,8 @@ hoverData = reactive({
   )))
   if(class(result) == "try-error")
     return (NULL)
-  names(result) = "value"
+  rownames(result) = "+"
+  #names(result) = "value"
   result
 })
 #catn("is.reactive(hoverData)= ", is.reactive(hoverData))
