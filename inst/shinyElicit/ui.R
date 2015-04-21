@@ -11,6 +11,10 @@ shinyUI(fluidPage(
     '))),
   uiOutput("debugTools"),
   h1("Biomarker validation study design support"),
+  fixedRow(column(1, offset=2, em("click for information:")),
+           column(3, submitButton("Info",
+                        icon=icon("glyphicon-info-sign", lib="glyphicon")
+           ))),
   hr(),
   actionButton(inputId = "reportButton",
                label = "When all steps are Done, you can click here for a report. (In Progress)"),
