@@ -45,8 +45,8 @@ shinyUI(fluidPage(
         fluidRow(
           column(2, HTML("&nbsp;")),
           column(5, numericInput("NNTpos", label = "NNTpos, must be smaller than NNTlower",
-                                 value=6, min = 1, step=1)),
-          column(5, numericInput("NNTneg", value=18, label = "NNTneg, must be larger than NNTupper", min = 1, step=1))
+                                 value=1, min = 1, step=1)),
+          column(5, numericInput("NNTneg", value=30, label = "NNTneg, must be larger than NNTupper", min = 1, step=1))
         ),
         plotOutput(outputId = "plotNNTgoals",
                    height='250px')
@@ -55,10 +55,16 @@ shinyUI(fluidPage(
         "DELETE ME"
       )),
       sectionHeader(5,  div(
-        numericInput("samplesize", label = "sample size",
-                     value=30, min = 10, max=1000, step = 1)
+        "Positive predictive value = 1/NNTpos = ",
+        textOutput("PPVderived"),
+        br(),
+        "Negative predictive value = 1 - 1/NNTneg = ",
+        textOutput("NPVderived")
       )),
-      sectionHeader(6, "TBD"),
+      sectionHeader(6,
+                    numericInput("samplesize", label = "sample size",
+                                 value=30, min = 10, max=1000, step = 1)
+      ),
       sectionHeader(7, div(
         h3("Required sensitivity and specificity"),
         ## TODO: input$prevalence is not changing.
