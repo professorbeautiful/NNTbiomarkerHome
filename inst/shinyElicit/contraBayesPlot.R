@@ -1,8 +1,9 @@
 output$contraBayesPlot <- renderPlot({
   achievable.se.sp(the.prev = input$prevalence)
+  catn("contraBayesPlot lines ", PPVderived(), NPVderived())
+  if(appName=="shinyElicit")
+    abline(v=PPVderived(), h=NPVderived())
 })
-
-# rValues$selectedNNTPosNeg =
 
 output$selectedNNTPosNeg = renderTable({
   hD = hoverData()
@@ -12,7 +13,7 @@ output$selectedNNTPosNeg = renderTable({
 })
 
 hoverData = reactive({
-  catn("hoverData")
+  #catn("hoverData")
   # TODO: currently assumes  axes = "pv",
   # as opposed to NNTpos, NNTneg.
   ppv = input$contraBayesPlot_hover$x

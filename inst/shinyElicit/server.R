@@ -97,8 +97,11 @@ shinyServerFunction =
     }
     #, height=280
     )
-    output$PPVderived = renderText({1/input$NNTpos})
-    output$NPVderived = renderText({ 1 - 1/input$NNTneg})
+
+    PPVderived = reactive({1/input$NNTpos})
+    output$PPVderived = renderText({PPVderived()})
+    NPVderived = reactive({1 - 1/input$NNTneg})
+    output$NPVderived = renderText({NPVderived() })
 
     output$plotNNTgoals = renderPlot({
       plotDiscomfort(drawPosNeg=TRUE,
