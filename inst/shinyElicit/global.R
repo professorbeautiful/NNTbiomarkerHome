@@ -5,7 +5,7 @@
 #stepsTableInitial = read.csv("SteppingStoneTable.csv", stringsAsFactors=F)[-1,]  ## TODO
 #data(stepsTableInitial)
 source("conveniences.R", local=F)
-source("stepsTableInitial.dmp", local=F)
+source("stepsTableInitial.R", local=F)
 rownames(stepsTableInitial) = NULL
 stepsTableInitial[[1]] = as.character(stepsTableInitial[[1]])
 
