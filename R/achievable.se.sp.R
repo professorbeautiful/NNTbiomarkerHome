@@ -63,12 +63,25 @@ achievable.se.sp = function(the.prev = 0.5,
   if(is.null(ylim))   ylim = c(max(0, 1 - (1-min(diagonal.values[ , 2]))), 1)
   xlim = unlist(as.list(theCall[["xlim"]])[-1])
   if(is.null(xlim))  xlim = 0:1
+  print(xlim)
+  print(ylim)
   plot(diagonal.values, type="l", lwd=2,
        xlab=if(axes[1]=="pv") "positive predictive value"
        else expression(bolditalic(NNT[Pos])),
        ylab=if(axes[1]=="pv") "negative predictive value"
        else expression(bolditalic(NNT[Neg])),
+       xaxs="i", yaxs="i",
        ...)
+#   x1 = par("usr")[1];  x2 = par("usr")[2];  y1 = par("usr")[3];  y2 = par("usr")[4]
+#   symbols(add=TRUE, x=mean(xlim[1],x1), y= mean(y1,y2), #bg="black",
+#           rectangles=t(matrix(c(xlim[1]-x1, y2-y1))))
+#   symbols(add=TRUE, x=mean(xlim[2],x2), y= mean(y1,y2), bg="black",
+#           rectangles=t(matrix(c(x2-xlim[2], y2-y1))))
+#   symbols(x=mean(x1,x2), y= mean(ylim[2],y2), bg="black",
+#           rectangles=t(matrix(c(xlim[2]-x2, y2-y1))))
+#   symbols(x=mean(x1,x2), y= mean(y1,ylim[1]), bg="black",
+#           rectangles=t(matrix(c(xlim[2]-x2, y1-ylim[1]))))
+
   if(contours) {
     for(se in sesp.seq)
       lines((diagFun(se=rep(se, length(sesp.seq)), sp=sesp.seq, prev=the.prev)),
@@ -79,8 +92,9 @@ achievable.se.sp = function(the.prev = 0.5,
   }
   if(placePointLabels) {
     solidcircle = 16
-    points(diagonal.values, col="black", pch=solidcircle, cex=2.7)
-    text(diagonal.values, labels=LETTERS[1:nrow(diagonal.values)],
+    points(xpd=NA,
+           diagonal.values, col="black", pch=solidcircle, cex=2.7)
+    text(xpd=NA, diagonal.values, labels=LETTERS[1:nrow(diagonal.values)],
 #        vfont=c("serif", "bold"),
          font=4, family="serif",
          col="white", cex=0.9)
