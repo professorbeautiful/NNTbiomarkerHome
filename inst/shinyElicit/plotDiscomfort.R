@@ -5,6 +5,7 @@ plotDiscomfort = function(
     NNTpos = 1,
     NNTneg=NNTupper*1.5,
     drawAxes=T,
+    drawNNT=T,
     drawPosNeg=T){
 
   labelCex = 2.0
@@ -23,11 +24,8 @@ plotDiscomfort = function(
        )
   YlimUpper = ifelse(drawPosNeg, 7, 4)
   plot(c(1,rightSideLimit), c(0, YlimUpper), pch="",
-       axes=drawAxes, xlab="", ylab="",
-       #mai=c(0,0,0,0),
+       axes=drawAxes, xlab="", ylab=""
        )
-
-  #abline(v=c(1,NNTlower,NNTupper))
   actBarLeft = 1
   actBarRight = NNTlower
   actBarX = actBarLeft + (actBarRight - actBarLeft)/2
@@ -54,19 +52,31 @@ plotDiscomfort = function(
           bg="green", add=T)
   text(waitBarX, barY, "Wait!", cex=  labelCex)
 
-  text(1:rightSideLimit, numbersY, 1:rightSideLimit, cex=labelCex,
+  numberGap = ceiling(rightSideLimit/25)
+  numberSequence = seq(1, rightSideLimit, numberGap)
+  text(x = numberSequence,y = numbersY,
+       labels = numberSequence, cex=labelCex,
        col=c("black", "red")
-       [1+(1:rightSideLimit) %between% c(NNTlower, NNTupper)]
+       [1+numberSequence %between% c(NNTlower, NNTupper)]
   )
-  symbols(c(NNTupper, NNTlower), c(numbersY,numbersY),
-          circles=c(0.4,0.4),
-          inches=F, add=T, fg="red", xpd=F)
+#   symbols(c(NNTupper, NNTlower), c(numbersY,numbersY),
+#           circles=c(0.4,0.4),
+#           inches=F, add=T, fg="red", xpd=F)
   points(NNTlower, YtriangleDown, cex=3, pch=triangleDownPch, bg="red")
   points(NNTupper, YtriangleDown, cex=3, pch=triangleDownPch, bg="red")
   text(discomfortBarLeft, YnntLowerUpper,
        "NNTlower", pos=1, cex=2, col="red")
   text(discomfortBarRight, YnntLowerUpper,
        "NNTupper", pos=1, cex=2, col="red")
+  if(drawNNT) {
+    NNT = 1/input$prevalence
+    YprevCircle = YnntLowerUpper
+    prevCirclePch = 19  # solid circle; filled circle=21
+    text(NNT, YnntLowerUpper, pos=1, "NNT", cex=2)
+    points(NNT, YtriangleDown, cex=3, pch=triangleDownPch, bg="black")
+    #points(NNT, YprevCircle, cex=5, pch=prevCirclePch, bg="black")
+    #points(NNT, YprevCircle, cex=3, pch="P", col="white")
+  }
   if(drawPosNeg) {
     points(NNTpos, YtriangleUp, cex=3, pch=triangleUpPch, bg="darkgreen")
     points(NNTneg, YtriangleUp, cex=3, pch=triangleUpPch, bg="darkgreen")
