@@ -13,6 +13,20 @@ shinyServerFunction =
     source("debugTools.R", local=TRUE)
     source("contraBayesPlot.R", local=TRUE)
 
+    observe({
+      if(!is.null(input$contraBayesPlot_click)) {
+        ppv = input$contraBayesPlot_click$x
+        npv = input$contraBayesPlot_click$y
+        nnts = pv.to.NNT(ppv = ppv, npv = npv)
+        catn("nnts observed: ", nnts[[1]], nnts[[2]])
+        if(all(!is.nan(nnts))) {
+          updateNumericInput(session, inputId="NNTneg",
+                             value=round(nnts[[2]]))
+          updateNumericInput(session, inputId="NNTpos",
+                             value=round(nnts[[1]]))
+        }
+       }
+    })
     rValues = reactiveValues(
       stepsTable = stepsTableInitial )
 

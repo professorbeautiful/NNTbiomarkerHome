@@ -80,6 +80,7 @@ shinyUI(fluidPage(
                      value=0.5, min = 0, max=1, step = 0.05),
         fluidRow(column(6,
                         plotOutput("contraBayesPlot",
+                                   clickId="contraBayesPlot_click",
                                    hoverId="contraBayesPlot_hover",
                                    width='100%')),
                  column(6, tableOutput("selectedNNTPosNeg"),
