@@ -2,7 +2,7 @@ output$contraBayesPlot <- renderPlot({
   achievable.se.sp(the.prev = input$prevalence)
   catn("contraBayesPlot lines ", PPVderived(), NPVderived())
   if(appName=="shinyElicit")
-    abline(v=PPVderived(), h=NPVderived())
+    abline(v=PPVderived(), h=NPVderived(), col="green", lwd=3)
 })
 
 output$selectedNNTPosNeg = renderTable({
