@@ -40,11 +40,19 @@ shinyUI(fluidPage(
                     )),
       sectionHeader(2, div(
         fluidRow(
-          column(2, HTML("&nbsp;")),
-          column(5, numericInput("NNTlower", label = "NNTlower",
-                                 value=7, min = 1, max=10, step=1)),
-          column(5, numericInput("NNTupper", label = "NNTupper",
-                                 value=17, min = 10, max=100, step=1))
+          #column(0, HTML("&nbsp;")),
+#           column(4, sliderInput("NNTlower", label = "NNTlower",
+#                                  value=7, min = 1, max=100, step=1)),
+#           column(4, sliderInput("prevalence", label = "prevalence = Pr(BestToAct) = 1/NNT",
+#                                  value=0.1, min = 0, max=1, step=0.05)),
+#           column(4, sliderInput("NNTupper", label = "NNTupper",
+#                                  value=17, min = 10, max=100, step=1))
+          column(4, numericInput("NNTlower", label = "NNTlower",
+                                 value=7, min = 1,  step=1)),
+          column(4, numericInput("prevalence", label = "prevalence = Pr(BestToAct)",
+                                 value=0.1, min = 0, max=1, step=0.01)),
+          column(4, numericInput("NNTupper", label = "NNTupper",
+                                 value=17, min = 2, step=1))
         ),
         plotOutput(outputId = "plotDiscomfort",
                    height='200px')
