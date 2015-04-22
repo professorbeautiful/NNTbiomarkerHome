@@ -66,30 +66,30 @@ shinyServerFunction =
     source("plotDiscomfort.R", local=TRUE)
 
     NNTgap = 1
-    observe( {
-      updateNumericInput(session, inputId="NNTpos",
-                         value=min(input$NNTpos,
-                                   input$NNTlower-NNTgap),
-                         max = input$NNTlower-NNTgap)
-    })
-    observe( {
-      updateNumericInput(session, inputId="NNTlower",
-                         value=max(input$NNTlower,
-                                   input$NNTpos+NNTgap),
-                         min = input$NNTpos+NNTgap)
-    })
-    observe( {
-      updateNumericInput(session, inputId="NNTneg",
-                         value=max(input$NNTneg,
-                                   input$NNTupper+NNTgap),
-                         min = input$NNTupper+NNTgap)
-    })
-    observe( {
-      updateNumericInput(session, inputId="NNTupper",
-                         value=min(input$NNTupper,
-                                   input$NNTneg-NNTgap),
-                         max = input$NNTneg-NNTgap)
-    })
+#     observe( {
+#       updateNumericInput(session, inputId="NNTpos",
+#                          value=min(input$NNTpos,
+#                                    isolate(input$NNTlower-NNTgap)),
+#                          max = isolate(input$NNTlower-NNTgap))
+#     })
+#     observe( {
+#       updateNumericInput(session, inputId="NNTlower",
+#                          value=max(input$NNTlower,
+#                                    isolate(input$NNTpos+NNTgap)),
+#                          min = isolate(input$NNTpos+NNTgap))
+#     })
+#     observe( {
+#       updateNumericInput(session, inputId="NNTneg",
+#                          value=max(input$NNTneg,
+#                                    isolate(input$NNTupper+NNTgap)),
+#                          min = isolate(input$NNTupper+NNTgap))
+#     })
+#     observe( {
+#       updateNumericInput(session, inputId="NNTupper",
+#                          value=min(input$NNTupper,
+#                                    isolate(input$NNTneg-NNTgap)),
+#                          max = isolate(input$NNTneg-NNTgap))
+#     })
     output$plotDiscomfort = renderPlot({
       plotDiscomfort(drawPosNeg=FALSE,
                      NNTlower = input$NNTlower,
