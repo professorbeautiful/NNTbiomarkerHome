@@ -49,7 +49,7 @@ shinyUI(fluidPage(
 #                                  value=17, min = 10, max=100, step=1))
           column(4, numericInput("NNTlower", label = "NNTlower",
                                  value=7, min = 1,  step=1)),
-          column(4, numericInput("prevalence", label = "prevalence = Pr(BestToAct)",
+          column(4, numericInput("prevalence", label = "prevalence = Pr(BestToAct) = 1/NNT",
                                  value=0.1, min = 0, max=1, step=0.01)),
           column(4, numericInput("NNTupper", label = "NNTupper",
                                  value=17, min = 2, step=1))
