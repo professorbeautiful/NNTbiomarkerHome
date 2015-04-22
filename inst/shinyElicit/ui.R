@@ -70,19 +70,27 @@ shinyUI(fluidPage(
         textOutput("NPVderived")
       )),
       sectionHeader(6,
-                    numericInput("samplesize", label = "sample size",
+                    numericInput("samplesize", label = "Prospective study sample size",
                                  value=30, min = 10, max=1000, step = 1)
       ),
       sectionHeader(7, div(
-        h3("Required sensitivity and specificity"),
-        ## TODO: input$prevalence is not changing.
+        h3("Required sensitivity and specificity for a retrospective study."),
+        h2("Select the prevalence; hover mouse on plot for calculations."),
         numericInput("prevalence", label = "prevalence",
                      value=0.5, min = 0, max=1, step = 0.05),
         fluidRow(column(6,
                         plotOutput("contraBayesPlot",
                                    hoverId="contraBayesPlot_hover",
                                    width='100%')),
-                 column(6, tableOutput("selectedNNTPosNeg"))
+                 column(6, tableOutput("selectedNNTPosNeg"),
+                        numericInput("samplesizeCases",
+                                     label = "Retrospective study #cases",
+                                     value=30),
+                        numericInput("samplesizeControls",
+                                     label = "Retrospective study #controls",
+                                     value=30),
+                        h3("Anticipated results (TODO)")
+                 )
         )
       ))  ### end 7
   ) # end scroll pane
