@@ -11,7 +11,7 @@
 
 deploy = function(app="shinyElicit"){
   devtools::install_github("professorbeautiful/NNTbiomarkerHome")
-  setwd("~/Dropbox/NNTbiomarkerHome/inst/" %&% app)
+  setwd("inst/" %&% app)
   require("shinyapps")
   deployApp()
   setwd("../..")

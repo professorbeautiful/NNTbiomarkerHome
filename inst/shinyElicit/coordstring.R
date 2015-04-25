@@ -1,3 +1,4 @@
+## not used. aborted experiment in svg
 coordstring =
   '[9, 8],
 [15, 15],
@@ -24,15 +25,15 @@ coordstring =
 [95, 114],
 [95, 122]'
 
-coordmatrix = matrix(ncol=2, byrow=T,
-                         as.numeric(eval(parse(text=
-                                                 paste(
-                           "c(",
-                         gsub("\\[|\\]|\n","",
-                              coordstring),
-                         ")"
-                         )
-                         )))
-)
+# coordmatrix = matrix(ncol=2, byrow=T,
+#                          as.numeric(eval(parse(text=
+#                                                  paste(
+#                            "c(",
+#                          gsub("\\[|\\]|\n","",
+#                               coordstring),
+#                          ")"
+#                          )
+#                          )))
+# )
 
 
