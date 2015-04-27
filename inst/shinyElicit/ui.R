@@ -10,97 +10,112 @@ shinyUI(fluidPage(
       );
     '))),
   uiOutput("debugTools"),
-  h1("Biomarker validation study design support"),
-  a(href="information.html",
-    fluidRow(column(1, offset=2, strong(em("click for information:",
-                                           style="color:lightgreen")))
+  fluidRow(
+    column(7,
+           h1("Biomarker validation study design support")),
+    column(5, a(href="information.html",
+             fluidRow(
+               column(3,
+                      style="background:yellow",
+                      strong(em("Click for information:",
+                                                       style="color:darkgreen")))
              ,
-             column(3, actionButton(inputId = "Info", label="",
+             column(1, style="background:yellow",
+                    actionButton(inputId = "Info", label="",
                                     style="background:lightgreen",
                                     icon=icon("info-sign", lib="glyphicon")))
-    )),
-  hr(),
-  actionButton(inputId = "reportButton",
-               label = "When all steps are Done, you can click here for a report. (In Progress)"),
-  div(style="background:darkGrey",
-      checkboxInput(inputId='stepTableCheckbox', value=FALSE,
-                    label=em(strong("NNT design table of stepping stones"))),
-      conditionalPanel('input.stepTableCheckbox',
-                       tableOutput("steps")
-      )
+             ))
+           )
   ),
-  hr(),
-  div(style="position:relative;overflow:scroll;height:1200px;background:lightgrey",
-      sectionHeader(1,
-                    div(style="vertical-align:middle;font-size:150%",
-                        HTML(stringr::str_dup("&nbsp;", 15)),
-                        "Intended beneficiaries", tags$textarea(id = "who"),
-                        HTML(stringr::str_dup("&nbsp;", 15)),
-                        " Decision choices (two)", tags$textarea(id = "options" )
-                    )),
-      sectionHeader(2, div(
-        fluidRow(
-          #column(0, HTML("&nbsp;")),
-#           column(4, sliderInput("NNTlower", label = "NNTlower",
-#                                  value=7, min = 1, max=100, step=1)),
-#           column(4, sliderInput("prevalence", label = "prevalence = Pr(BestToAct) = 1/NNT",
-#                                  value=0.1, min = 0, max=1, step=0.05)),
-#           column(4, sliderInput("NNTupper", label = "NNTupper",
-#                                  value=17, min = 10, max=100, step=1))
-          column(4, numericInput("NNTlower", label = "NNTlower",
-                                 value=7, min = 1,  step=1)),
-          column(4, numericInput("prevalence", label = "prevalence = Pr(BestToAct) = 1/NNT",
-                                 value=0.1, min = 0, max=1, step=0.01)),
-          column(4, numericInput("NNTupper", label = "NNTupper",
-                                 value=17, min = 2, step=1))
-        ),
-        plotOutput(outputId = "plotDiscomfort",
-                   height='200px')
-      )),
-      sectionHeader(3, div(
-        fluidRow(
-          column(2, HTML("&nbsp;")),
-          column(5, numericInput("NNTpos", label = "NNTpos, must be smaller than NNTlower",
-                                 value=1, min = 1, step=1)),
-          column(5, numericInput("NNTneg", value=30, label = "NNTneg, must be larger than NNTupper", min = 1, step=1))
-        ),
-        plotOutput(outputId = "plotNNTgoals",
-                   height='250px')
-      )),
-      sectionHeader(4, div(
-        "DELETE ME"
-      )),
-      sectionHeader(5,  div(
-        "Positive predictive value = 1/NNTpos = ",
-        textOutput("PPVderived"),
-        br(),
-        "Negative predictive value = 1 - 1/NNTneg = ",
-        textOutput("NPVderived")
-      )),
-      sectionHeader(6,
-                    numericInput("samplesize", label = "Prospective study sample size",
-                                 value=30, min = 10, max=1000, step = 1)
-      ),
-      sectionHeader(7, div(
-        h3("Required sensitivity and specificity for a retrospective study."),
-        h2("Select the prevalence; hover mouse on plot for calculations."),
-        numericInput("prevalence", label = "prevalence",
-                     value=0.5, min = 0, max=1, step = 0.05),
-        fluidRow(column(6,
-                        plotOutput("contraBayesPlot",
-                                   clickId="contraBayesPlot_click",
-                                   hoverId="contraBayesPlot_hover",
-                                   width='100%')),
-                 column(6, tableOutput("selectedNNTPosNeg"),
-                        numericInput("samplesizeCases",
-                                     label = "Retrospective study #cases",
-                                     value=30),
-                        numericInput("samplesizeControls",
-                                     label = "Retrospective study #controls",
-                                     value=30),
-                        h3("Anticipated results (TODO)")
-                 )
-        )
-      ))  ### end 7
-  ) # end scroll pane
+  hr(style="color:blue; border-width:10px"),
+  fluidRow(style="text-align:center",
+    #           column(4, sliderInput("NNTlower", label = "NNTlower",
+    #                                  value=7, min = 1, max=100, step=1)),
+    #           column(4, sliderInput("prevalence", label = "prevalence = Pr(BestToAct) = 1/NNT",
+    #                                  value=0.1, min = 0, max=1, step=0.05)),
+    #           column(4, sliderInput("NNTupper", label = "NNTupper",
+    #                                  value=17, min = 10, max=100, step=1))
+    column(1, HTML("&nbsp;")),
+    column(2, numericInput("NNTpos", label = "",
+                           value=2, min = 1, step=1)),
+    column(2, numericInput("NNTlower", label = "",
+                           value=7, min = 1,  step=1)),
+    column(2, numericInput("prevalence", label = "",
+                           value=0.1, min = 0, max=1, step=0.01)),
+    column(2, numericInput("NNTupper", label = "",
+                           value=17, min = 2, step=1)),
+    column(2, numericInput("NNTneg", value=30, label = "", min = 1, step=1))
+  ),
+  fluidRow(style="font-weight:bold; text-align:center",
+           column(1, HTML("&nbsp;")),
+           column(2, "NNTpos"),
+           column(2, "NNTlower"),
+           column(2, "prevalence"),
+           column(2, "NNTupper"),
+           column(2, "NNTneg")
+  ),
+  fluidRow(style="font-weight:bold; ; text-align:center; font-style:oblique",
+           column(1, HTML("&nbsp;")),
+           column(2, "preferably smaller than NNTlower"),
+           column(2, "below this 'treat' is acceptable"),
+           column(2, "Pr(BestToAct) = 1/NNT"),
+           column(2, "above this 'treat' is unacceptable"),
+           column(2, "preferably larger than NNTupper")
+  ),
+  plotOutput(outputId = "plotNNTgoals",
+             height='250px'),
+  hr(style="color:blue; border-width:10px"),
+
+  #   fluidRow(
+  #     "Positive predictive value = 1/NNTpos = ",
+  #     textOutput("PPVderived"),
+  #     br(),
+  #     "Negative predictive value = 1 - 1/NNTneg = ",
+  #     textOutput("NPVderived")
+  #   ),
+  #   sectionHeader(6,
+  #                 numericInput("samplesize", label = "Prospective study sample size",
+  #                              value=30, min = 10, max=1000, step = 1)
+  #   ),
+  #   sectionHeader(7, div(
+  # h3("Required sensitivity and specificity for a retrospective study."),
+  div(style="background:lightgrey",
+      fluidRow(column(5, offset=1,
+                      h3("Hover mouse on plot for calculations; click to set."),
+                      tableOutput("parameterTable"),
+                      plotOutput("contraBayesPlot",
+                                 clickId="contraBayesPlot_click",
+                                 hoverId="contraBayesPlot_hover",
+                                 width='100%')),
+               column(5, offset=1,
+                      h3("Anticipated results (TODO)"),
+                      br(),
+                      h3(style="font-style:oblique; ", "Prospective study"),
+                      fluidRow(
+                        column(4,
+                               numericInput("samplesizePositives",
+                                   label = " #positive",
+                                   value=30)
+                               ),
+                        column(4,
+                               numericInput("samplesizeNegatives",
+                                   label = " #negative",
+                                   value=30)
+                               )
+                      ),
+                      br(),
+                      h3("Retrospective study"),
+                      fluidRow(
+                        column(4,
+                               numericInput("samplesizeCases",
+                                            label = " #cases",
+                                            value=30)),
+                        column(4,
+                               numericInput("samplesizeControls",
+                                            label = " #controls",
+                                            value=30))
+                      )
+               )
+      )
+  )
 ))
