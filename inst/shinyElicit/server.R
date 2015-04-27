@@ -77,6 +77,13 @@ shinyServerFunction =
     }
     #, height=280
     )
+
+    observe({
+      nPos = input$samplesizePositives
+      NNTposConfIntProspective = 1 / binom.confint(
+        k=round( nPos * 1/input$NNTpos), nPos, alpha=0.10)
+
+    })
   }
 #debug(shinyServerFunction)
 shinyServer(func=shinyServerFunction)
