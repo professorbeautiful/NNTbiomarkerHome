@@ -14,7 +14,7 @@ disableActionButton <- function(id,session) {
   jsCode = list(code=
                   paste("$('#", id,
                         "').prop('disabled',true);"
-                   , sep=""))
+                        , sep=""))
   catn("jsCode ", jsCode[[1]])
   #$("#reportButton").prop('disabled',true)
   session$sendCustomMessage(type="jsCode", jsCode)
@@ -37,13 +37,13 @@ completedToggle = function(number) {
       column(2, ""),
       #HTML(str_dup("&nbsp;", 15)),
       column(8, div(style=toggleLabelStyle,
-          HTML("Is this step done?")
-          ),
-           HTML(stringr::str_dup("&nbsp;", 1)),
-           radioButtons(  inline=TRUE,
-                   ### inline requires in shinyUI a tags$head adding script for Shiny.addCustomMessageHandler("jsCode")
-                   "stepStatus" %&% number,
-                   label=NULL, choices=c("Not yet", "Done"))
+                    HTML("Is this step done?")
+      ),
+      HTML(stringr::str_dup("&nbsp;", 1)),
+      radioButtons(  inline=TRUE,
+                     ### inline requires in shinyUI a tags$head adding script for Shiny.addCustomMessageHandler("jsCode")
+                     "stepStatus" %&% number,
+                     label=NULL, choices=c("Not yet", "Done"))
       )
     )
   )
@@ -51,20 +51,20 @@ completedToggle = function(number) {
 
 sectionHeader = function(number, content) {
   div(#class = "well container-fluid",
-      style="border: 2px solid;
+    style="border: 2px solid;
         padding: 10px;
         background: #dddddd;
         border-top-left-radius: 2em",
-      list(hr(),
-           h2(paste0('(', number, ') ',
-                     stepsTableInitial[number, "Stepping stone"])),
-           h3("Question " %&% number, ": ",
-              stepsTableInitial[number, "Question"]),
-           div(style="margin-bottom:0.5cm",
-               content),
-           completedToggle(number),
-           hr()
-      )
+    list(hr(),
+         h2(paste0('(', number, ') ',
+                   stepsTableInitial[number, "Stepping stone"])),
+         h3("Question " %&% number, ": ",
+            stepsTableInitial[number, "Question"]),
+         div(style="margin-bottom:0.5cm",
+             content),
+         completedToggle(number),
+         hr()
+    )
   )
 }
 
