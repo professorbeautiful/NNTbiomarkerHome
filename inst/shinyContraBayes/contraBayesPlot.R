@@ -5,11 +5,22 @@ output$contraBayesPlot <- renderPlot({
     abline(v=PPVderived(), h=NPVderived(), col="green", lwd=3)
 })
 
-output$selectedNNTPosNeg = renderTable({
-  hD = hoverData()
-  if(is.null(hD)) NULL
-  else
-    xtable(digits=3, hD)
+output$parameterTable = renderTable({
+  data = hoverData()
+  if(is.null(data)) {
+    sesp = sesp.from.NNT(NNTpos = input$NNTpos,
+                         NNTneg=input$NNTneg,
+                         prev=input$prevalence)
+    data = data.frame(row.names = "",
+      sensitivity=sesp["se"],
+      specificity=sesp["sp"],
+      PPV=1/input$NNTpos,
+      NPV=1 - 1/input$NNTneg,
+      NNTpos=input$NNTpos,
+      NNTneg=input$NNTneg
+    )
+  }
+  xtable(digits=3, data)
 })
 
 hoverData = reactive({
