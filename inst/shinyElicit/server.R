@@ -27,55 +27,6 @@ shinyServerFunction =
         }
        }
     })
-    rValues = reactiveValues(
-      stepsTable = stepsTableInitial )
-
-    output$steps = renderTable({
-      #catn("Calling renderTable on stepsTable");
-      rValues$stepsTable
-    })
-
-    #  for(number in 1:nrow(stepsTableInitial)) {
-    #     output[["completedText" %&% number]] =
-    #       renderText({ rValues$stepsTable[number, "Done?"]
-    #                    })
-    obs = function(number) {
-      assign("obs" %&% number,
-             observe({
-               newValue <- input[["stepStatus" %&% number]]
-               catn("Toggling stepStatus" %&% number %&% " = " %&% newValue)
-               isolate({ # necessary, or else crash!
-                 rValues$stepsTable[number, "Done?"] = newValue
-                 catn("New value in stepsTable: ",
-                      rValues$stepsTable[number, "Done?"] )
-               })
-             }
-             )
-      )
-      #     cat("obs" %&% number %&% " is where? ",
-      #         find("obs" %&% number))
-      #     print(getAnywhere("obs" %&% number))
-    }
-    obsList = lapply(1:nrow(stepsTableInitial), obs)
-    # find(obs1) # not found!
-    #print(identical(obs1, obs2))
-    #print(identical(obs1, obsList[[1]]))
-    #print(identical(obsList[[1]], obsList[[7]]))
-    ###
-    ### ### must assign, or else only the last will take.
-
-    observe({
-      if(input$who == "" | input$options == "")
-        disableActionButton("stepStatus1", session)
-    })
-    observe({
-      if(!all(sapply(1:nrow(stepsTableInitial),
-                     function(n) "Done"==
-                       input[["stepStatus" %&% n]])))
-        disableActionButton("reportButton", session)
-      else
-        enableActionButton("reportButton", session)
-    })
 
     source("plotDiscomfort.R", local=TRUE)
 
