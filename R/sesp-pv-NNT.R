@@ -19,7 +19,21 @@
 #' @param prev Prevalence (prior probability)
 #' @param feasible Only return results in [0,1]. Default=TRUE
 #' @return c(ppv=ppv, npv=npv, sp=sp, se=se)
-#' @
+#' @details  NNT stands for Number Needed to Treat.  We have a range, such that
+#' if NNT < NNTpos, all patients will be treated, if NNT > NNTneg then all
+#' patients will not be treated. Suppose N=NNTpos is the number of patients such
+#' that if N pts are positive,one will be a true positive. The "eq" means that we
+#' choose NNTpos so that treating all or not treating all would be equivalent.
+#' E(loss | treat) = (NNTpos-1) * L[A,H]  = E(loss | wait) = 1 * L[W,D] Actually
+#' we choose N SMALLER so that TREATing is definitely, comfortably the right
+#' thing. E(loss | treat) = (NNTpos-1) * L[A,H]  <<  E(loss | wait) = 1 * L[W,D]
+#' Suppose N=NNTneg is the number of patients such that if N pts are negative, one
+#' will be a false negative. The "eq" means that we choose NNTneg so that treating
+#' all or not treating any would be equivalent. E(loss | treat) = (NNTneg-1) *
+#' L[A,H]  = E(loss | wait) = 1 * L[W,D] Actually we choose N LARGER so that
+#' WAITing is definitely, comfortably the right thing. E(loss | treat) =
+#' (NNTpos-1) * L[A,H]  >> E(loss | wait) = 1 * L[W,D]
+
 sesp.from.pv.feasible = function(ppv, npv, prev, feasible=TRUE) {
   if(feasible) {   ### make sure that feassible results are returned.
     if(ppv < prev) {
@@ -144,6 +158,18 @@ NNT.from.pv = pv.to.NNT = function(ppv, npv, pv) {
   return(c(NNTpos=NNTpos, NNTneg=NNTneg))
 }
 
+#' NNT.to.pv
+#'
+#' Convert between (NNTpos, NNTneg)  and (PPV, NPV).
+#'
+#' @param NNTpos NNT for a patient with positive test result
+#' @param NNTneg NNT for a patient with negative test result
+#' @param NNT A matrix or vector of (NNTpos, NNTneg) values.
+#' @param prev Prevalence of the "BestToTreat" group before testing.
+#' @param calculate.se.sp (default=FALSE) If TRUE, also calculate the sensitivity and specificity using the contra-Bayes theorem.
+#' @aliases pv.from.NNT
+#' @return For matrix input, cbind(ppv=ppv, npv=npv). For vector input, c(ppv=ppv, npv=npv).
+#'
 NNT.to.pv = pv.from.NNT = function(NNTpos, NNTneg, NNT, prev, calculate.se.sp=F) {
   if(!missing(NNT)) {
     if(is.matrix(NNT)) {
@@ -196,7 +222,7 @@ NNT.to.sesp = sesp.from.NNT = function(NNTpos, NNTneg, NNT, prev) {
 #' @param sesp Alternative input for se and sp, as matrix or named vector.
 #' @param prev Prevalence (prior probability)
 #' @return c(NNTpos=NNTpos, NNTneg=NNTneg)
-#' @aliases sesp.from.NNT
+#' @aliases sesp.to.NNT
 #'
 
 NNT.from.sesp = sesp.to.NNT = function(se, sp, sesp, prev) {
