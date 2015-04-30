@@ -27,5 +27,8 @@ See author for unpublished manuscript.
 }
 \keyword{ package }
 \examples{
-~~ simple examples of the most important functions ~~
+NNT.to.pv(NNTpos=5, NNTneg=28)
+NNT.from.sesp(se=0.7, sp=0.9, prev=0.1)
+pv.to.sesp(pv = cbind(ppv=seq(.5, .9, .1), npv=0.9), prev = 0.2)
+
 }
