@@ -12,9 +12,12 @@
 .deploy = function(app="shinyElicit"){
   devtools::install_github("professorbeautiful/NNTbiomarkerHome")
   setwd(paste0("inst/", app))
-  require("shinyapps")
-  deployApp()
-  setwd("../..")
+  tryCatch({
+    require("shinyapps")
+    deployApp()
+  },
+  finally={setwd("../..")}
+  )
 }
 
 runDeployed = function(app="shinyElicit"){
