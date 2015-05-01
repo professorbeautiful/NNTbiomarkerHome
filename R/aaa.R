@@ -3,7 +3,7 @@ cat("======== aaa.R  ================\n")
 
 #printFunctionBody = function(f) attributes(attributes(f)$srcref)$srcfile$lines
 
-printFunctionBody = function(f) 
+printFunctionBody = function(f)
   (deparse((body(f))))
 
 ### Convenience utilities borrowed from mvbutils
@@ -11,16 +11,16 @@ printFunctionBody = function(f)
 `%&%` = function (a, b)
         paste(a, b, sep = "")
 
-`%except%` = function (vector, condition) 
+`%except%` = function (vector, condition)
 	vector[match(vector, condition, 0) == 0]
 
-"cq" = function (...) 
+"cq" = function (...)
 {
-    as.character(sapply(as.list(match.call(expand.dots = TRUE))[-1], 
+    as.character(sapply(as.list(match.call(expand.dots = TRUE))[-1],
         as.character))
 }
 
-as.cat = function (x) 
+as.cat = function (x)
 {
   stopifnot(is.character(x))
   oldClass(x) <- "cat"
@@ -33,25 +33,15 @@ withNames =
   function(x, n) {temp = data.frame(x=x,n=n);
                   x = temp$x;
                   n = temp$n;
-                  names(x) <- n; 
+                  names(x) <- n;
                   x}
 
-ifVerboseCat = function(...){
-  #print(paste0("ifVerboseCat: sys.call(-1)=", sys.call(-1)))
-  f=try(as.character(parse(text=sys.call(-1)[1]))[1] )
-  if(class(f) == "try-error") return(invisible(NULL))
-  if(!exists("verboseOptions")) verboseOptions = logical(0)
-  if(is.na(verboseOptions[f])) {
-    verboseOptions[f] <- TRUE
-    assign("verboseOptions", verboseOptions, pos=1, immediate=TRUE)
-    #ifVerboseCat(verboseOptions)
-  }
-  if(verboseOptions[f]) 
-    catn(f, ": ", ...)
-  invisible(NULL)
-}
+# .onAttach = function(libname, pkgname){
+#   cat("libname, pkgname:  ", libname, pkgname, "\n")
+#   cat("search[1:2]: ", search()[1:2], "\n")
+# }
 
-clear = function(keep=c(".ctde", "startup", "verboseOptions")){
+clear = function(keep=c(".ctde", "startup", ".NNTbiomarker.verboseOptions")){
   answer <- repeat {
     cat("Delete ALL files in .GlobalEnv except ",
       paste(keep, collapse="&"), "?\n  (cannot be undone): ")
@@ -73,14 +63,3 @@ clear = function(keep=c(".ctde", "startup", "verboseOptions")){
 ### inclusive , includes the endpoints
 "%between%" = function(x, range) { (x<=range[2] & x>=range[1])}
 
-
-######################
-### Some utility classes and methods.  These may no longer be necessary.
-## Class Union: NumericLogical
-setClassUnion("NumericLogical",c("numeric","logical"))
-
-## Class Union: OptionalNumeric
-setClassUnion("OptionalNumeric",c("numeric","NULL"))
-
-## Class Union: OptionalCharacter
-setClassUnion("OptionalCharacter",c("character","NULL"))
