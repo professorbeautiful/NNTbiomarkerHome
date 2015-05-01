@@ -13,7 +13,7 @@ shinyUI(fluidPage(
   fluidRow(
     column(7,
            h1("Biomarker validation study design support")),
-    column(5, a(href="information.html",
+    column(5, a(href="information.html", rel="help", target="_blank",
              fluidRow(
                column(3,
                       style="background:yellow",
@@ -27,7 +27,7 @@ shinyUI(fluidPage(
              ))
            )
   ),
-  hr(style="color:blue; border-width:10px"),
+  hr(),
   fluidRow(style="text-align:center",
     #           column(4, sliderInput("NNTlower", label = "NNTlower",
     #                                  value=7, min = 1, max=100, step=1)),
@@ -64,7 +64,7 @@ shinyUI(fluidPage(
   ),
   plotOutput(outputId = "plotNNTgoals",
              height='250px'),
-  hr(style="color:blue; border-width:10px"),
+  hr(),
 
   #   fluidRow(
   #     "Positive predictive value = 1/NNTpos = ",
