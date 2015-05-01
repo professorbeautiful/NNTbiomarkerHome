@@ -1,4 +1,4 @@
-#' achievable.se.sp
+#' achievable.se.sp(): target sensitivity and specificity for a retrospective study.
 #'
 #' For a retrospective study design, given a prevalence value,
 #' produce a plot displaying the achievable contours of
@@ -8,21 +8,22 @@
 #' @param the.prev Prevalence (prior probability)
 #' @param axes Should the axes be predictive values ("pv") or NNT values? Default is "pv".
 #' @param sesp.seq Sequence of values at which the sensitivity and specificity will be explored.
-#' @param drawNNTaxes=TRUE,
-#' @param drawPVaxes=FALSE,
-#' @param drawArrows=TRUE,
-#' @param drawTable=TRUE,
-#' @param latexTable=TRUE,
-#' @param placePointLabels=TRUE, ### A, B, C, ...
-#' @param cexText=0.5,
-#' @param cexSubtitle=0.5,
-#' @param cexTitle=0.7,
-#' @param y0arrow=0.25,
-#' @param lwdArrow=1,
-#' @param ltyArrow=2,
-#' @param title=FALSE,
-#' @param  mtext=FALSE,
-#' @param  contours=TRUE,
+#' @param drawNNTaxes (default=TRUE) Option for tweaking the plot.
+#' @param drawPVaxes (default=FALSE) Option for tweaking the plot.
+#' @param drawArrows (default=TRUE) Arrow option; deprecated.
+#' @param drawTable (default=TRUE) Option for tweaking the plot.
+#' @param latexTable (default=TRUE) Option for tweaking the plot.
+#' @param placePointLabels (default=TRUE)  Write A, B, C, ... in circles where sensitivity=specificity.
+#' @param cexText (default=0.5) Option for tweaking the plot.
+#' @param cexSubtitle (default=0.5) Option for tweaking the plot.
+#' @param cexTitle (default=0.7) Option for tweaking the plot.
+#' @param y0arrow (default=0.25) Arrow option; deprecated.
+#' @param lwdArrow (default=1) Arrow option; deprecated.
+#' @param ltyArrow (default=2) Arrow option; deprecated.
+#' @param title (default=FALSE) Option for tweaking the plot.
+#' @param  mtext (default=FALSE) Option for tweaking the plot.
+#' @param  contours (default=TRUE) Option for tweaking the plot.
+#' @param ... Options to pass to plot.default()
 #' @return The predictive values when sensitivity equals specificity:  sesp.to.pv(cbind(sesp.seq,sesp.seq), prev=the.prev))
 
 achievable.se.sp = function(the.prev = 0.5,
