@@ -20,7 +20,7 @@ output$parameterTable = renderTable({
       NNTneg=input$NNTneg
     )
   }
-  xtable(digits=3, data)
+  xtable::xtable(digits=3, data)
 })
 
 hoverData = reactive({
