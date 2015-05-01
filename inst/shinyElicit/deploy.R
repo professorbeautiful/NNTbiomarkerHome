@@ -9,9 +9,9 @@
 # ERROR: sub-architecture 'x86_64' is not installed
 # Solution remove the soft links especially the third one.
 
-deploy = function(app="shinyElicit"){
+.deploy = function(app="shinyElicit"){
   devtools::install_github("professorbeautiful/NNTbiomarkerHome")
-  setwd("inst/" %&% app)
+  setwd(paste0("inst/", app))
   require("shinyapps")
   deployApp()
   setwd("../..")
