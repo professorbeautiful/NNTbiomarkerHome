@@ -1,8 +1,8 @@
 Package: NNTbiomarker
 Type: Package
 Title: Calculate design parameters for biomarker validation studies
-Version: 0.23
-Date: 2015-04-30
+Version: 0.24
+Date: 2015-05-01
 Authors@R: person("Roger", "Day", email="day01@pitt.edu", role=c("aut", "cre"))
 Description: The role of NNTbiomarker is to help a clinical trial team  discuss
     the clinical goals  of a well-defined biomarker with a diagnostic,
