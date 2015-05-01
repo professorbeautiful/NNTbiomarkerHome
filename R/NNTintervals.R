@@ -43,12 +43,12 @@ NNTintervalsProspective = function(
   # predictive intervals
   ppvPI = qbeta(c(alpha, 1-alpha),
                 tp+prior[1]-1, fn+prior[2]-1)
-  ifVerboseCat("  #CI for SN", binom.confint(tp, Npositives))
+  ifVerboseCat("  #CI for SN", NNTbiomarker::binom.confint(tp, Npositives))
   NNTposPI <- 1/ppvPI[2:1]
 
   npvPI = qbeta(c(alpha, 1-alpha),
                 tn+prior[1]-1, fp+prior[2]-1)
-  ifVerboseCat("  #CI for SP", binom.confint(tn, Nnegatives))
+  ifVerboseCat("  #CI for SP", NNTbiomarker::binom.confint(tn, Nnegatives))
   NNTnegPI <- 1/(1-npvPI)
   return(rbind(NNT=c(NNTpos, NNTneg), NNTposPI=NNTposPI, NNTnegPI=NNTnegPI))
 }
