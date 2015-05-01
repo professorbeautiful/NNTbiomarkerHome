@@ -1,0 +1,76 @@
+---
+title: "Using the NNTbiomarker package"
+author: "Roger Day"
+date: "May 1, 2015"
+output: html_document
+---
+
+## Planning clinically relevant biomarker validation studies using the “number needed to treat” concept.
+
+
+This package supports stepping through the design of a biomarker validation study. There are two "shiny"-based web apps for interaction and visualization:
+
+* shinyCombinePlots 
+
+* shinyElicit
+
+***
+
+## shinyCombinePlots 
+Displays plots of an NNT scale together with a "contra-Bayes" plot which maps from NNTs or PVs (predictive values)  to sensitivity and specificity.  
+The NNT scale allows you to specify a discomfort zone and values for NNT outside that zone, where clinical decisions would be clearer:
+
+
+
+\[NN{T_{Pos}} < \underbrace {NN{T_{Lower}} < NN{T_{Upper}}}_{{\rm{discomfort}}\;{\rm{ range}}} < NN{T_{Neg}}\]
+
+
+#### Prospective study design
+
+For a prospective study design, the design targets are easy:
+
+\[PPV > 1/NN{T_{Lower}},\quad NPV > 1 - 1/NN{T_{Upper}}\]
+
+#### Retrospective study design
+
+For a retrospective study design, given a prevalence value,
+produce a plot displaying the achievable contours of
+either predictive values or NNT values.
+This plot uses the "contra-Bayes" theorem, sesp.from.pv(), as follows:
+
+\[
+\begin{array}{l}
+SP = specificity = \frac{{PPO - Odds}}{{PPO - NP{O^{ - 1}}}}\\
+SN = sensitivity = \frac{{NPO - Odd{s^{ - 1}}}}{{NPO - PP{O^{ - 1}}}}
+\end{array}
+\]
+
+where 
+
+* $Odds = Pr(BestToAct) / Pr(BestToWait)$ 
+
+* $PPO = PPV / (1 – PPV)$ = the “positive predictive odds”
+
+* $NPO = NPV / (1 – NPV)$ = the “negative predictive odds”.
+
+
+*__TODO:__*
+
+Calculating anticipated results for prospective and retrospective studies 
+from sample sizes.
+
+***
+
+## shinyElicit
+Embeds the shinyCombinePlots in a sequence of steps required to elicit the desired clinical applicability. Walking through the steps will lead to a study deign responsive to patients' needs.
+
+
+*__TODO:__*
+
+After each **"Is this step done?"** toggle is set to **"Done"**, 
+the button at the top is enabled.
+This button is labeled:  
+
+*When all steps are Done, you can click here for a report*
+
+The report is not yet implemented.
