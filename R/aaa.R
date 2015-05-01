@@ -59,8 +59,8 @@ clear = function(keep=c(".ctde", "startup", "verboseOptions")){
     answer <- gsub("(\\w)", "\\U\\1", answer, perl=T)
     answer <- pmatch(answer, c("YES",  "NO", "N"))
       if (!is.na(answer)) {
-        if(answer %in% 1)  
-        rm(list=setdiff(ls(all=T, pos=1), keep), pos=1)
+        if(answer %in% 1)
+        rm(list=setdiff(ls(all.names=T, pos=1), keep), pos=1)
       else
         cat("Aborted. No objects deleted.\n")
       return(invisible(NULL))
