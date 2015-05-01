@@ -43,7 +43,6 @@ achievable.se.sp = function(the.prev = 0.5,
                             ltyArrow=2,
                             title=FALSE, mtext=FALSE, contours=TRUE,
                             ...) {
-  require("xtable")
   if(axes[1] == "NNT")
     diagFun = function(se, sp, prev){
       pv = sesp.to.pv(se, sp, prev=the.prev)
@@ -73,15 +72,6 @@ achievable.se.sp = function(the.prev = 0.5,
        else expression(bolditalic(NNT[Neg])),
        xaxs="i", yaxs="i",
        ...)
-#   x1 = par("usr")[1];  x2 = par("usr")[2];  y1 = par("usr")[3];  y2 = par("usr")[4]
-#   symbols(add=TRUE, x=mean(xlim[1],x1), y= mean(y1,y2), #bg="black",
-#           rectangles=t(matrix(c(xlim[1]-x1, y2-y1))))
-#   symbols(add=TRUE, x=mean(xlim[2],x2), y= mean(y1,y2), bg="black",
-#           rectangles=t(matrix(c(x2-xlim[2], y2-y1))))
-#   symbols(x=mean(x1,x2), y= mean(ylim[2],y2), bg="black",
-#           rectangles=t(matrix(c(xlim[2]-x2, y2-y1))))
-#   symbols(x=mean(x1,x2), y= mean(y1,ylim[1]), bg="black",
-#           rectangles=t(matrix(c(xlim[2]-x2, y1-ylim[1]))))
 
   if(contours) {
     for(se in sesp.seq)
@@ -100,7 +90,8 @@ achievable.se.sp = function(the.prev = 0.5,
          font=4, family="serif",
          col="white", cex=0.9)
   }
-  #   if(drawArrows){
+  # This commented-out section was written for a publication diagram.
+  #  if(drawArrows){
   #     x0positions = seq(xlim[1]+0.1*(xlim[2]-xlim[1]),
   #                       xlim[2]-0.1*(xlim[2]-xlim[1]), along=sesp.seq)
   #     arrows(x0=x0positions,
@@ -109,7 +100,20 @@ achievable.se.sp = function(the.prev = 0.5,
   #            y1=diagonal.values[2, ],
   #            lwd=lwdArrow, lty=ltyArrow, length=0.1, angle=10)
   #   }
-    if(axes[1]=="NNT") {
+  #
+  #     text(pos=1, x0positions, cex=cexText,
+  #          rep( par()$usr[3] + (par()$usr[4]-par()$usr[3])*(y0arrow*0.8),
+  #               length(sesp.seq)),
+  #          sesp.seq %&% "\n" %&%
+  #            sesp.seq %&% "\n" %&%
+  #            signif(digits=3, diagonal.values[1, ] ) %&%
+  #            "\n" %&% signif(digits=3, diagonal.values[2, ])
+  #          %&% "\n" %&% NNTpos
+  #          %&% "\n" %&% NNTneg
+  #     )
+  #   }
+
+if(axes[1]=="NNT") {
       NNTpos = signif(digits=3, diagonal.values[ ,1 ])
       NNTneg = signif(digits=3, diagonal.values[ ,2 ])
       PV = NNT.to.pv(NNTpos, NNTneg)
@@ -128,20 +132,8 @@ achievable.se.sp = function(the.prev = 0.5,
            "sp=\nppv=\nnpv=\nNNTpos=\nNNTneg="
     )
   }
-
-  #     text(pos=1, x0positions, cex=cexText,
-  #          rep( par()$usr[3] + (par()$usr[4]-par()$usr[3])*(y0arrow*0.8),
-  #               length(sesp.seq)),
-  #          sesp.seq %&% "\n" %&%
-  #            sesp.seq %&% "\n" %&%
-  #            signif(digits=3, diagonal.values[1, ] ) %&%
-  #            "\n" %&% signif(digits=3, diagonal.values[2, ])
-  #          %&% "\n" %&% NNTpos
-  #          %&% "\n" %&% NNTneg
-  #     )
-  #   }
   if(latexTable)
-    xtable(digits=3, t(data.frame(
+    xtable::xtable(digits=3, t(data.frame(
       sensitivity=sesp.seq, specificity=sesp.seq,
       PPV=PV[ , "ppv"],
       NPV=PV[ , "npv"],
@@ -155,24 +147,22 @@ achievable.se.sp = function(the.prev = 0.5,
       "orange (steeper) lines: fixed sensitivity", "\n",
       "    blue (gentler) lines: fixed specificity", collapse=" "
     ), side=3, cex=cexSubtitle)
-  if(drawNNTaxes) drawNNTaxes()
+  if(drawNNTaxes)  {
+      #1=below, 2=left, 3=above and 4=right.
+      yaxp = par()$yaxp
+      verticalTickMarks = seq(yaxp[1], yaxp[2], length=yaxp[3] + 1) [-(yaxp[3]+1)][-1]
+      xaxp = par()$xaxp
+      horizontalTickMarks = seq(xaxp[1], xaxp[2], length=xaxp[3] + 1) [-(xaxp[3]+1)][-1]
+      NNT_ = NNT.from.pv(ppv = horizontalTickMarks, npv = verticalTickMarks)
+      NNTpos = NNT_$"NNTpos"
+      NNTneg = NNT_$"NNTneg"
+      mtext(expression(NNTpos %->% phantom(0)), at=xaxp[1], line=1, side=3)
+      mtext(expression(NNTneg %->% phantom(0)), at=yaxp[1], line=1, side=4)
+      axis(3, at=horizontalTickMarks, labels=round(NNTpos, 2))
+      axis(4, at=verticalTickMarks, labels=round(NNTneg, 2))
+  }
   return(invisible(sesp.to.pv(cbind(sesp.seq,sesp.seq), prev=the.prev)))
 }
 # END  achievable.se.sp()
-
-drawNNTaxes = function() {
-  #1=below, 2=left, 3=above and 4=right.
-  yaxp = par()$yaxp
-  verticalTickMarks = seq(yaxp[1], yaxp[2], length=yaxp[3] + 1) [-(yaxp[3]+1)][-1]
-  xaxp = par()$xaxp
-  horizontalTickMarks = seq(xaxp[1], xaxp[2], length=xaxp[3] + 1) [-(xaxp[3]+1)][-1]
-  NNT_ = NNT.from.pv(ppv = horizontalTickMarks, npv = verticalTickMarks)
-  NNTpos = NNT_$"NNTpos"
-  NNTneg = NNT_$"NNTneg"
-  mtext(expression(NNTpos %->% phantom(0)), at=xaxp[1], line=1, side=3)
-  mtext(expression(NNTneg %->% phantom(0)), at=yaxp[1], line=1, side=4)
-  axis(3, at=horizontalTickMarks, labels=round(NNTpos, 2))
-  axis(4, at=verticalTickMarks, labels=round(NNTneg, 2))
-}
 
 
