@@ -1,0 +1,12 @@
+---
+title: "debugTools"
+author: "Roger Day"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The debugTools component}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+The shiny apps included in this package include at the top a toggle to show (or hide) a debugTools panel. This panel allows you to investigate what's going on in your package. You can toggle on or off the shiny trace option, evaluate a Javascript expression, or evaluate an R expression.  The use of capture.output allows more complex objects unfriendly to cat(), in particular lists, to be viewed.
