@@ -3,8 +3,8 @@ Type: Package
 Title: Calculate design parameters for biomarker validation studies
 Version: 0.24
 Date: 2015-05-01
-Authors@R: person("Roger", "Day", email="day01@pitt.edu", role=c("aut", "cre"))
-Description: The role of NNTbiomarker is to help a clinical trial team  discuss
+Authors@R: person("Roger", "Day", email="day01@pitt.edu", role=c("aut", "cre", "ctb"))
+Description: The role of the NNTbiomarker package is to help a clinical trial team  discuss
     the clinical goals  of a well-defined biomarker with a diagnostic,
     staging, prognostic, or predictive purpose.  From this discussion will
     come a statistical plan for a (non-randomized) validation trial.
@@ -18,7 +18,8 @@ Description: The role of NNTbiomarker is to help a clinical trial team  discuss
     that a positive biomarker test yields an NNT less than NNTlower,
     and that a negative biomarker test yields an NNT less than NNTlower,
     then the biomarker may be useful for patients.
-License:  GPL-3
-Imports:  shiny, xtable, stringr
-Collate:  aaa.R ifVerboseCat.R sesp-pv-NNT.R achievable.se.sp.R binom.confint.R NNTintervals.R run.R
-
+License: GPL-3
+Imports: shiny, xtable, stringr
+Collate: aaa.R ifVerboseCat.R sesp-pv-NNT.R achievable.se.sp.R binom.confint.R NNTintervals.R run.R
+Suggests: knitr
+VignetteBuilder: knitr
