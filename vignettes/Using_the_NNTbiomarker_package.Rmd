@@ -78,7 +78,7 @@ This button is labeled:
 
 The report is not yet implemented. The table near the top that drives the process can be shown or hidden with the toggle at the left of the window.
 ```{r}
-source("../stepsTableInitial.R")
+source("inst/shinyElicit/stepsTableInitial.R")
 pander::pandoc.table(stepsTableInitial)
 ```
 
