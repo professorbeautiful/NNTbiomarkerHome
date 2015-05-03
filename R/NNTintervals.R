@@ -1,6 +1,4 @@
-# independent flat priors for SN and SP
-
-#' NNTintervals
+#' NNTintervalsProspective
 #'
 #' Produce Bayesian and classical intervals for NNT from
 #' observations in a prospective study.
