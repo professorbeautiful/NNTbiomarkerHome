@@ -16,7 +16,7 @@ This package supports stepping through the design of a biomarker validation stud
 
 * shinyCombinePlots 
 
-* shinyElicit
+* [shinyElicit](#shinyElicit)
 
 ***
 
@@ -63,22 +63,23 @@ Calculating anticipated results for prospective and retrospective studies
 from sample sizes.
 
 ***
+<a name=shinyElicit id="shinyElicit" > </a>
 
 ## shinyElicit
-Embeds the shinyCombinePlots in a sequence of steps required to elicit the desired clinical applicability. Walking through the steps will lead to a study deign responsive to patients' needs.
+Embeds the shinyCombinePlots into a sequence of steps required to elicit the desired clinical applicability. Walking through the steps will lead to a study deign responsive to patients' needs.
+
+The table near the top that drives the process can be shown or hidden with the toggle at the left of the window. The table is shown or hidden via the checkbox at the upper left.
 
 
-*__TODO:__*
+<img src=Screenshot-stepsTableInitial.png height="200">
 
-After each **"Is this step done?"** toggle is set to **"Done"**, 
+After the user sets each **"Is this step done?"** toggle  to **"Done"**, 
 the button at the top is enabled.
 This button is labeled:  
 
 *When all steps are Done, you can click here for a report*
 
-The report is not yet implemented. The table near the top that drives the process can be shown or hidden with the toggle at the left of the window.
-```{r}
-source("../inst/shinyElicit/stepsTableInitial.R")
-pander::pandoc.table(stepsTableInitial)
-```
+*__TODO:__*
+
+The report is not yet implemented. 
 
