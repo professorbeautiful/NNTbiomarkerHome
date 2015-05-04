@@ -14,16 +14,20 @@ vignette: >
 
 This package supports stepping through the design of a biomarker validation study. There are two "shiny"-based web apps for interaction and visualization:
 
-* shinyCombinePlots 
+* [shinyCombinePlots](#shinyCombinePlots) 
 
 * [shinyElicit](#shinyElicit)
 
 ***
+<a name=shinyCombinePlots id="shinyCombinePlots" > </a>
 
 ## shinyCombinePlots 
 
-Displays plots of an NNT scale together with a "contra-Bayes" plot which maps from NNTs or PVs (predictive values)  to sensitivity and specificity.  
-The NNT scale allows you to specify a discomfort zone and values for NNT outside that zone, where clinical decisions would be clearer:
+------>   *Available at [http://trials.shinyapps.io/shinyCombinePlots](http://trials.shinyapps.io/shinyCombinePlots) or via runCombinePlots()*
+
+Displays plots of an NNT scale together with a "contra-Bayes" plot which maps from NNTs or PVs (predictive values) to sensitivity and specificity.  
+
+The NNT scale allows a clinical trial designer or team to specify a discomfort zone and values for NNT outside that zone, where clinical decisions would be clearer:
 
 \[NN{T_{Pos}} < \underbrace {NN{T_{Lower}} < NN{T_{Upper}}}_{{\rm{discomfort}}\;{\rm{ range}}} < NN{T_{Neg}}\]
 
@@ -66,6 +70,9 @@ from sample sizes.
 <a name=shinyElicit id="shinyElicit" > </a>
 
 ## shinyElicit
+
+------>    *Available at [http://trials.shinyapps.io/shinyElicit](http://trials.shinyapps.io/shinyElicit) or via runElicit()*
+
 Embeds the shinyCombinePlots into a sequence of steps required to elicit the desired clinical applicability. Walking through the steps will lead to a study deign responsive to patients' needs.
 
 The table near the top that drives the process can be shown or hidden with the toggle at the left of the window. The table is shown or hidden via the checkbox at the upper left.
