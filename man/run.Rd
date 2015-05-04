@@ -7,15 +7,12 @@
 run(shinyDir)
 }
 \arguments{
-\item{shinyDir}{Current options are "shinyElicit" and "shinyContraBayes"}
+\item{shinyDir}{Current options are "shinyElicit" and "shinyCombinePlots". If not provided, a menu of the options is provided.}
 }
 \description{
 Run a shiny app for this package.
 }
 \details{
-Currently, runElicit is built from the combinePlots branch. It does not walk
-through the design process. The master branch has a walk-through of the steps,
-but is not yet supported. When that is activated, the combinePlots version will
-be moved to a new directory, shinyCombinePlots.
+The selected shiny app is run. See the vignette Using_the_NNTbiomarker_package for details, and the vignette The_Biomarker_Crisis for an overview.
 }
 

@@ -7,7 +7,7 @@
 runCombinePlots()
 }
 \description{
-runCombinePlots
+Run a shiny app connecting a visual scale for NNT quantities and a "contra-Bayes" plot for mapping from predictive values to sensitivity/specificity (Bayes theorem in reverse).
 }
 \seealso{
 run

@@ -7,7 +7,7 @@
 runElicit()
 }
 \description{
-runElicit
+Run a shiny app outlining the process of specifying a design for a biomarker validation study.
 }
 \seealso{
 run
