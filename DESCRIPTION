@@ -1,11 +1,11 @@
 Package: NNTbiomarker
 Type: Package
-Title: Calculate design parameters for biomarker validation studies
-Version: 0.25
-Date: 2015-05-03
+Title: Calculate Design Parameters for Biomarker Validation Studies
+Version: 0.26
+Date: 2015-05-04
 Author: Roger Day
 Maintainer: Roger Day <day01@pitt.edu>
-Description: The role of the NNTbiomarker package is to help a clinical trial team  discuss
+Description: Helps a clinical trial team  discuss
     the clinical goals  of a well-defined biomarker with a diagnostic,
     staging, prognostic, or predictive purpose.  From this discussion will
     come a statistical plan for a (non-randomized) validation trial.

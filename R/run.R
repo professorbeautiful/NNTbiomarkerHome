@@ -28,7 +28,4 @@ runElicit = function() run("shinyElicit")
 #' @seealso run
 runCombinePlots = function() run("shinyCombinePlots")
 
-#' runContraBayes
-#'
-#' @seealso run
-runContraBayes = function() run("shinyContraBayes")
+
