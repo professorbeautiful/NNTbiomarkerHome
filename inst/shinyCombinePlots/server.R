@@ -9,10 +9,10 @@ shinyServerFunction =
     source("debugTools.R", local=TRUE)
     source("contraBayesPlot.R", local=TRUE)
 
-    observe({
-      wasClicked(button = "Info")
-      vignette("Using_the_NNTbiomarker_package", package="NNTbiomarker")
-    })
+#     observe({
+#       wasClicked(button = "Info")
+#       vignette("Using_the_NNTbiomarker_package", package="NNTbiomarker")
+#     })
 
     observe({
       if(!is.null(input$contraBayesPlot_click)) {
