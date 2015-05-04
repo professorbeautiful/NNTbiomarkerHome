@@ -14,8 +14,9 @@ shinyUI(fluidPage(
     column(7,
            h1("Biomarker validation study design support")),
     column(5, a(
+      href="Using_the_NNTbiomarker_package.html", rel="help", target="_blank",
       #href="../doc/Using_the_NNTbiomarker_package.html", rel="help", target="_blank",
-      href="http://www.github.org/professorbeautiful/NNTbiomarkerHome/man/Using_the_NNTbiomarker_package.html",
+      #href="http://www.github.org/professorbeautiful/NNTbiomarkerHome/man/Using_the_NNTbiomarker_package.html",
       fluidRow(
                column(3,
                       style="background:yellow",
