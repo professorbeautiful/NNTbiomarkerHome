@@ -25,7 +25,9 @@ On the left, you can toggle on or off the shiny trace option, so see communicati
 
 In the middle, you can evaluate a Javascript expression; browsers have good javascript viewers already, but this feature is sometimes convenient.  In particular, you can prepend a string that brings you to the javascript sides of the input and output components.
 
-On the right, you can evaluate an R expression. The use of capture.output allows more complex objects unfriendly to cat(), in particular lists, to be viewed. You can for example debug functions with debug(), and cancel with undebug(). You can change values at the GlobalEnv level. Note that this is not the same GlobalEnv as the one in your interactive RStudio session; changes do not propagate back.
+On the right, you can evaluate an R expression. The use of capture.output allows more complex objects unfriendly to cat(), in particular lists, to be viewed, though not always prettily. 
+
+You can change or assign values in the GlobalEnv which is in play in the shiny app session. Note that this is not the same GlobalEnv as the one in your interactive RStudio session; changes do not propagate back. It's very hand to debug functions with debug(), and cancel with undebug(), or change options() values. 
 
 Due to shiny reactivity, the result updates automatically in response to reactive elements.
 
