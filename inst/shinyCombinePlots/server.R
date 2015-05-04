@@ -10,6 +10,11 @@ shinyServerFunction =
     source("contraBayesPlot.R", local=TRUE)
 
     observe({
+      wasClicked(button = "Info")
+      vignette("Using_the_NNTbiomarker_package", package="NNTbiomarker")
+    })
+
+    observe({
       if(!is.null(input$contraBayesPlot_click)) {
         ppv = input$contraBayesPlot_click$x
         npv = input$contraBayesPlot_click$y
@@ -26,31 +31,6 @@ shinyServerFunction =
 
     source("plotDiscomfort.R", local=TRUE)
 
-    #     NNTgap = 1
-    #     observe( {
-    #       updateNumericInput(session, inputId="NNTpos",
-    #                          value=min(input$NNTpos,
-    #                                    isolate(input$NNTlower-NNTgap)),
-    #                          max = isolate(input$NNTlower-NNTgap))
-    #     })
-    #     observe( {
-    #       updateNumericInput(session, inputId="NNTlower",
-    #                          value=max(input$NNTlower,
-    #                                    isolate(input$NNTpos+NNTgap)),
-    #                          min = isolate(input$NNTpos+NNTgap))
-    #     })
-    #     observe( {
-    #       updateNumericInput(session, inputId="NNTneg",
-    #                          value=max(input$NNTneg,
-    #                                    isolate(input$NNTupper+NNTgap)),
-    #                          min = isolate(input$NNTupper+NNTgap))
-    #     })
-    #     observe( {
-    #       updateNumericInput(session, inputId="NNTupper",
-    #                          value=min(input$NNTupper,
-    #                                    isolate(input$NNTneg-NNTgap)),
-    #                          max = isolate(input$NNTneg-NNTgap))
-    #     })
     output$plotDiscomfort = renderPlot({
       plotDiscomfort(drawPosNeg=FALSE,
                      NNTlower = input$NNTlower,
