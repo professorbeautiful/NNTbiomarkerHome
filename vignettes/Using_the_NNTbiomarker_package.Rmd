@@ -18,6 +18,8 @@ This package supports stepping through the design of a biomarker validation stud
 
 * [shinyElicit](#shinyElicit)
 
+> See the vignette 'The_Biomarker_Crisis' for the motivation.
+
 ***
 <a name=shinyCombinePlots id="shinyCombinePlots" > </a>
 

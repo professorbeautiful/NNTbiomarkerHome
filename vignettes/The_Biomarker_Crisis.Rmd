@@ -34,4 +34,8 @@ To elicit the NNT discomfort range, we strip physician preferences down to the e
 
 ## Choosing target NNTs
 
-After choosing the discomfort range, the next steps are choosing desired values outside this range for NNTPos and NNTNeg in the test-positive and test-negative subgroups, and leveraging those values to guide the study design. This exercise helps the study team determine a relevant patient population and rules for selecting specimens, and ensure that the study’s eventual results will have utilitarian interpretability for guiding clinical decisions
+After choosing the discomfort range, the next steps are choosing desired values outside this range for NNTPos and NNTNeg in the test-positive and test-negative subgroups, and leveraging those values to guide the study design. This exercise helps the study team determine a relevant patient population and rules for selecting specimens, and ensure that the study’s eventual results will have utilitarian interpretability for guiding clinical decisions.
+
+## Details
+
+See the vignette [Using_the_NNTbiomarker_package](../Using_the_NNTbiomarker_package.html)
