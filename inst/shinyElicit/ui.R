@@ -12,7 +12,7 @@ shinyUI(fluidPage(
   uiOutput("debugTools"),
   h1("Biomarker validation study design support"),
   a(
-    href="Using_the_NNTbiomarker_package.html", rel="help", target="_blank",
+    href="Using_the_NNTbiomarker_package.htm", rel="help", target="_blank",
     #href="../doc/Using_the_NNTbiomarker_package.html", rel="help", target="_blank",
     #href="http://www.github.org/professorbeautiful/NNTbiomarkerHome/man/Using_the_NNTbiomarker_package.html",
 
