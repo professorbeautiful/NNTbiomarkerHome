@@ -23,6 +23,11 @@ run = function(shinyDir) {
 #' @seealso run
 runElicit = function() run("shinyElicit")
 
+#' runCombinePlots
+#'
+#' @seealso run
+runCombinePlots = function() run("shinyCombinePlots")
+
 #' runContraBayes
 #'
 #' @seealso run
