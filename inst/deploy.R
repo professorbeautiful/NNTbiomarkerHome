@@ -10,24 +10,27 @@
 # Solution remove the soft links especially the third one.
 
 
-installFromGithubNNTbiomarker = function()
+.installFromGithubNNTbiomarker = function()
   devtools::install_github("professorbeautiful/NNTbiomarkerHome", build_vignettes=TRUE)
 
 
-.deploy = function(app="shinyElicit", reInstall=TRUE){
+.deploy = function(app=c("shinyElicit", "shinyCombinePlots"), reInstall=TRUE){
   ## TODO: first check that the html files are created committed and pushed.
   if(reInstall)
-    installFromGithubNNTbiomarker()
-  setwd(paste0("inst/", app))
-  tryCatch({
-    require("shinyapps")
-    deployApp()
-  },
-  finally={setwd("../..")}
-  )
+    .installFromGithubNNTbiomarker()
+  apps = app
+  for (app in apps) {
+    setwd(paste0("inst/", app))
+    tryCatch({
+      require("shinyapps")
+      deployApp()
+    },
+    finally={setwd("../..")}
+    )
+  }
 }
 
-runDeployed = function(app="shinyElicit"){
+.runDeployed = function(app="shinyElicit"){
   system("open https://trials.shinyapps.io/" %&% app)
 }
 
