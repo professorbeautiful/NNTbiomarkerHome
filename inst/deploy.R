@@ -15,6 +15,7 @@ installFromGithubNNTbiomarker = function()
 
 
 .deploy = function(app="shinyElicit", reInstall=TRUE){
+  ## TODO: first check that the html files are created committed and pushed.
   if(reInstall)
     installFromGithubNNTbiomarker()
   setwd(paste0("inst/", app))
