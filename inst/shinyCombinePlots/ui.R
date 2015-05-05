@@ -41,14 +41,14 @@ shinyUI(fluidPage(
     #                                  value=17, min = 10, max=100, step=1))
     column(1, HTML("&nbsp;")),
     column(2, numericInput("NNTpos", label = "",
-                           value=2, min = 1, step=1)),
+                           value=2, min = 1, step=0.1)),
     column(2, numericInput("NNTlower", label = "",
-                           value=7, min = 1,  step=1)),
+                           value=7, min = 1,  step=0.1)),
     column(2, numericInput("prevalence", label = "",
                            value=0.1, min = 0, max=1, step=0.01)),
     column(2, numericInput("NNTupper", label = "",
-                           value=17, min = 2, step=1)),
-    column(2, numericInput("NNTneg", value=30, label = "", min = 1, step=1))
+                           value=17, min = 2, step=0.1)),
+    column(2, numericInput("NNTneg", value=30, label = "", min = 1, step=0.1))
   ),
   fluidRow(style="font-weight:bold; text-align:center",
            column(1, HTML("&nbsp;")),
@@ -84,42 +84,74 @@ shinyUI(fluidPage(
   #   sectionHeader(7, div(
   # h3("Required sensitivity and specificity for a retrospective study."),
   div(style="background:lightgrey",
-      fluidRow(column(5, offset=1,
-                      h3("Hover mouse on plot for calculations; click to set."),
-                      tableOutput("parameterTable"),
+      fluidRow(
+        column(6,
+               column(12, offset=2,
+                      h3("Contra-Bayes plot", style="center"),
+                      h4("Hover mouse on plot for calculations; click to set."),
+                      tableOutput("parameterTable")
+               ),
+               column(10, offset=1,
                       plotOutput("contraBayesPlot",
                                  clickId="contraBayesPlot_click",
                                  hoverId="contraBayesPlot_hover",
-                                 width='100%')),
-               column(5, offset=1,
-                      h3("Anticipated results (TODO)"),
-                      br(),
-                      h3(style="font-style:oblique; ", "Prospective study"),
-                      fluidRow(
-                        column(4,
-                               numericInput("samplesizePositives",
-                                   label = " #positive",
-                                   value=30)
-                               ),
-                        column(4,
-                               numericInput("samplesizeNegatives",
-                                   label = " #negative",
-                                   value=30)
-                               )
-                      ),
-                      br(),
-                      h3("Retrospective study"),
-                      fluidRow(
-                        column(4,
-                               numericInput("samplesizeCases",
-                                            label = " #cases",
-                                            value=30)),
-                        column(4,
-                               numericInput("samplesizeControls",
-                                            label = " #controls",
-                                            value=30))
-                      )
+                                 width='100%')
                )
+        ),
+        column(6,
+               h3("Anticipated results:"),
+               h3(style="font-style:oblique; text-indent:50px", "Prospective study"),
+               h4(style="text-indent:100px", "Data"),
+               fluidRow(
+                 column(3,
+                        numericInput("Npositives",
+                                     label = " #positive",
+                                     value=30)
+                 ),
+                 column(3,
+                        numericInput("NtruePositives",
+                                     label = " #TRUE positive",
+                                     value=15)
+                 ),
+                 column(3,
+                        numericInput("Nnegatives",
+                                     label = " #negative",
+                                     value=30)
+                 ),
+                 column(3,
+                        numericInput("NtrueNegatives",
+                                     label = " #TRUE negative",
+                                     value=15)
+                 )
+               ),
+               h4(style="text-indent:100px", "Predictive intervals (95%)"),
+               fluidRow(column(8, offset=3,
+                               tableOutput("intervalsProspective"))),
+               br(),
+               h3(style="font-style:oblique; text-indent:50px", "Retrospective study"),
+               h4(style="text-indent:100px", "Data"),
+               fluidRow(
+                 column(3,
+                        numericInput("Ncases",
+                                     label = "#cases",
+                                     value=30)),
+                 column(3,
+                        numericInput("NposCases",
+                                     label = "#positive cases",
+                                     value=15)),
+                 column(3,
+                        numericInput("Ncontrols",
+                                     label = "#controls",
+                                     value=30)),
+                 column(3,
+                        numericInput("NnegControls",
+                                     label = "#negative controls",
+                                     value=28)),
+                 h4(style="text-indent:100px", "Predictive intervals (95%)"),
+                 fluidRow(column(8, offset=3,
+                                 tableOutput("intervalsRetrospective")))
+               )
+        )
       )
   )
 ))

@@ -20,6 +20,7 @@ output$parameterTable = renderTable({
       NNTneg=input$NNTneg
     )
   }
+  rValues$parameterTable = data
   xtable::xtable(digits=3, data)
 })
 

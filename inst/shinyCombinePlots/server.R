@@ -9,10 +9,53 @@ shinyServerFunction =
     source("debugTools.R", local=TRUE)
     source("contraBayesPlot.R", local=TRUE)
 
-#     observe({
-#       wasClicked(button = "Info")
-#       vignette("Using_the_NNTbiomarker_package", package="NNTbiomarker")
-#     })
+
+    observe({
+      updateNumericInput(session, inputId="NtruePositives",
+                         value=round(input$Npositives / input$NNTpos))
+    })
+    observe({
+      updateNumericInput(session, inputId="NtrueNegatives",
+                         value=round(input$Nnegatives * (1 - 1/input$NNTneg)))
+    })
+
+    output$intervalsProspective = renderTable({
+      catn("In output$intervalsProspective")
+      data = NNTintervalsProspective(
+        Npositives = input$Npositives,
+        Nnegatives = input$Nnegatives,
+        NtruePositives = input$NtruePositives,
+        NtrueNegatives = input$NtrueNegatives,
+        prev = input$prevalence
+      )
+      print(data)
+      xtable::xtable(digits=3, data)
+    })
+
+    observe({
+      sensitivity = rValues$parameterTable[1, "sensitivity"]
+      updateNumericInput(session, inputId="NposCases",
+                         value=round(input$Ncases * sensitivity))
+    })
+    observe({
+      specificity = rValues$parameterTable[1, "specificity"]
+      updateNumericInput(session, inputId="NnegControls",
+                         value=round(input$Ncontrols * specificity))
+    })
+
+    output$intervalsRetrospective = renderTable({
+      catn("In output$intervalsRetrospective")
+      data = NNTintervalsRetrospective(
+        Ncases = input$Ncases,
+        Ncontrols = input$Ncontrols,
+        NposCases = input$NposCases,
+        NposControls = input$Ncontrols - input$NnegControls,
+        prev = input$prevalence
+      )
+      print(data)
+      xtable::xtable(digits=3, data)
+    })
+
 
     observe({
       if(!is.null(input$contraBayesPlot_click)) {
@@ -22,9 +65,9 @@ shinyServerFunction =
         catn("nnts observed: ", nnts[[1]], nnts[[2]])
         if(all(!is.nan(nnts))) {
           updateNumericInput(session, inputId="NNTneg",
-                             value=round(nnts[[2]]))
+                             value=(nnts[[2]]))
           updateNumericInput(session, inputId="NNTpos",
-                             value=round(nnts[[1]]))
+                             value=(nnts[[1]]))
         }
        }
     })
@@ -53,14 +96,8 @@ shinyServerFunction =
     }
     #, height=280
     )
-
-    observe({
-      nPos = input$samplesizePositives
-      NNTposConfIntProspective = 1 / binom.confint(
-        k=round( nPos * 1/input$NNTpos), nPos, alpha=0.10)
-
-    })
   }
+
 #debug(shinyServerFunction)
 shinyServer(func=shinyServerFunction)
 

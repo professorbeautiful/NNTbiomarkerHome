@@ -8,10 +8,10 @@
 #' There were (or will be) Npositives patients with a positive test, Nnegatives with a negative test.
 #' The observed NNTs in each group were (or will be) NNTpos and NNTneg.
 #'
-#' @param NNTpos Observed or desired NNT among the positives.
-#' @param NNTneg Observed or desired NNT among the negatives.
 #' @param Npositives Total number of observed positives.
 #' @param Nnegatives Total number of observed negatives.
+#' @param NtruePositives Observed or anticipated number of "BestToTreat" among the positives.
+#' @param NtrueNegatives Observed or anticipated number of "BestToWait"  among the negatives.
 #' @param prev = 0.15 Prevalence of "BestToTreat" characteristic.
 #' @param alpha = 0.025 Significance level (one side).
 #' @param prior Beta parameters for prior. Default is the Jeffreys prior = c(1/2,1/2). Jaynes prior = c(0,0) won't work when #fp=1.
@@ -19,36 +19,41 @@
 #' for PPV and NPV, based on Jeffreys' beta(1/2,1/2) prior.
 
 NNTintervalsProspective = function(
-  NNTpos=2,
-  NNTneg=30,
-  Npositives = 10,
-  Nnegatives = 30,
+  Npositives,
+  Nnegatives,
+  NtruePositives,
+  NtrueNegatives,
   prev = 0.15,
   alpha = 0.025,
   prior = c(1/2, 1/2)
 ){
-  ppv = 1/NNTpos
-  npv = 1 - 1/NNTneg
 
-  #  (A)  for prospective study:
-  # N = Npositives; tp ~= N * PPV = 5
-  tp = round(Npositives*ppv)
-  fn = round(Npositives*(1-ppv))
-  # N = Nnegatives; tn ~= N * NPV
-  tn = round(Nnegatives*npv)
-  fp = round(Nnegatives*(1-npv))
+
+  tp = NtruePositives
+  fn = Nnegatives - NtrueNegatives
+  tn = NtrueNegatives
+  fp = Npositives - NtruePositives
+  ppv = tp/(tp+fp)
+  npv = tn/(tn+fn)
+  NNTpos = 1/ppv
+  NNTneg = 1/(1-npv)
 
   # predictive intervals
   ppvPI = qbeta(c(alpha, 1-alpha),
-                tp+prior[1]-1, fn+prior[2]-1)
-  ifVerboseCat("  #CI for SN", NNTbiomarker::binom.confint(tp, Npositives))
+                tp+prior[1]-1, fp+prior[2]-1)
+  #ifVerboseCat("  #CI for SN", NNTbiomarker::binom.confint(tp, Npositives))
   NNTposPI <- 1/ppvPI[2:1]
 
   npvPI = qbeta(c(alpha, 1-alpha),
-                tn+prior[1]-1, fp+prior[2]-1)
-  ifVerboseCat("  #CI for SP", NNTbiomarker::binom.confint(tn, Nnegatives))
+                tn+prior[1]-1, fn+prior[2]-1)
+  #ifVerboseCat("  #CI for SP", NNTbiomarker::binom.confint(tn, Nnegatives))
   NNTnegPI <- 1/(1-npvPI)
-  return(rbind(NNT=c(NNTpos, NNTneg), NNTposPI=NNTposPI, NNTnegPI=NNTnegPI))
+  result = cbind(NNTposPI, NNTnegPI, ppvPI, npvPI)
+  result = rbind(c(NNTpos, NNTneg, ppv, npv), result)
+  dimnames(result)[[2]] = c("NNTpos", "NNTneg", "PPV", "NPV")
+  dimnames(result)[[1]] = c("observed", "lower boundary", "upper boundary")
+  result = result[ c(2,1,3), ]
+  return(result)
 }
 
 
@@ -196,8 +201,17 @@ NNTintervalsRetrospective = function(
   # cor(NNTpos, NNTneg) ## Negative
   intervalsForNNT = cbind(t(data.frame(intervalForNNTpos,
                                        intervalForNNTneg)), NNThat)
-
-  return(list(intervalsForSN=intervalsForSN, intervalsForSP=intervalsForSP, intervalsForNNT=intervalsForNNT))
+  result = cbind(
+    intervalForNNTpos,
+    intervalForNNTneg,
+    intervalForSN_q,
+    intervalForSP_q
+  )
+  result = rbind(c(NNThat, snHat, spHat), result)
+  dimnames(result)[[2]] = c("NNTpos", "NNTneg", "sensitivity", "specificity")
+  dimnames(result)[[1]] = c("observed", "lower boundary", "upper boundary")
+  result = result[c(2,1,3), ]
+  return(result)
   # plot(NNTpos, NNTneg, log="y", pch=".", cex=0.1 , col=c("black", "green")[1+(NNTpos < NNTneg)])
   # plot(spRandom, snRandom, col=c("black", "green")[1+(NNTpos < NNTneg)])
   #   par(mfrow=c(1,2))
