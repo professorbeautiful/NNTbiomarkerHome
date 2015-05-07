@@ -1,8 +1,8 @@
 Package: NNTbiomarker
 Type: Package
 Title: Calculate Design Parameters for Biomarker Validation Studies
-Version: 0.28
-Date: 2015-05-05
+Version: 0.29
+Date: 2015-05-07
 Author: Roger Day
 Maintainer: Roger Day <day01@pitt.edu>
 Description: Helps a clinical trial team  discuss
@@ -23,6 +23,6 @@ Description: Helps a clinical trial team  discuss
     retrospective case-controls studies.
 License: GPL-3
 Imports: shiny, xtable, stringr
-Collate: aaa.R ifVerboseCat.R sesp-pv-NNT.R achievable.se.sp.R binom.confint.R NNTintervals.R run.R
+Collate: aaa.R ifVerboseCat.R sesp-pv-NNT.R achievable.se.sp.R binom.confint.R NNTintervals.R run.R ROCplots.R
 Suggests: knitr
 VignetteBuilder: knitr
