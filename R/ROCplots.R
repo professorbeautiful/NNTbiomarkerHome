@@ -1,12 +1,31 @@
+#' ROCplots
+#'
+#' Plots for a binary target and a single continuous predictor.
+#'
+#' @param data Data frame with columns "class" (binary target variable) and "X" (predictor).
+#' @param N Sample size
+#' @param prev Prevalence
+#' @param diffInSd Difference: E(X | group=1) - E(X | group=0),measured in units of S.D (common to the 2 groups).
+#' @param whichPlots Which plots to do. Options are c("density", "raw", "ROC", "pv", "nnt")
+#' @param NNTlower Subjective input. If NNT < NNTlower, the decision is clearly to Treat .
+#' @param NNTupper Subjective input. If NNT > NNTupper, the decision is clearly to Wait .
 
-
-ROCplots = function(N= 1000, prev=0.2, muD=0, muN=2, sd=1,
+ROCplots = function(data, N= 1000, prev=0.2, diffInSD=2,
                     whichPlots=c("density", "raw", "ROC", "pv", "nnt"),
-                    nntLower=3, nntUpper=10) {
-  class = rbinom(N, 1, prev)
-  nD = sum(class)
-  nH = N - nD
-  X = rnorm(N, c(muD, muN)[1+class], sd)
+                    NNTlower=3, NNTupper=10) {
+  if(missing(data)) {  ## Simulate
+    muD=0; muN=diffInSD; sd=1
+    class = rbinom(N, 1, prev)
+    nD = sum(class)
+    nH = N - nD
+    X = rnorm(N, c(muD, muN)[1+class], sd)
+  }
+  else {
+    class = data$class
+    X = data$class
+    nD = sum(class)
+    nH = N - nD
+  }
   if(is.element(el = "density", set=whichPlots)) {
     plot(density(X))
     rug(X)
@@ -30,16 +49,16 @@ ROCplots = function(N= 1000, prev=0.2, muD=0, muN=2, sd=1,
     else
       plot(ppv, npv, type="l")
   }
-  ## plotting nntPos vs nntNeg is even more limited, because, well, infinity.
-  nntPos = 1/ppv
-  nntNeg = 1/(1-npv)
+  ## plotting NNTpos vs NNTneg is even more limited, because, well, infinity.
+  NNTpos = 1/ppv
+  NNTneg = 1/(1-npv)
   if(is.element(el = "nnt", set=whichPlots)) {
     if(N <= 10)
-      plot(nntPos, nntNeg, type="b", pch=as.character(1:N))
+      plot(NNTpos, NNTneg, type="b", pch=as.character(1:N))
     else
-      plot(nntPos, nntNeg, type="l")
-    lines(c(par()$usr[1], nntLower), c(nntUpper,nntUpper), lty=2, col="blue")
-    lines(c(nntLower, nntLower), c(par()$usr[4],nntUpper), lty=2, col="blue")
+      plot(NNTpos, NNTneg, type="l")
+    lines(c(par()$usr[1], NNTlower), c(NNTupper,NNTupper), lty=2, col="blue")
+    lines(c(NNTlower, NNTlower), c(par()$usr[4],NNTupper), lty=2, col="blue")
   }
   return(invisible(data))
 }
