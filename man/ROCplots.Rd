@@ -4,26 +4,39 @@
 \alias{ROCplots}
 \title{ROCplots}
 \usage{
-ROCplots(data, N = 1000, prev = 0.2, diffInSD = 2,
-  whichPlots = c("density", "raw", "ROC", "pv", "nnt"), NNTlower = 3,
-  NNTupper = 10)
+ROCplots(data, whichPlots = c("density", "raw", "ROC", "pv", "nnt",
+  "nntRange"), NNTlower = 3, NNTupper = 10, N = 1000, prev = 0.2,
+  diffInSD = 2)
 }
 \arguments{
 \item{data}{Data frame with columns "class" (binary target variable) and "X" (predictor).}
 
-\item{N}{Sample size}
-
-\item{prev}{Prevalence}
-
 \item{whichPlots}{Which plots to do. Options are c("density", "raw", "ROC", "pv", "nnt")}
 
-\item{NNTlower}{Subjective input. If NNT < NNTlower, the decision is clearly to Treat .}
+\item{NNTlower}{Subjective input. If NNT < NNTlower, the decision is clearly to Treat.}
 
-\item{NNTupper}{Subjective input. If NNT > NNTupper, the decision is clearly to Wait .}
+\item{NNTupper}{Subjective input. If NNT > NNTupper, the decision is clearly to Wait.}
 
-\item{diffInSd}{Difference: E(X | group=1) - E(X | group=0),measured in units of S.D (common to the 2 groups).}
+\item{N}{For simulated data: sample size}
+
+\item{prev}{For simulated data: Prevalence}
+
+\item{diffInSd}{For simulated data: Difference: E(X | group=1) - E(X | group=0),measured in units of S.D (common to the 2 groups).}
 }
 \description{
-Plots for a binary target and a single continuous predictor.
+A variety of ROC-related plots for a binary target and a single continuous predictor.
+}
+\details{
+The "whichPlots" options are as follows:
+\itemize {
+ \item {"density"}{Marginal density of X, with rug.}
+ \item {"raw"}{X versus class.}
+ \item {"ROC"}{Standard ROC curve.}
+ \item {"pv"}{Plot of ppv versus npv, with indication of the acceptable region}
+ \item {"nnt"}{Plot of NNTpos versus NNTneg, with indication of the acceptable region}
+ \item {"nntRange"}{Plot of NNTpos and NNTneg versus cutoff, Plot of ppv versus npv, with indication of the acceptable range.}
+}
+
+By default, all are done.
 }
 
