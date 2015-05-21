@@ -36,7 +36,5 @@ The "whichPlots" options are as follows:
  \item {"nnt"}{Plot of NNTpos versus NNTneg, with indication of the acceptable region}
  \item {"nntRange"}{Plot of NNTpos and NNTneg versus cutoff, Plot of ppv versus npv, with indication of the acceptable range.}
 }
-
-By default, all are done.
 }
 

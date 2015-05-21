@@ -19,17 +19,17 @@ rectangle = function(x, y, log=c(), ...) {
 #' @param N For simulated data: sample size
 #' @param prev For simulated data: Prevalence
 #' @param diffInSd For simulated data: Difference: E(X | group=1) - E(X | group=0),measured in units of S.D (common to the 2 groups).
-#' @details The "whichPlots" options are as follows:
+#' @details The plots display the values achievable by changing the cutoff, in comparison with the desired values as determined by NNTlower and NNTupper.
+#' The "whichPlots" options are as follows:
 #' \itemize {
 #'  \item {"density"}{Marginal density of X, with rug.}
 #'  \item {"raw"}{X versus class.}
 #'  \item {"ROC"}{Standard ROC curve.}
-#'  \item {"pv"}{Plot of ppv versus npv, with indication of the acceptable region}
+#'  \item {"pv"}{Plot of ppv versus npv, with indication of the acceptable range for cutoff.}
 #'  \item {"nnt"}{Plot of NNTpos versus NNTneg, with indication of the acceptable region}
-#'  \item {"nntRange"}{Plot of NNTpos and NNTneg versus cutoff, Plot of ppv versus npv, with indication of the acceptable range.}
+#'  \item {"nntRange"}{Plot of NNTpos and NNTneg versus cutoff, with indication of the acceptable range.}
 #' }
-#'
-#' By default, all are done.
+# By default, all the plots are made.
 
 ROCplots = function(data,
                     whichPlots=c("density", "raw", "ROC", "pv", "nnt", "nntRange"),
@@ -37,6 +37,11 @@ ROCplots = function(data,
                     N= 1000, prev=0.2, diffInSD=2) {
   print(whichPlots)
   seeThroughGrey = paste0("#404040", "88")
+  seeThroughBlue =   paste0(rgb(0,0,.5), "22")
+  seeThroughRed = paste0(rgb(0.9,0.1,.1), "22")
+  Usr = function()par()$usr
+  UsrX = function()Usr()[1:2]
+  UsrY = function()Usr()[3:4]
   if(missing(data)) {  ## Simulate
     muD=0; muN=diffInSD; sd=1
     class = rbinom(N, 1, prev)
@@ -91,20 +96,35 @@ ROCplots = function(data,
   NNTneg = 1/(1-npv)
   if(is.element(el = "nnt", set=whichPlots)) {
     if(N <= 10)
-      plot(NNTpos, NNTneg, type="b", pch=as.character(1:N))
+      plot(NNTpos, NNTneg, log="y", type="b", pch=as.character(1:N))
     else
-      plot(NNTpos, NNTneg, type="l")
-    lines(c(par()$usr[1], NNTlower), c(NNTupper,NNTupper), lty=2, col="blue")
-    lines(c(NNTlower, NNTlower), c(par()$usr[4],NNTupper), lty=2, col="blue")
+      plot(NNTpos, NNTneg, log="y", type="l")
+    lines(c(UsrX()[1], NNTlower), c(NNTupper,NNTupper), lty=2, col="blue")
+    lines(c(NNTlower, NNTlower), c(10^UsrY()[2],NNTupper), lty=2, col="blue")
     legend("topleft", legend="acceptable region", box.col="blue", text.col="blue")
-    rect(par()$usr[1], par()$usr[3], par()$usr[2], NNTupper,
-              col=seeThroughGrey)
-    rect(NNTlower, par()$usr[3],par()$usr[2], par()$usr[4],
-              col=seeThroughGrey)
-    text(x=par()$usr[1], y=NNTupper, col="blue", labels = "NNTupper",
-         xpd=NA, pos=2, cex=0.7)
-    text(x=NNTlower, y=par()$usr[4], col="blue", labels = "NNTlower",
+    rect(Usr()[1], 10^Usr()[3], Usr()[2], NNTupper,
+              col=seeThroughRed)
+    rect(NNTlower, 10^Usr()[3], Usr()[2], 10^Usr()[4],
+              col=seeThroughRed)
+    text(x=Usr()[1], y=NNTupper, col="blue", labels = "NNTupper",
+         xpd=NA, adj=c(0,0), cex=0.7)
+    text(x=NNTlower, y=10^Usr()[4], col="blue", labels = "NNTlower",
          xpd=NA, pos=3, cex=0.7)
+#     legend(x="topright",
+#            legend="nntNegTooSmall", text.col="red", cex=0.5,
+#           bg=seeThroughRed)
+    text(mean(c(UsrX()[2], NNTlower)),
+         10^mean(c(log10(NNTupper), UsrY()[2])),
+         "nntPosTooBig",
+         col="red"
+         #, adj=c(1,1)
+         )
+    text(mean(c(UsrX()[1], NNTlower)),
+         10^mean(c(log10(NNTupper), UsrY()[1])),
+         "nntNegTooSmall",
+         col="red"
+#         , adj=c(0,0)
+    )
   }
 
   if(is.element(el = "nntRange", set=whichPlots)) {
@@ -113,13 +133,13 @@ ROCplots = function(data,
          ylab="cutoff", xlab="NNT", log="x")
     crossovers = c(min(Xtrunc[NNTpos < NNTlower]),
                    max(Xtrunc[NNTupper < NNTneg]))
-    NNTneg = pmin(NNTneg, 10^par()$usr[2])
+    NNTneg = pmin(NNTneg, 10^Usr()[2])
     # abline(v=c(NNTlower, NNTupper))
-    lines(x=c(NNTlower, NNTlower), y=c(par()$usr[3], crossovers[1]))
-    lines(x=c(NNTupper, NNTupper), y=c(par()$usr[4], crossovers[2]))
-    text(x=NNTlower, y=par()$usr[3], "NNTlower", col="blue",
+    lines(x=c(NNTlower, NNTlower), y=c(Usr()[3], crossovers[1]))
+    lines(x=c(NNTupper, NNTupper), y=c(Usr()[4], crossovers[2]))
+    text(x=NNTlower, y=Usr()[3], "NNTlower", col="blue",
          srt=90, pos=4)
-    text(x=NNTupper, y=par()$usr[4], "NNTupper", col="blue",
+    text(x=NNTupper, y=Usr()[4], "NNTupper", col="blue",
          srt=90, pos=2)
     # abline(h=crossovers)
     nntPosTooBig = which(Xtrunc < crossovers[1])
@@ -133,15 +153,13 @@ ROCplots = function(data,
     lines(NNTneg, Xtrunc)
     polygon(x=c(NNTpos[valid], rev(NNTneg[valid])),
             y=c(Xtrunc[valid], rev(Xtrunc[valid])),
-            col=ifelse(exists("polygonColorNNT"),
-                       polygonColorNNT,
-                       paste0(rgb(0,0,.5), "22")))
+            col=seeThroughBlue)
     polygon(x=c(NNTpos[nntPosTooBig], rev(NNTneg[nntPosTooBig])),
             y=c(Xtrunc[nntPosTooBig], rev(Xtrunc[nntPosTooBig])),
-            col=paste0(rgb(0.9,0.1,.1), "22"))
+            col=seeThroughRed)
     polygon(x=c(NNTpos[nntNegTooSmall], rev(NNTneg[nntNegTooSmall])),
             y=c(Xtrunc[nntNegTooSmall], rev(Xtrunc[nntNegTooSmall])),
-            col=paste0(rgb(0.9,0.1,.1), "22"))
+            col=seeThroughRed)
     geometricMean = function(x) exp(mean(log(x)))
     text(x=geometricMean(c(NNTpos[valid], NNTneg[valid])),
          y=mean(Xtrunc[valid]),
@@ -156,7 +174,7 @@ ROCplots = function(data,
     #           rectangles=cbind(10, diff(crossovers)),
     #           inches=F,
     #           bg=seeThroughGrey, add=TRUE)
-    #   rectangle(par()$usr[1:2], crossovers,
+    #   rectangle(Usr()[1:2], crossovers,
     #             bg=seeThroughGrey, add=TRUE, log="x")
   }
   return(invisible(data))
