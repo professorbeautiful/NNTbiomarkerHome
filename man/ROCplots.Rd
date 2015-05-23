@@ -6,7 +6,7 @@
 \usage{
 ROCplots(data, whichPlots = c("density", "raw", "ROC", "pv", "nnt",
   "nntRange"), NNTlower = 3, NNTupper = 10, N = 1000, prev = 0.2,
-  diffInSD = 2)
+  diffInSD = 2, ...)
 }
 \arguments{
 \item{data}{Data frame with columns "class" (binary target variable) and "X" (predictor).}
@@ -21,20 +21,25 @@ ROCplots(data, whichPlots = c("density", "raw", "ROC", "pv", "nnt",
 
 \item{prev}{For simulated data: Prevalence}
 
+\item{...}{Extra arguments for a plot. Do not supply unless length(whichPlots)==1.}
+
 \item{diffInSd}{For simulated data: Difference: E(X | group=1) - E(X | group=0),measured in units of S.D (common to the 2 groups).}
 }
 \description{
 A variety of ROC-related plots for a binary target and a single continuous predictor.
 }
 \details{
+The plots display the values achievable by changing the cutoff, in comparison with the desired values as determined by NNTlower and NNTupper.
 The "whichPlots" options are as follows:
-\itemize {
- \item {"density"}{Marginal density of X, with rug.}
- \item {"raw"}{X versus class.}
- \item {"ROC"}{Standard ROC curve.}
- \item {"pv"}{Plot of ppv versus npv, with indication of the acceptable region}
- \item {"nnt"}{Plot of NNTpos versus NNTneg, with indication of the acceptable region}
- \item {"nntRange"}{Plot of NNTpos and NNTneg versus cutoff, Plot of ppv versus npv, with indication of the acceptable range.}
+\itemize{
+ \item{"density"}{Marginal density of X, with rug.}
+ \item{"raw"}{X versus class.}
+ \item{"ROC"}{Standard ROC curve.}
+ \item{"pv"}{Plot of ppv versus npv, with indication of the acceptable range for cutoff.}
+ \item{"nnt"}{Plot of NNTpos versus NNTneg, with indication of the acceptable region}
+ \item{"nntRange"}{Plot of NNTpos and NNTneg versus cutoff, with indication of the acceptable range.}
+
+By default, all the plots are made.
 }
 }
 

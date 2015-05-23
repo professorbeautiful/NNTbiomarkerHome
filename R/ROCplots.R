@@ -19,23 +19,30 @@ rectangle = function(x, y, log=c(), ...) {
 #' @param N For simulated data: sample size
 #' @param prev For simulated data: Prevalence
 #' @param diffInSd For simulated data: Difference: E(X | group=1) - E(X | group=0),measured in units of S.D (common to the 2 groups).
-#' @details The plots display the values achievable by changing the cutoff, in comparison with the desired values as determined by NNTlower and NNTupper.
+#' @param ... Extra arguments for a plot. Do not supply unless length(whichPlots)==1.
+#' @details  The plots display the values achievable by changing the cutoff, in comparison with the desired values as determined by NNTlower and NNTupper.
 #' The "whichPlots" options are as follows:
-#' \itemize {
-#'  \item {"density"}{Marginal density of X, with rug.}
-#'  \item {"raw"}{X versus class.}
-#'  \item {"ROC"}{Standard ROC curve.}
-#'  \item {"pv"}{Plot of ppv versus npv, with indication of the acceptable range for cutoff.}
-#'  \item {"nnt"}{Plot of NNTpos versus NNTneg, with indication of the acceptable region}
-#'  \item {"nntRange"}{Plot of NNTpos and NNTneg versus cutoff, with indication of the acceptable range.}
+#' \itemize{
+#'  \item{"density"}{Marginal density of X, with rug.}
+#'  \item{"raw"}{X versus class.}
+#'  \item{"ROC"}{Standard ROC curve.}
+#'  \item{"pv"}{Plot of ppv versus npv, with indication of the acceptable range for cutoff.}
+#'  \item{"nnt"}{Plot of NNTpos versus NNTneg, with indication of the acceptable region}
+#'  \item{"nntRange"}{Plot of NNTpos and NNTneg versus cutoff, with indication of the acceptable range.}
+#'
+#' By default, all the plots are made.
 #' }
-# By default, all the plots are made.
+
 
 ROCplots = function(data,
                     whichPlots=c("density", "raw", "ROC", "pv", "nnt", "nntRange"),
                     NNTlower=3, NNTupper=10,
-                    N= 1000, prev=0.2, diffInSD=2) {
+                    N= 1000, prev=0.2, diffInSD=2,
+                    ...) {
   print(whichPlots)
+  print(missing(...))
+  if(!missing(...) & length(whichPlots) > 1)
+    stop("Please, only use ... if length(whichPlots) == 1")
   seeThroughGrey = paste0("#404040", "88")
   seeThroughBlue =   paste0(rgb(0,0,.5), "22")
   seeThroughRed = paste0(rgb(0.9,0.1,.1), "22")
