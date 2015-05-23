@@ -60,26 +60,30 @@ ROCplots = function(data,
   N = nrow(data)
   nD = sum(class)
   nH = N - nD
+  data = data.frame(class, X) [order(X), ]
+
   if(is.element(el = "density", set=whichPlots)) {
-    plot(density(X, weights = weights/sum(weights)))
+    plot(density(X, weights = weights/sum(weights)), ...)
     rug(X)
   }
+
   if(is.element(el = "raw", set=whichPlots))
     plot(X, class)
-  data = data.frame(class, X) [order(X), ]
   sens = (nD - cumsum(data$class == 1))/ nD  # 1 - FN/nD = (TP/nD)
   spec = cumsum(data$class == 0)/nH       # TN/nH
   if(is.element(el = "ROC", set=whichPlots))
-    plot(1-spec, sens, type="l")
+    plot(1-spec, sens, type="l", ...)
 
   ### You can't plot ppv versus npv at the -Inf or +Inf cutoffs,
   ### unlike ROCs. You need at least one Pos and one Neg.
+  # Thus we cut off the top cutoff.
   # Ranks for cutoffs:
   nPos = (N-1):1
   nNeg = 1:(N-1)
   ## vectors of ppv and npv for all cutoffs.
   ppv = (nD - cumsum(data$class == 1))[-N]/ nPos  #  TP/Pos
   npv = cumsum(data$class == 0)[-N]/ nNeg  ## TN/Neg
+
   if(is.element(el = "pv", set=whichPlots)) {
     if(N <= 10)
       plot(ppv, npv, type="b", pch=as.character(1:N))
@@ -111,17 +115,17 @@ ROCplots = function(data,
     text(x=NNTlower, y=10^Usr()[4], col="blue", labels = "NNTlower",
          xpd=NA, pos=3, cex=0.7)
 #     legend(x="topright",
-#            legend="nntNegTooSmall", text.col="red", cex=0.5,
+#            legend="NNTnegTooSmall", text.col="red", cex=0.5,
 #           bg=seeThroughRed)
     text(mean(c(UsrX()[2], NNTlower)),
          10^mean(c(log10(NNTupper), UsrY()[2])),
-         "nntPosTooBig",
+         "NNTposTooBig",
          col="red"
          #, adj=c(1,1)
          )
     text(mean(c(UsrX()[1], NNTlower)),
          10^mean(c(log10(NNTupper), UsrY()[1])),
-         "nntNegTooSmall",
+         "NNTnegTooSmall",
          col="red"
 #         , adj=c(0,0)
     )
@@ -131,45 +135,53 @@ ROCplots = function(data,
     Xtrunc = data$X[-length(data$X)]   # [-1]
     plot(c(NNTpos, NNTneg), c(Xtrunc, Xtrunc), pch="",
          ylab="cutoff", xlab="NNT", log="x")
-    crossovers = c(min(Xtrunc[NNTpos < NNTlower]),
-                   max(Xtrunc[NNTupper < NNTneg]))
+    crossovers = c(min(Xtrunc[NNTpos <= NNTlower]),
+                   max(Xtrunc[NNTupper <= NNTneg]))
     NNTneg = pmin(NNTneg, 10^Usr()[2])
     # abline(v=c(NNTlower, NNTupper))
-    lines(x=c(NNTlower, NNTlower), y=c(Usr()[3], crossovers[1]))
-    lines(x=c(NNTupper, NNTupper), y=c(Usr()[4], crossovers[2]))
+    lines(x=c(NNTlower, NNTlower), y=c(Usr()[3], crossovers[2]))
+    lines(x=c(NNTupper, NNTupper), y=c(Usr()[4], crossovers[1]))
     text(x=NNTlower, y=Usr()[3], "NNTlower", col="blue",
-         srt=90, pos=4)
+         srt=90, pos=4, xpd=NA, cex=0.7)
     text(x=NNTupper, y=Usr()[4], "NNTupper", col="blue",
-         srt=90, pos=2)
+         srt=90, adj=c(1,1), xpd=NA, cex=0.7)
     # abline(h=crossovers)
-    nntPosTooBig = which(Xtrunc < crossovers[1])
-    nntNegTooSmall = which(Xtrunc > crossovers[2])
-    invalid = c(nntPosTooBig, nntNegTooSmall)
+    NNTposTooBig = which(Xtrunc <= crossovers[1])
+    NNTnegTooSmall = which(Xtrunc >= crossovers[2] & ppv > 0)
+    invalid = c(NNTposTooBig, NNTnegTooSmall)
     valid = which(
-      (Xtrunc > crossovers[1]
-       & Xtrunc < crossovers[2])
+      (Xtrunc >= crossovers[1]
+       & Xtrunc <= crossovers[2])
     )
     lines(NNTpos, Xtrunc)
     lines(NNTneg, Xtrunc)
     polygon(x=c(NNTpos[valid], rev(NNTneg[valid])),
             y=c(Xtrunc[valid], rev(Xtrunc[valid])),
             col=seeThroughBlue)
-    polygon(x=c(NNTpos[nntPosTooBig], rev(NNTneg[nntPosTooBig])),
-            y=c(Xtrunc[nntPosTooBig], rev(Xtrunc[nntPosTooBig])),
+    polygon(x=c(NNTpos[NNTposTooBig], rev(NNTneg[NNTposTooBig])),
+            y=c(Xtrunc[NNTposTooBig], rev(Xtrunc[NNTposTooBig])),
             col=seeThroughRed)
-    polygon(x=c(NNTpos[nntNegTooSmall], rev(NNTneg[nntNegTooSmall])),
-            y=c(Xtrunc[nntNegTooSmall], rev(Xtrunc[nntNegTooSmall])),
+    polygon(x=c(NNTpos[NNTnegTooSmall], rev(NNTneg[NNTnegTooSmall])),
+            y=c(Xtrunc[NNTnegTooSmall], rev(Xtrunc[NNTnegTooSmall])),
             col=seeThroughRed)
     geometricMean = function(x) exp(mean(log(x)))
-    text(x=geometricMean(c(NNTpos[valid], NNTneg[valid])),
+    text(x=geometricMean(c(NNTlower, NNTupper)),
          y=mean(Xtrunc[valid]),
-         labels="acceptable", col="blue", bg="white")
-    text(x=geometricMean(c(NNTpos[nntNegTooSmall], NNTneg[nntNegTooSmall])),
-         y=mean(Xtrunc[nntNegTooSmall]),
-         labels="nntNegTooSmall", col="red")
-    text(x=geometricMean(c(NNTpos[nntPosTooBig], NNTneg[nntPosTooBig])),
-         y=mean(Xtrunc[nntPosTooBig]),
-         labels="nntPosTooBig", col="red")
+         labels="acceptable\ncutoffs", col="blue", bg="white")
+    text(x=geometricMean(NNTpos[valid]),
+         y=mean(Xtrunc[valid]),
+         labels="NNTpos", col="blue", bg="white",
+         pos=2, xpd=NA, cex=0.7)
+    text(x=geometricMean(NNTneg[valid]),
+         y=mean(Xtrunc[valid]),
+         labels="NNTneg", col="blue", bg="white",
+         pos=4, xpd=NA, cex=0.7)
+    text(x=geometricMean(c(NNTpos[NNTnegTooSmall], NNTneg[NNTnegTooSmall])),
+         y=mean(Xtrunc[NNTnegTooSmall]),
+         labels="NNTneg \ntoo small", col="red")
+    text(x=geometricMean(c(NNTpos[NNTposTooBig], NNTneg[NNTposTooBig])),
+         y=mean(Xtrunc[NNTposTooBig]),
+         labels="NNTpos \ntoo big", col="red")
     #   symbols(NNTupper, mean(crossovers),
     #           rectangles=cbind(10, diff(crossovers)),
     #           inches=F,
