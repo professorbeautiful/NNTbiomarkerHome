@@ -1,13 +1,3 @@
-rectangle = function(x, y, log=c(), ...) {
-  symbols(x=mean(x),
-          y=mean(y),
-          rectangles=cbind(diff(x),
-                           diff(y)),
-          inches=F,
-          ...)
-}
-
-
 #' ROCplots
 #'
 #' A variety of ROC-related plots for a binary target and a single continuous predictor.
@@ -67,6 +57,7 @@ ROCplots = function(data,
   N = nrow(data)
   nD = sum(class)
   nH = N - nD
+  prevalence = nD/N  ### prevalence of BestToTreat.
   data = data.frame(class, X) [order(X), ]
 
   if(is.element(el = "density", set=whichPlots)) {
@@ -76,12 +67,26 @@ ROCplots = function(data,
 
   if(is.element(el = "raw", set=whichPlots))
     plot(X, class)
-  sens = (nD - cumsum(data$class == 1))/ nD  # 1 - FN/nD = (TP/nD)
-  spec = cumsum(data$class == 0)/nH       # TN/nH
-  if(is.element(el = "ROC", set=whichPlots))
-    plot(1-spec, sens, type="l", ...)
 
-  ### You can't plot ppv versus npv at the -Inf or +Inf cutoffs,
+  sensitivity = (nD - cumsum(data$class == 1))/ nD  # 1 - FN/nD = (TP/nD)
+  specificity = cumsum(data$class == 0)/nH       # TN/nH
+  if(is.element(el = "ROC", set=whichPlots))
+    plot(1-specificity, sensitivity, type="l", ...)
+  requiredSeSp = sesp.from.NNT(NNTlower, NNTupper, prev=prevalence)
+  requiredSe = requiredSeSp[1]
+  requiredSp = requiredSeSp[2]
+  legend("topleft", legend="acceptable\nregion", box.col=NA, bty="n", text.col="blue")
+  rect(xleft = UsrX()[1], xright = UsrX()[2], ybottom = UsrY()[1], ytop = requiredSe,
+       col=seeThroughRed)
+  rect(xleft = requiredSp, xright = UsrX()[2], ybottom = UsrY()[1], ytop = UsrY()[2],
+       col=seeThroughRed)
+  text(x=0, y=requiredSe, col="blue", labels = "required sensitivity",
+       xpd=NA, adj=c(0,0), cex=0.9)
+  text(x=requiredSp, y=1, col="blue", labels = "required specificity",
+       xpd=NA, pos=3, cex=0.9)
+
+
+    ### You can't plot ppv versus npv at the -Inf or +Inf cutoffs,
   ### unlike ROCs. You need at least one Pos and one Neg.
   # Thus we cut off the top cutoff.
   # Ranks for cutoffs:
@@ -100,6 +105,25 @@ ROCplots = function(data,
     npvMin = 1 - 1/NNTupper
     lines(c(ppvMin, ppvMin), c(npvMin, 1), col="blue")
     lines(c(ppvMin, 1), c(npvMin, npvMin), col="blue")
+    legend("topright", legend="acceptable region", box.col=NA, text.col="blue")
+    rect(UsrX()[1], ybottom = UsrY()[1], xright = UsrX()[2], ytop=npvMin,
+         col=seeThroughRed)
+    rect(UsrX()[1], ybottom = UsrY()[1], xright = ppvMin, ytop = UsrY()[2],
+         col=seeThroughRed)
+    text(x=ppvMin, y=1, col="blue", labels = "ppvMin",
+         xpd=NA, adj=c(0,0), cex=0.9)
+    text(x=UsrX()[2], y=npvMin, col="blue", labels = "npvMin",
+         xpd=NA, adj=c(1,0), cex=0.9)
+    text(mean(c(UsrX()[1], ppvMin)),
+         mean(c(npvMin, UsrY()[2])),
+         "ppv too small",
+         col="red"
+    )
+    text(mean(c(ppvMin, UsrX()[2])),
+         mean(c(npvMin, UsrY()[1])),
+         "npv too small",
+         col="red"
+    )
   }
 
   ## plotting NNTpos vs NNTneg is even more limited, because, well, infinity.
@@ -112,27 +136,24 @@ ROCplots = function(data,
       plot(NNTpos, NNTneg, log="y", type="l")
     lines(c(UsrX()[1], NNTlower), c(NNTupper,NNTupper), lty=2, col="blue")
     lines(c(NNTlower, NNTlower), c(10^UsrY()[2],NNTupper), lty=2, col="blue")
-    legend("topleft", legend="acceptable region", box.col="blue", text.col="blue")
+    legend("topleft", legend="acceptable\nregion", box.col=NA, text.col="blue")
     rect(Usr()[1], 10^Usr()[3], Usr()[2], NNTupper,
               col=seeThroughRed)
     rect(NNTlower, 10^Usr()[3], Usr()[2], 10^Usr()[4],
               col=seeThroughRed)
     text(x=Usr()[1], y=NNTupper, col="blue", labels = "NNTupper",
-         xpd=NA, adj=c(0,0), cex=0.7)
+         xpd=NA, adj=c(0,0), cex=0.9)
     text(x=NNTlower, y=10^Usr()[4], col="blue", labels = "NNTlower",
-         xpd=NA, pos=3, cex=0.7)
-#     legend(x="topright",
-#            legend="NNTnegTooSmall", text.col="red", cex=0.5,
-#           bg=seeThroughRed)
+         xpd=NA, pos=3, cex=0.9)
     text(mean(c(UsrX()[2], NNTlower)),
          10^mean(c(log10(NNTupper), UsrY()[2])),
-         "NNTposTooBig",
+         "NNTpos too big",
          col="red"
          #, adj=c(1,1)
          )
     text(mean(c(UsrX()[1], NNTlower)),
          10^mean(c(log10(NNTupper), UsrY()[1])),
-         "NNTnegTooSmall",
+         "NNTneg too small",
          col="red"
 #         , adj=c(0,0)
     )
@@ -189,12 +210,6 @@ ROCplots = function(data,
     text(x=geometricMean(c(NNTpos[NNTposTooBig], NNTneg[NNTposTooBig])),
          y=mean(Xtrunc[NNTposTooBig]),
          labels="NNTpos \ntoo big", col="red")
-    #   symbols(NNTupper, mean(crossovers),
-    #           rectangles=cbind(10, diff(crossovers)),
-    #           inches=F,
-    #           bg=seeThroughGrey, add=TRUE)
-    #   rectangle(Usr()[1:2], crossovers,
-    #             bg=seeThroughGrey, add=TRUE, log="x")
   }
   return(invisible(data))
 }
