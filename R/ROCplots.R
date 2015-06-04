@@ -39,6 +39,7 @@ ROCplots = function(data,
   Usr = function()par()$usr
   UsrX = function()Usr()[1:2]
   UsrY = function()Usr()[3:4]
+
   if(missing(data)) {  ## Simulate
     muD=0; muN=diffInSD; sd=1
     class = rbinom(N, 1, prev)
@@ -49,16 +50,15 @@ ROCplots = function(data,
   else {
     class = data$class
     X = data$X
-    if(!is.null(data$weights))
-      weights = data$weights
-    else
+    if(is.null(data$weights))
       weights = rep(1, length(X))
   }
-  N = nrow(data)
-  nD = sum(class)
+  weights = data$weights
+  N = sum(data$weights)
+  nD = sum(class * data$weights)
   nH = N - nD
   prevalence = nD/N  ### prevalence of BestToTreat.
-  data = data.frame(class, X) [order(X), ]
+  data = data [order(X), ]
 
   if(is.element(el = "density", set=whichPlots)) {
     plot(density(X, weights = weights/sum(weights)), ...)
@@ -67,35 +67,41 @@ ROCplots = function(data,
 
   if(is.element(el = "raw", set=whichPlots))
     plot(X, class)
-
-  sensitivity = (nD - cumsum(data$class == 1))/ nD  # 1 - FN/nD = (TP/nD)
-  specificity = cumsum(data$class == 0)/nH       # TN/nH
-  if(is.element(el = "ROC", set=whichPlots))
-    plot(1-specificity, sensitivity, type="l", ...)
+  cum1 = cumsum((data$class == 1) * (data$weight))
+  cum0 = cumsum((data$class == 0) * (data$weight))
+  sensitivity = (nD - cum1)/ nD  # 1 - FN/nD = (TP/nD)
+  specificity = cum0/nH       # TN/nH
   requiredSeSp = sesp.from.NNT(NNTlower, NNTupper, prev=prevalence)
   requiredSe = requiredSeSp[1]
   requiredSp = requiredSeSp[2]
-  legend("topleft", legend="acceptable\nregion", box.col=NA, bty="n", text.col="blue")
-  rect(xleft = UsrX()[1], xright = UsrX()[2], ybottom = UsrY()[1], ytop = requiredSe,
-       col=seeThroughRed)
-  rect(xleft = requiredSp, xright = UsrX()[2], ybottom = UsrY()[1], ytop = UsrY()[2],
-       col=seeThroughRed)
-  text(x=0, y=requiredSe, col="blue", labels = "required sensitivity",
-       xpd=NA, adj=c(0,0), cex=0.9)
-  text(x=requiredSp, y=1, col="blue", labels = "required specificity",
-       xpd=NA, pos=3, cex=0.9)
-
+  if(is.element(el = "ROC", set=whichPlots)) {
+    plot(1-specificity, sensitivity, type="l", ...)
+    legend("topleft", legend="acceptable\nregion", box.col=NA, bty="n", text.col="blue")
+    rect(xleft = UsrX()[1], xright = UsrX()[2], ybottom = UsrY()[1], ytop = requiredSe,
+         col=seeThroughRed)
+    rect(xleft = requiredSp, xright = UsrX()[2], ybottom = UsrY()[1], ytop = UsrY()[2],
+         col=seeThroughRed)
+    text(x=0, y=requiredSe, col="blue", labels = "required sensitivity",
+         xpd=NA, adj=c(0,0), cex=0.9)
+    text(x=requiredSp, y=1, col="blue", labels = "required specificity",
+         xpd=NA, pos=3, cex=0.9)
+  }
 
     ### You can't plot ppv versus npv at the -Inf or +Inf cutoffs,
   ### unlike ROCs. You need at least one Pos and one Neg.
   # Thus we cut off the top cutoff.
   # Ranks for cutoffs:
-  nPos = (N-1):1
-  nNeg = 1:(N-1)
+  nNeg = cumsum(data$weight)
+  nPos = rev(nNeg)
   ## vectors of ppv and npv for all cutoffs.
-  ppv = (nD - cumsum(data$class == 1))[-N]/ nPos  #  TP/Pos
-  npv = cumsum(data$class == 0)[-N]/ nNeg  ## TN/Neg
-
+  ppvAll = (nD - cum1)/ nPos  #  TP/Pos
+  npvAll = cum0/ nNeg  ## TN/Neg
+  validPV = (ppvAll != 0) &  (npvAll != 1)
+  notTail = (ppvAll >= min(ppvAll[validPV & data$class==0]))
+  ppvNoTail = ppvAll[validPV & notTail]
+  npvNoTail = npvAll[validPV & notTail]
+  ppv = ppvAll[validPV & data$class==0]
+  npv = npvAll[validPV & data$class==0]
   if(is.element(el = "pv", set=whichPlots)) {
     if(N <= 10)
       plot(ppv, npv, type="b", pch=as.character(1:N))
@@ -160,18 +166,18 @@ ROCplots = function(data,
   }
 
   if(is.element(el = "nntRange", set=whichPlots)) {
-    Xtrunc = data$X[-length(data$X)]   # [-1]
+    Xtrunc = data$X[validPV & (data$class==0)]
     plot(c(NNTpos, NNTneg), c(Xtrunc, Xtrunc), pch="",
-         ylab="cutoff", xlab="NNT", log="x")
+         ylab="cutoff", xlab="NNT", log="x", xlim=c(1,1e4))
     crossovers = c(min(Xtrunc[NNTpos <= NNTlower]),
                    max(Xtrunc[NNTupper <= NNTneg]))
     NNTneg = pmin(NNTneg, 10^Usr()[2])
     # abline(v=c(NNTlower, NNTupper))
     lines(x=c(NNTlower, NNTlower), y=c(Usr()[3], crossovers[2]))
     lines(x=c(NNTupper, NNTupper), y=c(Usr()[4], crossovers[1]))
-    text(x=NNTlower, y=Usr()[3], "NNTlower", col="blue",
+    text(x=NNTlower, y=Usr()[3], "  NNTlower", col="blue",
          srt=90, pos=4, xpd=NA, cex=0.7)
-    text(x=NNTupper, y=Usr()[4], "NNTupper", col="blue",
+    text(x=NNTupper, y=Usr()[4], "NNTupper  ", col="blue",
          srt=90, adj=c(1,1), xpd=NA, cex=0.7)
     # abline(h=crossovers)
     NNTposTooBig = which(Xtrunc <= crossovers[1])
@@ -213,4 +219,6 @@ ROCplots = function(data,
   }
   return(invisible(data))
 }
-theData = ROCplots()
+
+
+# theData = ROCplots()

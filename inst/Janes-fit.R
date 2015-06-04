@@ -43,7 +43,7 @@ locationsOnCurves = as.data.frame(locationsOnCurves)
 
 points(locationsOnCurves, pch=as.character(1:5))
 
-xdf = data.frame(x=seq(0,1,length.out = 100))
+xdf = data.frame(x=seq(0,1,length.out = samplesize))
 xvalues = xdf[[1]]
 
 lmTreat = lm(y ~ poly(x,2), data = locationsOnCurves[c(2,3,4), ])
@@ -107,7 +107,7 @@ abline(h=c(NNTlower,NNTupper))
 ###
 pW = predictWait
 pT = predictTreat
-probVec = cbind(OKregardless=pmin(pW, pT),
+probVec = data.frame(OKregardless=pmin(pW, pT),
             TreatHelps=pmax(pT-pW, 0),
             WaitHelps=pmax(pW-pT, 0),
             Dregardless=1 - pmax(pW, pT)
@@ -136,3 +136,13 @@ janesData = janesData[order(janesData$X), ]
 
 ROCplots(data= janesData, NNTlower=10, NNTupper=40)
 
+
+janesDataSmooth= data.frame(
+  X = rep(xvalues, times=2),
+  class = rep(0:1, each=samplesize),
+  weights = c(1-probVec$TreatHelps, probVec$TreatHelps)
+)
+
+ROCplots(       whichPlots = "pv",
+  data= janesDataSmooth,
+        NNTlower=10, NNTupper=40)
