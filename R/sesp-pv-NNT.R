@@ -82,6 +82,12 @@ sesp.from.pv = pv.to.sesp = function(ppv=0.1, npv=0.7, pv, prev=0.2){
     }
     else stop("sesp.from.pv: pv must be matrix or vector")
   }
+  else {
+    if(length(ppv) > 1 & missing(npv))
+      warning("length(ppv) > 1 & missing(npv). check usage.")
+    if(length(npv) > 1 & missing(ppv))
+    warning("length(npv) > 1 & missing(ppv). check usage.")
+  }
   ppv.odds= ppv/(1-ppv)
   npv.odds= npv/(1-npv)
   odds = prev/(1-prev)
@@ -118,6 +124,12 @@ pv.from.sesp = sesp.to.pv = function(se=0.8, sp=0.8, sesp, prev=0.001) {
     }
     else stop("pv.from.sesp: sesp must be matrix or vector")
   }
+  else {
+    if(length(se) > 1 & missing(sp))
+      warning("length(se) > 1 & missing(sp). check usage.")
+    if(length(sp) > 1 & missing(se))
+      warning("length(sp) > 1 & missing(se). check usage.")
+  }
   ppv = as.vector(prev*se/(prev*se + (1-prev)*(1-sp)))
   npv = as.vector((1-prev)*sp/(prev*(1-se) + (1-prev)*sp))
   if(length(ppv) > 1) return(cbind(ppv=ppv,npv=npv))
@@ -150,6 +162,12 @@ NNT.from.pv = pv.to.NNT = function(ppv, npv, pv) {
       ppv = pv["ppv"];   npv = pv["npv"]
     }
     else stop("NNT.from.pv: pv must be matrix or vector")
+  }
+  else {
+    if(length(ppv) > 1 & missing(npv))
+      warning("length(ppv) > 1 & missing(npv). check usage.")
+    if(length(npv) > 1 & missing(ppv))
+      warning("length(npv) > 1 & missing(ppv). check usage.")
   }
   NNTpos = 1/as.vector(ppv)
   NNTneg = 1/(1-as.vector(npv))
@@ -185,6 +203,12 @@ NNT.to.pv = pv.from.NNT = function(NNTpos, NNTneg, NNT, prev, calculate.se.sp=F)
       NNTpos = NNT["NNTpos"];   NNTneg = NNT["NNTneg"]
     }
     else stop("pv.from.NNT: NNT must be matrix or vector")
+  }
+  else {
+    if(length(NNTpos) > 1 & missing(NNTneg))
+      warning("length(NNTpos) > 1 & missing(NNTneg). check usage.")
+    if(length(NNTneg) > 1 & missing(NNTpos))
+      warning("length(NNTneg) > 1 & missing(NNTpos). check usage.")
   }
   ppv.odds = 1/(NNTpos-1)
   ppv = as.vector(ppv.odds/(1+ppv.odds))
