@@ -48,17 +48,17 @@ ROCplots = function(data,
     data = data.frame(class=class, X=X, weights=weights)
   }
   else {
-    class = data$class
-    X = data$X
     if(is.null(data$weights))
-      weights = rep(1, length(X))
+      data$weights = rep(1, length(data$X))
   }
+  data = data [order(data$X), ]
+  class = data$class
   weights = data$weights
-  N = sum(data$weights)
-  nD = sum(class * data$weights)
+  X = data$X
+  N = sum(weights)
+  nD = sum(class * weights)
   nH = N - nD
   prevalence = nD/N  ### prevalence of BestToTreat.
-  data = data [order(X), ]
 
   if(is.element(el = "density", set=whichPlots)) {
     plot(density(X, weights = weights/sum(weights)), ...)
@@ -67,8 +67,8 @@ ROCplots = function(data,
 
   if(is.element(el = "raw", set=whichPlots))
     plot(X, class)
-  cum1 = cumsum((data$class == 1) * (data$weight))
-  cum0 = cumsum((data$class == 0) * (data$weight))
+  cum1 = cumsum(class * weights)
+  cum0 = cumsum((1-class) * weights)
   sensitivity = (nD - cum1)/ nD  # 1 - FN/nD = (TP/nD)
   specificity = cum0/nH       # TN/nH
   requiredSeSp = sesp.from.NNT(NNTlower, NNTupper, prev=prevalence)
@@ -91,17 +91,22 @@ ROCplots = function(data,
   ### unlike ROCs. You need at least one Pos and one Neg.
   # Thus we cut off the top cutoff.
   # Ranks for cutoffs:
-  nNeg = cumsum(data$weight)
+  nNeg = cumsum(weights)
   nPos = rev(nNeg)
   ## vectors of ppv and npv for all cutoffs.
   ppvAll = (nD - cum1)/ nPos  #  TP/Pos
   npvAll = cum0/ nNeg  ## TN/Neg
   validPV = (ppvAll != 0) &  (npvAll != 1)
-  notTail = (ppvAll >= min(ppvAll[validPV & data$class==0]))
+  possibleTail = which(validPV &
+                         data$class==min(data$class))
+  if(length(possibleTail) > 0)
+    notTail = (ppvAll >= min(ppvAll[possibleTail]))
+  else
+    notTail = TRUE
   ppvNoTail = ppvAll[validPV & notTail]
   npvNoTail = npvAll[validPV & notTail]
-  ppv = ppvAll[validPV & data$class==0]
-  npv = npvAll[validPV & data$class==0]
+  ppv = ppvAll[validPV & notTail]
+  npv = npvAll[validPV & notTail]
   if(is.element(el = "pv", set=whichPlots)) {
     if(N <= 10)
       plot(ppv, npv, type="b", pch=as.character(1:N))
@@ -116,10 +121,10 @@ ROCplots = function(data,
          col=seeThroughRed)
     rect(UsrX()[1], ybottom = UsrY()[1], xright = ppvMin, ytop = UsrY()[2],
          col=seeThroughRed)
-    text(x=ppvMin, y=1, col="blue", labels = "ppvMin",
-         xpd=NA, adj=c(0,0), cex=0.9)
-    text(x=UsrX()[2], y=npvMin, col="blue", labels = "npvMin",
-         xpd=NA, adj=c(1,0), cex=0.9)
+    text(x=ppvMin, y=UsrY()[1], col="blue", labels = "ppvMin",
+         xpd=NA, adj=c(0.5,1), cex=0.9)
+    text(x=UsrX()[1], y=npvMin, col="blue", labels = "npvMin",
+         xpd=NA, adj=c(-1,0), cex=0.9)
     text(mean(c(UsrX()[1], ppvMin)),
          mean(c(npvMin, UsrY()[2])),
          "ppv too small",
@@ -166,9 +171,10 @@ ROCplots = function(data,
   }
 
   if(is.element(el = "nntRange", set=whichPlots)) {
-    Xtrunc = data$X[validPV & (data$class==0)]
-    plot(c(NNTpos, NNTneg), c(Xtrunc, Xtrunc), pch="",
-         ylab="cutoff", xlab="NNT", log="x", xlim=c(1,1e4))
+    Xtrunc = data$X[validPV]
+    plot( c(Xtrunc, Xtrunc), c(NNTpos, NNTneg),pch="",
+         xlab="cutoff", ylab="NNT", log="y", ylim=c(1,1e2),
+         xlim=c(0,25))
     crossovers = c(min(Xtrunc[NNTpos <= NNTlower]),
                    max(Xtrunc[NNTupper <= NNTneg]))
     NNTneg = pmin(NNTneg, 10^Usr()[2])
@@ -176,9 +182,9 @@ ROCplots = function(data,
     lines(x=c(NNTlower, NNTlower), y=c(Usr()[3], crossovers[2]))
     lines(x=c(NNTupper, NNTupper), y=c(Usr()[4], crossovers[1]))
     text(x=NNTlower, y=Usr()[3], "  NNTlower", col="blue",
-         srt=90, pos=4, xpd=NA, cex=0.7)
+         srt=90, adj=c(0,0), xpd=NA, cex=0.9)
     text(x=NNTupper, y=Usr()[4], "NNTupper  ", col="blue",
-         srt=90, adj=c(1,1), xpd=NA, cex=0.7)
+         srt=90, adj=c(1,1), xpd=NA, cex=0.9)
     # abline(h=crossovers)
     NNTposTooBig = which(Xtrunc <= crossovers[1])
     NNTnegTooSmall = which(Xtrunc >= crossovers[2] & ppv > 0)
@@ -205,16 +211,16 @@ ROCplots = function(data,
     text(x=geometricMean(NNTpos[valid]),
          y=mean(Xtrunc[valid]),
          labels="NNTpos", col="blue", bg="white",
-         pos=2, xpd=NA, cex=0.7)
+         pos=2, xpd=NA, cex=0.95)
     text(x=geometricMean(NNTneg[valid]),
          y=mean(Xtrunc[valid]),
          labels="NNTneg", col="blue", bg="white",
-         pos=4, xpd=NA, cex=0.7)
+         pos=4, xpd=NA, cex=0.95)
     text(x=geometricMean(c(NNTpos[NNTnegTooSmall], NNTneg[NNTnegTooSmall])),
-         y=mean(Xtrunc[NNTnegTooSmall]),
+         y=mean(Xtrunc[NNTnegTooSmall]), xpd=NA,
          labels="NNTneg \ntoo small", col="red")
     text(x=geometricMean(c(NNTpos[NNTposTooBig], NNTneg[NNTposTooBig])),
-         y=mean(Xtrunc[NNTposTooBig]),
+         y=mean(Xtrunc[NNTposTooBig]), xpd=NA,
          labels="NNTpos \ntoo big", col="red")
   }
   return(invisible(data))
