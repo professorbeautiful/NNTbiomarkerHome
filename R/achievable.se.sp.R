@@ -85,8 +85,8 @@ achievable.se.sp = function(the.prev = 0.5,
     solidcircle = 16
     points(xpd=NA,
            diagonal.values, col="black", pch=solidcircle, cex=2.7)
-    text(xpd=NA, diagonal.values, labels=LETTERS[1:nrow(diagonal.values)],
-#        vfont=c("serif", "bold"),
+    graphics::text(xpd=NA, diagonal.values, labels=LETTERS[1:nrow(diagonal.values)],
+#        vfont=c("serif", "bold"),  # Beware of shinyjs::text
          font=4, family="serif",
          col="white", cex=0.9)
   }
@@ -125,7 +125,7 @@ if(axes[1]=="NNT") {
     }
   cat("PV\n"); print(PV)
   if(drawTable){
-    text(pos=2, -0.03, cex=cexText,
+    graphics::text(pos=2, -0.03, cex=cexText,
          -0.018 +rep( par()$usr[3] + (par()$usr[4]-par()$usr[3])*(y0arrow*0.8),
                       length(sesp.seq)),
          "se=\n" %&%

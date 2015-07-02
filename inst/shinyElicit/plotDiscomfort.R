@@ -32,7 +32,7 @@ plotDiscomfort = function(
   actBarWidth = actBarRight - actBarLeft
   symbols(actBarX, barY, inches=F,
           rectangles=matrix(c(actBarWidth, barHeight), nrow=1), bg="green", add=T)
-  text(actBarX, barY, "Act!", cex=labelCex)
+  graphics::textactBarX, barY, "Act!", cex=labelCex)
 
   discomfortBarLeft = NNTlower
   discomfortBarRight = NNTupper
@@ -41,7 +41,7 @@ plotDiscomfort = function(
   symbols(discomfortBarX, barY, inches=F,
           rectangles=matrix(c(discomfortBarWidth, barHeight), nrow=1),
           bg="red", add=T)
-  text(discomfortBarX, barY, "discomfort range", cex=labelCex)
+  graphics::textdiscomfortBarX, barY, "discomfort range", cex=labelCex)
 
   waitBarLeft = NNTupper
   waitBarRight = rightSideLimit
@@ -50,11 +50,11 @@ plotDiscomfort = function(
   symbols(waitBarX, barY, inches=F,
           rectangles=matrix(c(waitBarWidth, barHeight), nrow=1),
           bg="green", add=T)
-  text(waitBarX, barY, "Wait!", cex=  labelCex)
+  graphics::textwaitBarX, barY, "Wait!", cex=  labelCex)
 
   numberGap = ceiling(rightSideLimit/25)
   numberSequence = seq(1, rightSideLimit, numberGap)
-  text(x = numberSequence,y = numbersY,
+  graphics::textx = numberSequence,y = numbersY,
        labels = numberSequence, cex=labelCex,
        col=c("black", "red")
        [1+numberSequence %between% c(NNTlower, NNTupper)]
@@ -64,15 +64,15 @@ plotDiscomfort = function(
 #           inches=F, add=T, fg="red", xpd=F)
   points(NNTlower, YtriangleDown, cex=3, pch=triangleDownPch, bg="red")
   points(NNTupper, YtriangleDown, cex=3, pch=triangleDownPch, bg="red")
-  text(discomfortBarLeft, YnntLowerUpper,
+  graphics::textdiscomfortBarLeft, YnntLowerUpper,
        "NNTlower", pos=1, cex=2, col="red")
-  text(discomfortBarRight, YnntLowerUpper,
+  graphics::textdiscomfortBarRight, YnntLowerUpper,
        "NNTupper", pos=1, cex=2, col="red")
   if(drawNNT) {
     NNT = 1/input$prevalence
     YprevCircle = YnntLowerUpper
     prevCirclePch = 19  # solid circle; filled circle=21
-    text(NNT, YnntLowerUpper, pos=1, "NNT", cex=2)
+    graphics::textNNT, YnntLowerUpper, pos=1, "NNT", cex=2)
     points(NNT, YtriangleDown, cex=3, pch=triangleDownPch, bg="black")
     #points(NNT, YprevCircle, cex=5, pch=prevCirclePch, bg="black")
     #points(NNT, YprevCircle, cex=3, pch="P", col="white")
@@ -80,9 +80,9 @@ plotDiscomfort = function(
   if(drawPosNeg) {
     points(NNTpos, YtriangleUp, cex=3, pch=triangleUpPch, bg="darkgreen")
     points(NNTneg, YtriangleUp, cex=3, pch=triangleUpPch, bg="darkgreen")
-    text(NNTpos, YnntPosNeg,
+    graphics::textNNTpos, YnntPosNeg,
          "NNTpos", pos=3, cex=2, col="darkgreen")
-    text(NNTneg, YnntPosNeg,
+    graphics::textNNTneg, YnntPosNeg,
          "NNTneg", pos=3, cex=2, col="darkgreen")
   }
 }

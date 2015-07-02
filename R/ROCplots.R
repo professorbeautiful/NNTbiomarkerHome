@@ -81,9 +81,9 @@ ROCplots = function(data,
          col=seeThroughRed)
     rect(xleft = requiredSp, xright = UsrX()[2], ybottom = UsrY()[1], ytop = UsrY()[2],
          col=seeThroughRed)
-    text(x=0, y=requiredSe, col="blue", labels = "required sensitivity",
+    graphics::text(x=0, y=requiredSe, col="blue", labels = "required sensitivity",
          xpd=NA, adj=c(0,0), cex=0.9)
-    text(x=requiredSp, y=1, col="blue", labels = "required specificity",
+    graphics::text(x=requiredSp, y=1, col="blue", labels = "required specificity",
          xpd=NA, pos=3, cex=0.9)
   }
 
@@ -121,16 +121,16 @@ ROCplots = function(data,
          col=seeThroughRed)
     rect(UsrX()[1], ybottom = UsrY()[1], xright = ppvMin, ytop = UsrY()[2],
          col=seeThroughRed)
-    text(x=ppvMin, y=UsrY()[1], col="blue", labels = "ppvMin",
+    graphics::text(x=ppvMin, y=UsrY()[1], col="blue", labels = "ppvMin",
          xpd=NA, adj=c(0.5,1), cex=0.9)
-    text(x=UsrX()[1], y=npvMin, col="blue", labels = "npvMin",
+    graphics::text(x=UsrX()[1], y=npvMin, col="blue", labels = "npvMin",
          xpd=NA, adj=c(-1,0), cex=0.9)
-    text(mean(c(UsrX()[1], ppvMin)),
+    graphics::text(mean(c(UsrX()[1], ppvMin)),
          mean(c(npvMin, UsrY()[2])),
          "ppv too small",
          col="red"
     )
-    text(mean(c(ppvMin, UsrX()[2])),
+    graphics::text(mean(c(ppvMin, UsrX()[2])),
          mean(c(npvMin, UsrY()[1])),
          "npv too small",
          col="red"
@@ -152,17 +152,17 @@ ROCplots = function(data,
               col=seeThroughRed)
     rect(NNTlower, 10^Usr()[3], Usr()[2], 10^Usr()[4],
               col=seeThroughRed)
-    text(x=Usr()[1], y=NNTupper, col="blue", labels = "NNTupper",
+    graphics::text(x=Usr()[1], y=NNTupper, col="blue", labels = "NNTupper",
          xpd=NA, adj=c(0,0), cex=0.9)
-    text(x=NNTlower, y=10^Usr()[4], col="blue", labels = "NNTlower",
+    graphics::text(x=NNTlower, y=10^Usr()[4], col="blue", labels = "NNTlower",
          xpd=NA, pos=3, cex=0.9)
-    text(mean(c(UsrX()[2], NNTlower)),
+    graphics::text(mean(c(UsrX()[2], NNTlower)),
          10^mean(c(log10(NNTupper), UsrY()[2])),
          "NNTpos too big",
          col="red"
          #, adj=c(1,1)
          )
-    text(mean(c(UsrX()[1], NNTlower)),
+    graphics::text(mean(c(UsrX()[1], NNTlower)),
          10^mean(c(log10(NNTupper), UsrY()[1])),
          "NNTneg too small",
          col="red"
@@ -181,9 +181,9 @@ ROCplots = function(data,
     # abline(v=c(NNTlower, NNTupper))
     lines(x=c(NNTlower, NNTlower), y=c(Usr()[3], crossovers[2]))
     lines(x=c(NNTupper, NNTupper), y=c(Usr()[4], crossovers[1]))
-    text(x=NNTlower, y=Usr()[3], "  NNTlower", col="blue",
+    graphics::text(x=NNTlower, y=Usr()[3], "  NNTlower", col="blue",
          srt=90, adj=c(0,0), xpd=NA, cex=0.9)
-    text(x=NNTupper, y=Usr()[4], "NNTupper  ", col="blue",
+    graphics::text(x=NNTupper, y=Usr()[4], "NNTupper  ", col="blue",
          srt=90, adj=c(1,1), xpd=NA, cex=0.9)
     # abline(h=crossovers)
     NNTposTooBig = which(Xtrunc <= crossovers[1])
@@ -205,21 +205,21 @@ ROCplots = function(data,
             y=c(Xtrunc[NNTnegTooSmall], rev(Xtrunc[NNTnegTooSmall])),
             col=seeThroughRed)
     geometricMean = function(x) exp(mean(log(x)))
-    text(x=geometricMean(c(NNTlower, NNTupper)),
+    graphics::text(x=geometricMean(c(NNTlower, NNTupper)),
          y=mean(Xtrunc[valid]),
          labels="acceptable\ncutoffs", col="blue", bg="white")
-    text(x=geometricMean(NNTpos[valid]),
+    graphics::text(x=geometricMean(NNTpos[valid]),
          y=mean(Xtrunc[valid]),
          labels="NNTpos", col="blue", bg="white",
          pos=2, xpd=NA, cex=0.95)
-    text(x=geometricMean(NNTneg[valid]),
+    graphics::text(x=geometricMean(NNTneg[valid]),
          y=mean(Xtrunc[valid]),
          labels="NNTneg", col="blue", bg="white",
          pos=4, xpd=NA, cex=0.95)
-    text(x=geometricMean(c(NNTpos[NNTnegTooSmall], NNTneg[NNTnegTooSmall])),
+    graphics::text(x=geometricMean(c(NNTpos[NNTnegTooSmall], NNTneg[NNTnegTooSmall])),
          y=mean(Xtrunc[NNTnegTooSmall]), xpd=NA,
          labels="NNTneg \ntoo small", col="red")
-    text(x=geometricMean(c(NNTpos[NNTposTooBig], NNTneg[NNTposTooBig])),
+    graphics::text(x=geometricMean(c(NNTpos[NNTposTooBig], NNTneg[NNTposTooBig])),
          y=mean(Xtrunc[NNTposTooBig]), xpd=NA,
          labels="NNTpos \ntoo big", col="red")
   }
