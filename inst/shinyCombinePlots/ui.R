@@ -1,4 +1,4 @@
-#####  shinyElicit ui
+#####  shinyCombined ui
 
 shinyUI(fluidPage(
   tags$head(tags$script(HTML('
@@ -93,8 +93,8 @@ shinyUI(fluidPage(
                ),
                column(10, offset=1,
                       plotOutput("contraBayesPlot",
-                                 clickId="contraBayesPlot_click",
-                                 hoverId="contraBayesPlot_hover",
+                                 click="contraBayesPlot_click",
+                                 hover="contraBayesPlot_hover",
                                  width='100%')
                )
         ),
