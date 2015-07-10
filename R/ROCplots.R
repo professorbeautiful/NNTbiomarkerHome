@@ -76,15 +76,17 @@ ROCplots = function(data,
   requiredSp = requiredSeSp[2]
   if(is.element(el = "ROC", set=whichPlots)) {
     plot(1-specificity, sensitivity, type="l", ...)
-    legend("topleft", legend="acceptable\nregion", box.col=NA, bty="n", text.col="blue")
-    rect(xleft = UsrX()[1], xright = UsrX()[2], ybottom = UsrY()[1], ytop = requiredSe,
-         col=seeThroughRed)
-    rect(xleft = requiredSp, xright = UsrX()[2], ybottom = UsrY()[1], ytop = UsrY()[2],
-         col=seeThroughRed)
-    graphics::text(x=0, y=requiredSe, col="blue", labels = "required sensitivity",
-         xpd=NA, adj=c(0,0), cex=0.9)
-    graphics::text(x=requiredSp, y=1, col="blue", labels = "required specificity",
-         xpd=NA, pos=3, cex=0.9)
+    if(!is.na(NNTlower)) {
+      legend("topleft", legend="acceptable\nregion", box.col=NA, bty="n", text.col="blue")
+      rect(xleft = UsrX()[1], xright = UsrX()[2], ybottom = UsrY()[1], ytop = requiredSe,
+           col=seeThroughRed)
+      rect(xleft = requiredSp, xright = UsrX()[2], ybottom = UsrY()[1], ytop = UsrY()[2],
+           col=seeThroughRed)
+      graphics::text(x=0, y=requiredSe, col="blue", labels = "required sensitivity",
+                     xpd=NA, adj=c(0,0), cex=0.9)
+      graphics::text(x=requiredSp, y=1, col="blue", labels = "required specificity",
+                     xpd=NA, pos=3, cex=0.9)
+    }
   }
 
     ### You can't plot ppv versus npv at the -Inf or +Inf cutoffs,
