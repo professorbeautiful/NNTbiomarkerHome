@@ -2,7 +2,7 @@
 ## We begin with some convenient assignments and function.
 {
   thisSession <<- session
-  rValues = reactiveValues()
+  reactiveValuesForDebugTools = reactiveValues()
   wasClicked =  function(button) {
     if(exists("input"))
       if(!is.null(button) ) {
@@ -25,16 +25,16 @@ output$evaluatedOutputR = renderText({
           gsub(" ", "&nbsp;", capture.output(eval(parse(text=evalString)))))
   ## You have to isolate input$evalStringR; otherwise each character typed calls this callback.
   ## The following might be useful later for up-arrowing through past expressions.
-  #   if(is.null(rValues$evalStringHistory))
-  #     rValues$evalStringHistory = character(0)
-  #  rValues$evalStringHistory = c(rValues$evalStringHistory, evalString)
+  #   if(is.null(reactiveValuesForDebugTools$evalStringHistory))
+  #     reactiveValuesForDebugTools$evalStringHistory = character(0)
+  #  reactiveValuesForDebugTools$evalStringHistory = c(reactiveValuesForDebugTools$evalStringHistory, evalString)
   }
 })
 
 outputPreambleJS <<- 'window.Shiny.shinyapp.$bindings.'
 # EXAMPLE:  window.Shiny.shinyapp.$bindings.selTxt.firstChild.nodeValue
 inputPreambleJS <<- 'window.Shiny.shinyapp.$inputValues.'
-wrapperToGetKeys <<- function(x) "Object.keys(" %&% x %&% ")"
+wrapperToGetKeys <<- function(x) "Object.keys(" %&% x %&% ")"  # Currently not used.
 observerPreambleToggles = observe({
   input$prependInputPreambleToggle
   input$prependOutputPreambleToggle
@@ -53,9 +53,9 @@ observerPreambleToggles = observe({
     }
     else ## Remove outputPreambleJS
       evalString = gsub(outputPreambleJS, "", evalString, fixed=TRUE)
-    isolate( { rValues$evalStringJS = evalString } )
+    isolate( { reactiveValuesForDebugTools$evalStringJS = evalString } )
     catn("Responding to preamble toggles, evalString=", evalString)
-    updateTextInput(thisSession, "evalStringJS", label="", value=rValues$evalStringJS)
+    updateTextInput(thisSession, "evalStringJS", label="", value=reactiveValuesForDebugTools$evalStringJS)
     # You need to specify the label arg too. The default, NULL, doesn't cut it.
   })
 })
