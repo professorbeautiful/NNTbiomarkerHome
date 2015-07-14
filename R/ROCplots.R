@@ -32,7 +32,7 @@ ROCplots = function(data,
   print(whichPlots)
   print(missing(...))
   if(!missing(...) & length(whichPlots) > 1)
-    stop("Please, only use ... if length(whichPlots) == 1")
+    warning("Please, only use ... if length(whichPlots) == 1")
   seeThroughGrey = paste0("#404040", "88")
   seeThroughBlue =   paste0(rgb(0,0,.5), "22")
   seeThroughRed = paste0(rgb(0.9,0.1,.1), "22")
@@ -67,6 +67,7 @@ ROCplots = function(data,
 
   if(is.element(el = "raw", set=whichPlots))
     plot(X, class)
+
   cum1 = cumsum(class * weights)
   cum0 = cumsum((1-class) * weights)
   sensitivity = (nD - cum1)/ nD  # 1 - FN/nD = (TP/nD)
@@ -74,6 +75,7 @@ ROCplots = function(data,
   requiredSeSp = sesp.from.NNT(NNTlower, NNTupper, prev=prevalence)
   requiredSe = requiredSeSp[1]
   requiredSp = requiredSeSp[2]
+
   if(is.element(el = "ROC", set=whichPlots)) {
     plot(1-specificity, sensitivity, type="l", ...)
     if(!is.na(NNTlower)) {
@@ -111,9 +113,9 @@ ROCplots = function(data,
   npv = npvAll[validPV & notTail]
   if(is.element(el = "pv", set=whichPlots)) {
     if(N <= 10)
-      plot(ppv, npv, type="b", pch=as.character(1:N))
+      plot(ppv, npv, type="b", pch=as.character(1:N), ...)
     else
-      plot(ppv, npv, type="l")
+      plot(ppv, npv, type="l", ...)
     ppvMin = 1/NNTlower
     npvMin = 1 - 1/NNTupper
     lines(c(ppvMin, ppvMin), c(npvMin, 1), col="blue")
@@ -144,9 +146,9 @@ ROCplots = function(data,
   NNTneg = 1/(1-npv)
   if(is.element(el = "nnt", set=whichPlots)) {
     if(N <= 10)
-      plot(NNTpos, NNTneg, log="y", type="b", pch=as.character(1:N))
+      plot(NNTpos, NNTneg, log="y", type="b", pch=as.character(1:N), ...)
     else
-      plot(NNTpos, NNTneg, log="y", type="l")
+      plot(NNTpos, NNTneg, log="y", type="l", ...)
     lines(c(UsrX()[1], NNTlower), c(NNTupper,NNTupper), lty=2, col="blue")
     lines(c(NNTlower, NNTlower), c(10^UsrY()[2],NNTupper), lty=2, col="blue")
     legend("topleft", legend="acceptable\nregion", box.col=NA, text.col="blue")
@@ -176,7 +178,7 @@ ROCplots = function(data,
     Xtrunc = data$X[validPV]
     plot( c(Xtrunc, Xtrunc), c(NNTpos, NNTneg),pch="",
          xlab="cutoff", ylab="NNT", log="y", ylim=c(1,1e2),
-         xlim=c(0,25))
+         xlim=c(0,25), ...)
     crossovers = c(min(Xtrunc[NNTpos <= NNTlower]),
                    max(Xtrunc[NNTupper <= NNTneg]))
     NNTneg = pmin(NNTneg, 10^Usr()[2])
