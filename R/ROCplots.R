@@ -227,7 +227,7 @@ ROCplots = function(data,
          y=mean(Xtrunc[NNTposTooBig]), xpd=NA,
          labels="NNTpos \ntoo big", col="red")
   }
-  return(invisible(data))
+  return(invisible(sys.frame(1)))
 }
 
 
