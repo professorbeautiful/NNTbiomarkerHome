@@ -211,7 +211,7 @@ legend("topright",
        col=      c("white", "red", "red", "white", "white", "blue", "blue" ),
        lwd = c(0, 2, 2, 0, 0,2, 2)
 )
-title("NNT by RS")
+title("NNT by Oncotype DX RS")
 ########
 ########
 RSsampleBtoT = rbinom(length(RSsampleBenefit), 1, RSsampleBenefit)
@@ -280,7 +280,8 @@ text(labels="x0=17", x=1-specificity17, y=sensitivity17, adj=c(1.3,0),col="red")
 ROCplots(data=data.frame(
   class=(1:length(RSsample) %in% whichBenefitted),
   X=RSsample),
-  NNTlower=NA,   whichPlots="pv"
+  NNTlower=NA,   whichPlots="pv",
+  title="My PV plot"
 )
 ppv30 = benefitTable["TRUE", "(30,Inf]"]/ sum(benefitTable[ , "(30,Inf]"])
 npv30 = 1 - benefitTable["FALSE", "(30,Inf]"]/ sum(benefitTable[ ,  "(30,Inf]"])
