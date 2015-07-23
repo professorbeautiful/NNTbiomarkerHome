@@ -171,7 +171,9 @@ TailorXRScutoffs = c(11, 25)  ### upper boundaries
 OncotypeNNTrange = round(nnt[as.character(OncotypeRScutoffs)])
 TailorXNNTrange = round(nnt[as.character(TailorXRScutoffs)])
 #nnt = pmin(nnt, 1000)
-plot(RSvector, nnt, log='y', ylim=c(1,1000), type="l", lwd=3,
+plot(RSvector, nnt,   ##  log='y',
+     xlim=c(0, 50),
+     ylim=c(1,100), type="l", lwd=3,
      xlab="Recurrence score", ylab="Number needed to treat")
 argmin = function(v, target=0) which(abs(v-target) == min(abs(v-target))[1])
 RSforNNTupper = argmin(nnt,NNTupper)
@@ -212,6 +214,17 @@ legend("topright",
        lwd = c(0, 2, 2, 0, 0,2, 2)
 )
 title("NNT by Oncotype DX RS")
+
+######   AERiskTable ####
+
+rect(0, 0, 50, 1, col = 'black')
+rect(xleft = 17.5, ybottom = 1, xright = 18.5, ytop = RiskOfGrade4 * nnt[argmin(v = RSvector, target = 18)], col = 'red')
+
+AERiskTable = cbind(  c( 10, 20, 70),  cbind(c(15, 25, 60)) )  ## WRONG NUMBERS!
+dimnames(AERiskTable) <- list( c("G4", "G3", "OK"),  c("hema", "cardiac"))
+### Remember to remove the helped patient!  NNT-1.
+
+
 ########
 ########
 RSsampleBtoT = rbinom(length(RSsampleBenefit), 1, RSsampleBenefit)
