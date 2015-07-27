@@ -172,14 +172,17 @@ OncotypeRScutoffs = c(17, 30)  ### upper boundaries
 TailorXRScutoffs = c(11, 25)  ### upper boundaries
 OncotypeNNTrange = round(nnt[as.character(OncotypeRScutoffs)])
 TailorXNNTrange = round(nnt[as.character(TailorXRScutoffs)])
+
+
+
 #nnt = pmin(nnt, 1000)
 plot(RSvector, nnt,   ##  log='y',
      xlim=c(0, 50),
      ylim=c(1,100), type="l", lwd=3,
      xlab="Recurrence score", ylab="Number needed to treat")
 argmin = function(v, target=0) which(abs(v-target) == min(abs(v-target))[1])
-RSforNNTupper = argmin(nnt,NNTupper)
-RSforNNTlower = argmin(nnt,NNTlower)
+RSforNNTupper = argmin(nnt, OncotypeNNTrange[1])
+RSforNNTlower = argmin(nnt, OncotypeNNTrange[2])
 # points(tenYearDFS_long$RS[c(RSforNNTupper, RSforNNTlower)],
 #        c(NNTupper, NNTlower),
 #        col='darkgreen', type="h", lty=2, lwd=2)
