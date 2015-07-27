@@ -8,8 +8,7 @@ TailorXRScutoffs = c(11, 25)  ### upper boundaries
 
 pointStrings = grep(value=T, pattern = "<point",
                     read.csv(header=F,
-                             "/Users/Roger/Dropbox/_HOME/Paper_on_Biomarker_Studies_and_NNT/Paik2006-10yearDFS."
-                             %&% "TAM.xml",
+                             "inst/Paik2006-10yearDFS.TAM.xml",
                              stringsAsFactors = F)[[1]]
 )
 dxBegin = regexpr("dx='", pointStrings)+4
@@ -23,8 +22,7 @@ allY_TAM = as.numeric(substr(pointStrings, dyBegin, dyEnd))
 ### Create pointStrings ####
 pointStrings = grep(value=T, pattern = "<point",
      read.csv(header=F,
-              "/Users/Roger/Dropbox/_HOME/Paper_on_Biomarker_Studies_and_NNT/Paik2006-10yearDFS."
-              %&% "TAM+CHEMO.xml",
+              "inst/Paik2006-10yearDFS.TAM+CHEMO.xml",
               stringsAsFactors = F)[[1]]
 )
 dxBegin = regexpr("dx='", pointStrings)+4
