@@ -83,6 +83,8 @@ pbeta(OncotypeRScutoffs[1]/50, shape1=abParam[1], shape2=abParam[2])
 pbeta(OncotypeRScutoffs[2]/50, shape1=abParam[1], shape2=abParam[2])
 #Perfect.
 
+PaikSampleSize <- 668
+
 ##########   BEGINNING THE RECURRENCE RISK BENEFIT PLOTTING  ###########################
 BenefitPlot <- function (
   sampleSize=PaikSampleSize) {
@@ -146,6 +148,7 @@ BenefitPlot <- function (
        col="blue")
   invisible(list(whichBenefitted=whichBenefitted,
                  theseBenefitted=theseBenefitted,
+                 benefit=benefit,
                  RSsampleBenefit=RSsampleBenefit,
                  RSsample=RSsample,
                  .Random.seed=initial.Random.seed))  # Worth saving.
@@ -155,6 +158,7 @@ BenefitPlot <- function (
 benefitPlotOutput = BenefitPlot()
 whichBenefitted = benefitPlotOutput$whichBenefitted
 theseBenefitted = benefitPlotOutput$theseBenefitted
+benefit = benefitPlotOutput$benefit
 RSsampleBenefit = benefitPlotOutput$RSsampleBenefit
 RSsample = benefitPlotOutput$RSsample
 .Random.seed = benefitPlotOutput$.Random.seed
