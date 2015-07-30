@@ -167,7 +167,7 @@ theseBenefitted = benefitPlotOutput$theseBenefitted
 benefit = benefitPlotOutput$benefit
 RSsampleBenefit = benefitPlotOutput$RSsampleBenefit
 RSsample = benefitPlotOutput$RSsample
-$.Random.seed = benefitPlotOutput$.Random.seed
+#.Random.seed = benefitPlotOutput$.Random.seed
 set.seed(benefitPlotOutput$.Random.seed)
 
 
@@ -348,9 +348,8 @@ with(tenYearDFS_long %>% subset(., group=="TAM"), {
 
 boxcolors = colorRampPalette(c("lightgrey", "red"))(6)
 par(mai=c(0,0,1,0))
-par()
 for(RSforAEplot in c(OncotypeRScutoffs, TailorXRScutoffs)) {
-  aeProb = c(2.9,15,57,20,5,0.1)
+  aeProb = c(2.9, 15, 57, 20, 5, 0.1)
   boxwidths = c(1, (nnt[RSforAEplot] - 1) * aeProb / 100)
   symbols(x=rep(0, 7), y=7:1, inches=F,
           xlim=c(-ceiling(max(boxwidths)), ceiling(max(boxwidths))) * 0.75,
