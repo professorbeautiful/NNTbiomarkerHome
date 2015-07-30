@@ -1,15 +1,19 @@
 #### Adverse event NNT bars ####
 #### For CMFT, from table 5 of fisher1997.
 
-AEplot = function(RSinput){
-  boxcolors = colorRampPalette(c("lightgrey", "red"))(6)
+AEplot = function(RSinput = 30){
+  if(is.null(RSinput))
+    RSinput = 48
   par(mai=c(0,0,1,0))
   aeProb = c(2.9,15,57,20,5,0.1)
-  boxwidths = c(1, (nnt[RSforAEplot] - 1) * aeProb / 100)
+  boxwidths = c(1, (nnt[RSinput] - 1) * aeProb / 100)
+  opts = options(warn=-1)
   symbols(x=rep(0, 7), y=7:1, inches=F,
           xlim=c(-ceiling(max(boxwidths)), ceiling(max(boxwidths))) * 0.75,
-          rectangles = cbind(boxwidths, 1), bg = c("green", boxcolors) ,
-          axes=F, xlab="", ylab="")
+          rectangles = cbind(boxwidths, 1), bg = c("green", boxcolors), 
+          #axes=F, 
+          xlab="", ylab="")
+  options(opts)
   "%except%" <-  function (vector, condition) vector[match(vector, condition, 0) == 0]
   verticalsX = lapply(boxwidths[-1], function(bw)
     if(bw <= 1)  numeric(0)  else  -floor(bw/2):floor(bw/2)
@@ -23,8 +27,8 @@ AEplot = function(RSinput){
        pos=4 , xpd=NA)
   text(x = - boxwidths/2, y=7:1, round(boxwidths, 1),
        pos=2 )
-  title(paste0("RS = ", RSforAEplot, "  NNT = ", round(nnt[RSforAEplot])))
+  title(paste0("RS = ", RSinput, "  NNT = ", round(nnt[RSinput])))
 }
-
-for(RSforAEplot in c(OncotypeRScutoffs, TailorXRScutoffs))
-  AEplot(RSforAEplot)
+# 
+# for(RSinput in c(OncotypeRScutoffs, TailorXRScutoffs))
+#   AEplot(RSinput)

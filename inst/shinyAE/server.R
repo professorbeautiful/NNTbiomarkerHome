@@ -1,17 +1,62 @@
 library(shiny)
 
-shinyServer(function(input, output) {
-  rV = reactiveValues(RSclicked = 20)
-  output$skislope = renderPlot({
-    skisloplot(rV$RSclicked)
-    })
-  output$AEstack = renderPlot({
-    AEplot(rV$RSclicked)
+# options(shiny.error=recover)
+
+shinyServer(function(input, output, session) {
+  
+  thisSession <<- session
+  
+  source("skislope.R", local=TRUE)
+  source("AEplot.R", local=TRUE)
+  
+  rV = reactiveValues(RSclicked = 30)
+  
+  observe({
+    input$ODXlow
+    updateNumericInput(inputId = "RSchosen",
+                       session = thisSession, 
+                       value = OncotypeRScutoffs[1])
   })
   observe({
-    rV$RSclicked = try(input$skislope_hover$x)
-    if(class(rV$RSclicked) == "try-error")
-      rV$RSclicked = 0
-    cat("The observe function is run, and the value is ", rV$RSclicked)
+    input$ODXhigh
+    updateNumericInput(inputId = "RSchosen",
+                       session = thisSession, 
+                       value = OncotypeRScutoffs[2])
   })
+  observe({
+    input$TailorX_low
+    updateNumericInput(inputId = "RSchosen",
+                       session = thisSession, 
+                       value = TailorXRScutoffs[1])
+  })
+  observe({
+    input$TailorX_high
+    updateNumericInput(inputId = "RSchosen",
+                       session = thisSession, 
+                       value = TailorXRScutoffs[2])
+  })
+  
+  output$skislope = renderPlot({
+#     if(is.null(input$plot_click))
+#       RSarg = 49
+#     else RSarg = input$plot_click$x
+#     RSarg = round(max(RSarg, 5))
+#     cat("============  Setting rV$RSclicked: ", rV$RSclicked, 
+#         " ======\n")
+#     isolate({
+#       rV$RSclicked = RSarg
+#     })
+    skisloplot(input$RSchosen)
+  })
+  
+  output$AEstack = renderPlot({
+    AEplot(input$RSchosen)
+  })
+#   observe({
+#     RSclicked = try(input$skislope_click$x)
+#     if(class(RSclicked) == "try-error")
+#       rV$RSclicked = 50
+#     else
+#       rV$RSclicked = RSclicked
+#   })
 })

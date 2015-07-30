@@ -1,33 +1,39 @@
-skisloplot <- function (RSinput = 30) {
+skisloplot <- function (RSinput= 30) {
   plot(RSvector, nnt,   xaxs="i",   yaxs="i", ##  log='y',
        xlim=c(0, 50),
-       ylim=c(0,100), type="l", lwd=2,
+       ylim=c(0,100), type="l",  lwd=2, 
+       main = "Number Needed to Treat by Recurrence Score", 
        xlab="Recurrence score", ylab="Number needed to treat")
   
   AERiskTable = c(.029, .15, .57, .20, .05, .001)   #Data from B20 trial; CMFT
   names(AERiskTable) = c("G0", "G1", "G2", "G3", "G4", "G5")
   
   Gvec = kronecker(matrix(AERiskTable, nrow=1), matrix(nnt-1))
-  str(Gvec)
+  #str(Gvec)
   Gcum = t(apply(Gvec, 1, cumsum))+1
   colnames(Gcum) <- c("G0", "G1", "G2", "G3", "G4", "G5")
-  str(Gcum)
+  #str(Gcum)
   
-  groupcolors = colorRampPalette(c("lightgrey", "red"))(6)
   for (i in 1:ncol(Gcum))
-    lines(x = RSvector, y = Gcum[, i], col = groupcolors[i])
+    lines(x = RSvector, y = Gcum[, i], col = boxcolors[i])
   
   rect(0, 0, 50, 1, col = 'green')
   
   for (i in 1:ncol(Gcum)) {
     if (i == 1)  
       polygon(x = c(0:100, 100:0), y = c(rep(1, 101), Gcum[101:1, 1]), 
-              col = groupcolors[1])
+              col = boxcolors[1])
     else  
       polygon(x = c(0:100, 100:0), y = c(Gcum[1:101, i-1], Gcum[101:1, i]), 
-              col = groupcolors[i])
+              col = boxcolors[i])
   }
   
   points(x = RSinput, y = nnt[RSinput + 1], type = "h", lwd = 3)
+  
+  legend("topright", legend = 
+           c("benefitted", "no AE", "mild", "moderate", "severe", "life-threatening", "died"),
+          text.col = c("green", boxcolors), cex=1.2,
+         lwd=10, col = c("green", boxcolors)
+         )
   ### Remember to remove the helped patient!  NNT-1.
 }
