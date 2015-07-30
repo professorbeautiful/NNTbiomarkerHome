@@ -56,26 +56,27 @@ lines(xvalues, predictWait, col="red")
 
 benefit = predictTreat - predictWait
 
-plot.default(xvalues, benefit)
-abline(h=0)
 
+# The following mean benefits are not appropriate:
+# the NNT view requires that the patients in the group be indistinguishable;
+# but we cannot discard the actual value of the test result.
 # For each possible cutoff, what is the mean benefit of treating the positives?
-marginalBenefitPos = sapply(xvalues,
-                            function(cutoff)mean(benefit[xvalues > cutoff]))
-## The last one is NaN because the condition is all F.
-nntPos = 1/marginalBenefitPos
+# marginalBenefitPos = sapply(xvalues,
+#                             function(cutoff)mean(benefit[xvalues > cutoff]))
+# ## The last one is NaN because the condition is all F.
+# nntPos = 1/marginalBenefitPos
+#
+# # For each possible cutoff, what is the mean benefit of treating the negatives?
+# marginalBenefitNeg = sapply(xvalues,
+#                             function(cutoff)mean(benefit[xvalues <= cutoff]))
+# nntNeg = 1/marginalBenefitNeg
+# nntNeg = pmin(nntNeg, 1000)
+# nntNeg[nntNeg <= 0] = 1000
+# xvaluesNeg = xvalues[nntNeg > 0]
+# #nntNeg = nntNeg[nntNeg > 0]
 
-# For each possible cutoff, what is the mean benefit of treating the negatives?
-marginalBenefitNeg = sapply(xvalues,
-                            function(cutoff)mean(benefit[xvalues <= cutoff]))
-nntNeg = 1/marginalBenefitNeg
-nntNeg = pmin(nntNeg, 1000)
-nntNeg[nntNeg <= 0] = 1000
-xvaluesNeg = xvalues[nntNeg > 0]
-#nntNeg = nntNeg[nntNeg > 0]
-
-NNTlower = 7
-NNTupper = 17
+NNTlower = 10
+NNTupper = 50
 plot(xvalues, nntNeg, xlim = c(min(xvaluesNeg), 1), log="y", ylim=c(2,1000))
 abline(h=NNTlower)
 
@@ -137,12 +138,41 @@ janesData = janesData[order(janesData$X), ]
 ROCplots(data= janesData, NNTlower=10, NNTupper=40)
 
 
+RSquantiles = c(0, 11, 20, 28, 41, 112) # From Janes Fig 1 panel C.
+quintiles = seq(0, 1, by = 0.2)
+RSlm.out = lm(RSquantiles ~ quintiles)
+plot(quintiles, RSquantiles)
+
 janesDataSmooth= data.frame(
-  X = rep(xvalues, times=2),
+  X = rep(xvalues, times=2) ,
   class = rep(0:1, each=samplesize),
   weights = c(1-probVec$TreatHelps, probVec$TreatHelps)
 )
 
-ROCplots(       whichPlots = "pv",
+ROCplots(       whichPlots = "nntRange",
   data= janesDataSmooth,
-        NNTlower=10, NNTupper=40)
+        NNTlower=10, NNTupper=50)
+
+# "80% overall DFS;   44% marker negative".  Marker negative means marker <
+mean(janesDataSmooth$X < 42)
+
+## Conditional NNT's
+nnt = 1/benefit
+nnt[nnt <= 0] = 1000
+argmin = function(v, target=0) which(abs(v-target) == min(abs(v-target))[1])
+xvalues[argmin(nnt,50)]
+xvalues[argmin(nnt,10)]
+abline(h=xvalues[argmin(nnt,50)], lwd=2)
+abline(h=xvalues[argmin(nnt,10)], lwd=2)
+
+# epxloring why this line is in theNNTpos too big region.
+nnt[argmin(nnt,10)]
+
+
+lines(nnt, xvalues, lwd=2)
+plot.default(xvalues, benefit)
+abline(h=0)
+plot(xvalues, nnt, log="y", ylim=c(1,1000), xlab="Recurrence Score quantile", ylab="NNT")
+abline(h=10)  ### NNTlower?
+abline(h=20)  ### In discomfort zone?
+abline(h=50)  ### NNTupper?
