@@ -22,7 +22,8 @@ Description: Helps a clinical trial team  discuss
     is visualization of a "contra-Bayes" theorem, which produces criteria for
     retrospective case-controls studies.
 License: GPL-3
-Imports: shiny, xtable, stringr
+Imports: shiny, xtable, stringr, magrittr, mvbutils, ggplot2
 Collate: aaa.R ifVerboseCat.R sesp-pv-NNT.R achievable.se.sp.R binom.confint.R NNTintervals.R run.R ROCplots.R smartBoxPlot.R
-Suggests: knitr
+Suggests: knitr, testthat (>= 0.8.1), knitr (>= 1.6),
+        rmarkdown
 VignetteBuilder: knitr

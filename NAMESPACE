@@ -9,3 +9,8 @@ export("binom.confint")
 importFrom(stringr, str_dup)
 importFrom(xtable, xtable)
 import(shiny)
+importFrom(magrittr, '%>%')
+export('%>%')
+importFrom(mvbutils, '%&%')
+export('%&%')
+
