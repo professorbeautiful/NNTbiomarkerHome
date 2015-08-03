@@ -1,7 +1,7 @@
-skisloplot <- function (RSinput= 30) {
+skisloplot <- function (RSinput= 30, ytop = 100) {
   plot(RSvector, nnt,   xaxs="i",   yaxs="i", ##  log='y',
        xlim=c(0, 50),
-       ylim=c(0,100), type="l",  lwd=2, 
+       ylim=c(0, ytop), type="l",  lwd=5, 
        main = "Number Needed to Treat by Recurrence Score", 
        xlab="Recurrence score", ylab="Number needed to treat")
   
@@ -22,18 +22,19 @@ skisloplot <- function (RSinput= 30) {
   for (i in 1:ncol(Gcum)) {
     if (i == 1)  
       polygon(x = c(0:100, 100:0), y = c(rep(1, 101), Gcum[101:1, 1]), 
-              col = boxcolors[1])
+              border = FALSE, col = boxcolors[1])
     else  
       polygon(x = c(0:100, 100:0), y = c(Gcum[1:101, i-1], Gcum[101:1, i]), 
-              col = boxcolors[i])
+              border = FALSE, col = boxcolors[i])
   }
   
-  points(x = RSinput, y = nnt[RSinput + 1], type = "h", lwd = 3)
+  points(x = RSinput, y = nnt[RSinput + 1], type = "h", lwd = 3, col = "CornflowerBlue")
+  text(x = RSinput, y = nnt[RSinput + 1], "RS", col = "CornflowerBlue", cex = 2, adj = c(0,0))
   
   legend("topright", legend = 
-           c("benefitted", "no AE", "mild", "moderate", "severe", "life-threatening", "died"),
-          text.col = c("green", boxcolors), cex=1.2,
-         lwd=10, col = c("green", boxcolors)
+           c("NNT", "User selected RS", "Benefitted", "No AE", "Mild", "Moderate", "Severe", "Life-threatening", "Died"),
+          text.col = c("black", "CornflowerBlue", "green", boxcolors), cex=1.2,
+          lwd=9, col = c("black", "CornflowerBlue", "green", boxcolors)
          )
   ### Remember to remove the helped patient!  NNT-1.
 }

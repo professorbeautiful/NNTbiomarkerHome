@@ -37,21 +37,22 @@ shinyServer(function(input, output, session) {
   })
   
   output$skislope = renderPlot({
-#     if(is.null(input$plot_click))
+#     if(is.null(input$skislope_click))
 #       RSarg = 49
-#     else RSarg = input$plot_click$x
+#     else RSarg = input$skislope_click$x
 #     RSarg = round(max(RSarg, 5))
 #     cat("============  Setting rV$RSclicked: ", rV$RSclicked, 
 #         " ======\n")
 #     isolate({
 #       rV$RSclicked = RSarg
 #     })
-    skisloplot(input$RSchosen)
+    skisloplot(input$RSchosen, input$ytop)
   })
   
   output$AEstack = renderPlot({
     AEplot(input$RSchosen)
   })
+
 #   observe({
 #     RSclicked = try(input$skislope_click$x)
 #     if(class(RSclicked) == "try-error")

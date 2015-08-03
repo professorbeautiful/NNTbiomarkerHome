@@ -32,11 +32,14 @@ AEplot = function(RSinput = 30, makeTitle=FALSE){
        pos=4 , xpd=NA)
   text(x = - boxwidths/2, y=7:1, round(boxwidths, 1),
        pos=2 , xpd=NA)
-  if(makeTitle)  title(paste0("RS = ", RSinput, "  NNT = ", round(nnt[RSinput])))
+  if(makeTitle)
+    title(paste0("Outcomes for ",
+                 round(nnt[RSinput]), " if all patients treated, and 1 benefits\n",
+                 "RS = ", RSinput, "  NNT = ", round(nnt[RSinput])))
   print(paste0("RS = ", RSinput, "  NNT = ", round(nnt[RSinput])))
   print(boxwidths)
 }
 #
 #for(RSinput in c(OncotypeRScutoffs, TailorXRScutoffs))
-for(RSinput in c(17,30,10,25))
-  AEplot(RSinput)
+#for(RSinput in c(17,30,10,25))
+#  AEplot(RSinput)
