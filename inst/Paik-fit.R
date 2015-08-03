@@ -1,10 +1,6 @@
-# library(XML)
-# getNodeSet(xmlTreeParse("/Users/Roger/Dropbox/_HOME/Paper_on_Biomarker_Studies_and_NNT/oncotypeDX-risk-functions.jpg.xml"),
-#             "point")
-## I'd have to understand getNodeSet() better!
 
-OncotypeRScutoffs = c(17, 30)  ### upper boundaries
-TailorXRScutoffs = c(11, 25)  ### upper boundaries
+OncotypeRScutoffs = c(18, 30)  ### intermediate risk boundaries
+TailorXRScutoffs = c(11, 25)  ### intermediate risk boundaries
 
 pointStrings = grep(value=T, pattern = "<point",
                     read.csv(header=F,
@@ -80,6 +76,15 @@ abParam = nlm(function(abParam)
 pbeta(OncotypeRScutoffs[1]/50, shape1=abParam[1], shape2=abParam[2])
 pbeta(OncotypeRScutoffs[2]/50, shape1=abParam[1], shape2=abParam[2])
 #Perfect.
+benefit =
+  (-1)*apply(matrix(predicted_TenYearDFS, ncol=2), 1, diff)
+tenYearDFS_long$benefit = c(rep(0, length(benefit)),
+                            benefit)
+tenYearDFS_long_treated = tenYearDFS_long[tenYearDFS_long$group=="TAM_CHEMO", ]
+tenYearDFS_long_treated$control = tenYearDFS_long$predicted[1:101]
+tenYearDFS_long_treated$benefit2 =  ### OK; the same.
+  tenYearDFS_long_treated$control -
+  tenYearDFS_long_treated$predicted
 
 PaikSampleSize <- 668
 
@@ -88,15 +93,18 @@ BenefitPlot <- function (
   sampleSize=PaikSampleSize) {
 
   initial.Random.seed = .Random.seed
+
+  TAMcolor = 'red'
+  TAM_CHEMOcolor = 'blue'
+  Benefitcolor = 'darkgreen'
+
+
   with(tenYearDFS, plot(RS, Recur,
                         xlab="Recurrence Score (RS)",
                         ylab="Recurrence by 10 years",
                         ylim=c(0,0.35),
                         pch="" #,pch=c("C","T")[1 + (tenYearDFS$group=="TAM")])
   ))
-  TAMcolor = 'red'
-  TAM_CHEMOcolor = 'blue'
-  Benefitcolor = 'darkgreen'
   points(x=tenYearDFS$RS,
          predict(lm_TenYearDFS),
          pch=c("C","T")[1 + (tenYearDFS$group=="TAM")],
@@ -106,29 +114,17 @@ BenefitPlot <- function (
   lines(lwd=3, RSvector, predicted_TenYearDFS[tenYearDFS_long$group=='TAM_CHEMO'],
         col=TAM_CHEMOcolor)
 
-  benefit =
-    (-1)*apply(matrix(predicted_TenYearDFS, ncol=2), 1, diff)
-  tenYearDFS_long$benefit = c(rep(0, length(benefit)),
-                              benefit)
-  tenYearDFS_long_treated = tenYearDFS_long[tenYearDFS_long$group=="TAM_CHEMO", ]
-  tenYearDFS_long_treated$control = tenYearDFS_long$predicted[1:101]
-  tenYearDFS_long_treated$benefit2 =  ### OK; the same.
-    tenYearDFS_long_treated$control -
-    tenYearDFS_long_treated$predicted
-
-  #RSsample = rgamma(sampleSize, shape=shapescale[1], scale=shapescale[2])
-  #   RSsample = 50 * rbeta(sampleSize, shape1=abParam[1], shape2=abParam[2])
-  #   #RSsample = sort(RSsample[RSsample < 50])
-  #   RSsample = sort(RSsample)
-  #   RSsampleBenefit = tenYearDFS_long_treated$benefit[
-  #     match(ceiling(RSsample), tenYearDFS_long_treated$RS)]
-  #   RSsampleBenefit = pmax(0, RSsampleBenefit)
+  RSsample = 50 * rbeta(sampleSize, shape1=abParam[1], shape2=abParam[2])
+  RSsample = sort(RSsample)
+  RSsampleBenefit = tenYearDFS_long_treated$benefit[
+    match(ceiling(RSsample), tenYearDFS_long_treated$RS)]
+  RSsampleBenefit = pmax(0, RSsampleBenefit)
   #   lines(RSsample, RSsampleBenefit, col=Benefitcolor, lwd=3)
-  lines(0:100, benefit, col=Benefitcolor, lwd=3)
 
+  lines(0:100, benefit, col=Benefitcolor, lwd=3)
+  # RSsampleBenefit = tenYearDFS_long_treated$benefit[]
   whichBenefitted = which(1==rbinom(sampleSize, 1, RSsampleBenefit))
   theseBenefitted = RSsample[whichBenefitted]
-
   ### Who benefits from T+C?   ##
 
   rug(RSsample, col=TAMcolor, ticksize= -0.04)
@@ -153,18 +149,17 @@ BenefitPlot <- function (
   invisible(list(whichBenefitted=whichBenefitted,
                  theseBenefitted=theseBenefitted,
                  benefit=benefit,
-                 RSsampleBenefit=RSsampleBenefit,
+                 # RSsampleBenefit=RSsampleBenefit,
                  RSsample=RSsample,
                  .Random.seed=initial.Random.seed))  # Worth saving.
 }
 
 
-set.seed(benefitPlotOutput$.Random.seed)
+# set.seed(benefitPlotOutput$.Random.seed)
 benefitPlotOutput = BenefitPlot()
 
 whichBenefitted = benefitPlotOutput$whichBenefitted
 theseBenefitted = benefitPlotOutput$theseBenefitted
-benefit = benefitPlotOutput$benefit
 RSsampleBenefit = benefitPlotOutput$RSsampleBenefit
 RSsample = benefitPlotOutput$RSsample
 #.Random.seed = benefitPlotOutput$.Random.seed
@@ -176,17 +171,15 @@ set.seed(benefitPlotOutput$.Random.seed)
 nnt = 1/benefit
 nnt[nnt<=0] = Inf
 names(nnt) = RSvector
-OncotypeRScutoffs = c(17, 30)  ### upper boundaries
-TailorXRScutoffs = c(11, 25)  ### upper boundaries
+
+#####   NNT by Oncotype DX RS  #####
 OncotypeNNTrange = round(nnt[as.character(OncotypeRScutoffs)])
 TailorXNNTrange = round(nnt[as.character(TailorXRScutoffs)])
 
-
-
-#nnt = pmin(nnt, 1000)
 plot(RSvector, nnt,   xaxs="i",   yaxs="i", ##  log='y',
      xlim=c(0, 50),
-     ylim=c(0,120), type="l", lwd=3,
+     ylim=c(0,120), type="l", lwd=4,
+     col=Benefitcolor,
      xlab="Recurrence score", ylab="Number needed to treat")
 
 argmin = function(v, target=0)
@@ -210,28 +203,37 @@ points(TailorXRScutoffs, nnt[as.character(TailorXRScutoffs)],
        col='blue', type="h", lty=1, lwd=2)
 text(x=TailorXRScutoffs[2], y=nnt[as.character(TailorXRScutoffs)][2],
      srt=90, adj=c(0, 1), xpd=NA, col='blue', " TailorX")
-text(x=9, y=80,
+text(x=9, y=100,
      srt=90, adj=c(0, 1), xpd=NA, col='blue', " TailorX")
 for(iCut in 1:2)
   lines(c(-10, TailorXRScutoffs[iCut]),
         rep(times=2, nnt[as.character(TailorXRScutoffs[iCut])]),
         col="blue", lty=2)
+'%&%' = function(a, b) paste0(a,b)
 legend("topright",
        legend=c(
-         "Oncotype DX risk groups ",
-         "  Cutoffs " %&%  paste(OncotypeRScutoffs, collapse=", ") ,
-         "  NNT range "  %&% paste(OncotypeNNTrange, collapse=", ") ,
+         "Number needed to treat",
+         "One patient who benefits",
          "",
-         "TailorX risk groups ",
-         "  Cutoffs " %&%  paste(TailorXRScutoffs, collapse=", ") ,
-         "  NNT range "  %&% paste(TailorXNNTrange, collapse=", ")
+         "Oncotype DX intermediate risk",
+         "  RS Boundaries " %&%  paste(OncotypeRScutoffs, collapse=", ") ,
+         "  NNT Boundaries "  %&% paste(OncotypeNNTrange, collapse=", ") ,
+         "",
+         "TailorX intermediate risk",
+         "  RS Boundaries " %&%  paste(TailorXRScutoffs, collapse=", ") ,
+         "  NNT Boundaries "  %&% paste(TailorXNNTrange, collapse=", ")
        ),
-       lty=c(0, 1, 2, 0, 0, 1, 2),
-       text.col= c("red", "red", "red", "white","blue", "blue", "blue" ),
-       col=      c("white", "red", "red", "white", "white", "blue", "blue" ),
-       lwd = c(0, 2, 2, 0, 0,2, 2)
+       lty=c(1, 1, 0, 0, 1, 2, 0, 0, 1, 2),
+       text.col= c("darkgreen", "green", "white",
+                   "red", "red", "red", "white",
+                   "blue", "blue", "blue", "white"),
+       col= c("darkgreen", "green", "white",
+                   "red", "red", "red", "white",
+                   "blue", "blue", "blue", "white"),
+       lwd = c(4, 6, 0, 0, 2, 2, 0, 0, 2, 2)
 )
 title("NNT by Oncotype DX RS")
+rect(0, 0, 50, 1, col = 'green')  # the patient who benefits
 
 
 rect(0, 0, 50, 1, col = 'black')
@@ -307,8 +309,6 @@ points(pch="O", x=1-specificity17, y=sensitivity17, col="red")
 text(labels="x0=17", x=1-specificity17, y=sensitivity17, adj=c(1.3,0),col="red")
 points(pch="O", x=1-specificity17, y=sensitivity17, col="red")
 text(labels="x0=17", x=1-specificity17, y=sensitivity17, adj=c(1.3,0),col="red")
-
-
 
 ROCplots(data=data.frame(
   class=(1:length(RSsample) %in% whichBenefitted),
