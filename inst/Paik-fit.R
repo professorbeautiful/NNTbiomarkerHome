@@ -1,4 +1,7 @@
 
+
+cat("Running Paik-fit.R\n")
+
 OncotypeRScutoffs = c(18, 30)  ### intermediate risk boundaries
 TailorXRScutoffs = c(11, 25)  ### intermediate risk boundaries
 
@@ -92,13 +95,13 @@ PaikSampleSize <- 668
 
 RSsample = 50 * rbeta(sampleSize, shape1=abParam[1], shape2=abParam[2])
 RSsample = sort(RSsample)
-RSsampleBenefit = DFSdata_long_treated$benefit[
-  match(ceiling(RSsample), DFSdata_long_treated$RS)]
+RSsampleBenefit = tenYearDFS_long_treated$benefit[
+  match(ceiling(RSsample), tenYearDFS_long_treated$RS)]
 RSsampleBenefit = pmax(0, RSsampleBenefit)
 #   lines(RSsample, RSsampleBenefit, col=Benefitcolor, lwd=3)
 
 
-# RSsampleBenefit = DFSdata_long_treated$benefit[]
+# RSsampleBenefit = tenYearDFS_long_treated$benefit[]
 whichBenefitted = which(1==rbinom(sampleSize, 1, RSsampleBenefit))
 theseBenefitted = RSsample[whichBenefitted]
 ### Who benefits from T+C?   ##
@@ -118,11 +121,6 @@ Paik_nnt = nnt
 
 RSsampleBtoT = rbinom(length(RSsampleBenefit), 1, RSsampleBenefit)
 prevalence = sum(RSsampleBtoT)/length(RSsampleBtoT)  ### 3% benefit
-
-
-RecurDiff = diff(
-  laply(split(tenYearDFS$Recur,tenYearDFS$group), diff)
-)
 
 
 benefitTable = table( RSsample %in% theseBenefitted,
