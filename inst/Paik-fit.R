@@ -76,6 +76,7 @@ abParam = nlm(function(abParam)
 pbeta(OncotypeRScutoffs[1]/50, shape1=abParam[1], shape2=abParam[2])
 pbeta(OncotypeRScutoffs[2]/50, shape1=abParam[1], shape2=abParam[2])
 #Perfect.
+
 benefit =
   (-1)*apply(matrix(predicted_TenYearDFS, ncol=2), 1, diff)
 tenYearDFS_long$benefit = c(rep(0, length(benefit)),
@@ -88,82 +89,22 @@ tenYearDFS_long_treated$benefit2 =  ### OK; the same.
 
 PaikSampleSize <- 668
 
-##########   BEGINNING THE RECURRENCE RISK BENEFIT PLOTTING  ###########################
-BenefitPlot <- function (
-  sampleSize=PaikSampleSize) {
 
-  initial.Random.seed = .Random.seed
-
-  TAMcolor = 'red'
-  TAM_CHEMOcolor = 'blue'
-  Benefitcolor = 'darkgreen'
+RSsample = 50 * rbeta(sampleSize, shape1=abParam[1], shape2=abParam[2])
+RSsample = sort(RSsample)
+RSsampleBenefit = DFSdata_long_treated$benefit[
+  match(ceiling(RSsample), DFSdata_long_treated$RS)]
+RSsampleBenefit = pmax(0, RSsampleBenefit)
+#   lines(RSsample, RSsampleBenefit, col=Benefitcolor, lwd=3)
 
 
-  with(tenYearDFS, plot(RS, Recur,
-                        xlab="Recurrence Score (RS)",
-                        ylab="Recurrence by 10 years",
-                        ylim=c(0,0.35),
-                        pch="" #,pch=c("C","T")[1 + (tenYearDFS$group=="TAM")])
-  ))
-  points(x=tenYearDFS$RS,
-         predict(lm_TenYearDFS),
-         pch=c("C","T")[1 + (tenYearDFS$group=="TAM")],
-         col=ifelse(tenYearDFS$group=="TAM", TAMcolor, TAM_CHEMOcolor) )
-  lines(lwd=3, RSvector, predicted_TenYearDFS[tenYearDFS_long$group=='TAM'],
-        col=TAMcolor)
-  lines(lwd=3, RSvector, predicted_TenYearDFS[tenYearDFS_long$group=='TAM_CHEMO'],
-        col=TAM_CHEMOcolor)
+# RSsampleBenefit = DFSdata_long_treated$benefit[]
+whichBenefitted = which(1==rbinom(sampleSize, 1, RSsampleBenefit))
+theseBenefitted = RSsample[whichBenefitted]
+### Who benefits from T+C?   ##
 
-  RSsample = 50 * rbeta(sampleSize, shape1=abParam[1], shape2=abParam[2])
-  RSsample = sort(RSsample)
-  RSsampleBenefit = tenYearDFS_long_treated$benefit[
-    match(ceiling(RSsample), tenYearDFS_long_treated$RS)]
-  RSsampleBenefit = pmax(0, RSsampleBenefit)
-  #   lines(RSsample, RSsampleBenefit, col=Benefitcolor, lwd=3)
-
-  lines(0:100, benefit, col=Benefitcolor, lwd=3)
-  # RSsampleBenefit = tenYearDFS_long_treated$benefit[]
-  whichBenefitted = which(1==rbinom(sampleSize, 1, RSsampleBenefit))
-  theseBenefitted = RSsample[whichBenefitted]
-  ### Who benefits from T+C?   ##
-
-  rug(RSsample, col=TAMcolor, ticksize= -0.04)
-  rug(theseBenefitted, col=Benefitcolor, ticksize = -0.08, lwd=2)
-  abline(v=OncotypeRScutoffs, lty=2)
-
-  legend(x="topleft",
-         legend=c("TAM only", "TAM+CHEMO",
-                  "would have benefitted: " %&% length(theseBenefitted)
-                  %&% "/" %&% PaikSampleSize),
-         col = c(TAMcolor, TAM_CHEMOcolor, Benefitcolor), pch=c("T","C", ""), lwd=c(3,3, 3))
-  split(RSsample, cut(RSsample, c(0, 11, 30)))
-  split(theseBenefitted, cut(theseBenefitted, c(0, 11, 30)))
-  benefitTable = table( RSsample %in% theseBenefitted,
-                        cut(RSsample, c(0, OncotypeRScutoffs, Inf )))
-  text(c(5, 21, 35), c(0.25, 0.25, 0.25),
-       c(
-         benefitTable[2,1]  %&% "/" %&% benefitTable[1,1],
-         benefitTable[2,2]  %&% "/" %&% benefitTable[1,2],
-         benefitTable[2,3] %&% "/" %&% benefitTable[1,3]),
-       col=Benefitcolor)
-  invisible(list(whichBenefitted=whichBenefitted,
-                 theseBenefitted=theseBenefitted,
-                 benefit=benefit,
-                 # RSsampleBenefit=RSsampleBenefit,
-                 RSsample=RSsample,
-                 .Random.seed=initial.Random.seed))  # Worth saving.
-}
-
-
-# set.seed(benefitPlotOutput$.Random.seed)
-benefitPlotOutput = BenefitPlot()
-
-whichBenefitted = benefitPlotOutput$whichBenefitted
-theseBenefitted = benefitPlotOutput$theseBenefitted
-RSsampleBenefit = benefitPlotOutput$RSsampleBenefit
-RSsample = benefitPlotOutput$RSsample
-#.Random.seed = benefitPlotOutput$.Random.seed
-set.seed(benefitPlotOutput$.Random.seed)
+benefitTable = table( RSsample %in% theseBenefitted,
+                      cut(RSsample, c(0, OncotypeRScutoffs, Inf )))
 
 
 #### NUMBER NEEDED TO TREAT   ####
@@ -171,175 +112,20 @@ set.seed(benefitPlotOutput$.Random.seed)
 nnt = 1/benefit
 nnt[nnt<=0] = Inf
 names(nnt) = RSvector
+Paik_nnt = nnt
 
-#####   NNT by Oncotype DX RS  #####
-OncotypeNNTrange = round(nnt[as.character(OncotypeRScutoffs)])
-TailorXNNTrange = round(nnt[as.character(TailorXRScutoffs)])
+######   Marginal benefit  ####
 
-plot(RSvector, nnt,   xaxs="i",   yaxs="i", ##  log='y',
-     xlim=c(0, 50),
-     ylim=c(0,120), type="l", lwd=4,
-     col=Benefitcolor,
-     xlab="Recurrence score", ylab="Number needed to treat")
-
-argmin = function(v, target=0)
-  sapply(target, function(target)which(abs(v-target) == min(abs(v-target))[1]))
-
-RSforNNTupper = argmin(nnt, OncotypeNNTrange[1])
-RSforNNTlower = argmin(nnt, OncotypeNNTrange[2])
-# points(tenYearDFS_long$RS[c(RSforNNTupper, RSforNNTlower)],
-#        c(NNTupper, NNTlower),
-#        col='darkgreen', type="h", lty=2, lwd=2)
-# abline(h=c(NNTlower, NNTupper), col='darkgreen', lty=2, lwd=2)
-points(OncotypeRScutoffs, nnt[as.character(OncotypeRScutoffs)],
-       col='red', type="h", lty=1, lwd=2)
-for(iCut in 1:2)
-  lines(c(-10, OncotypeRScutoffs[iCut]),
-        rep(times=2, nnt[as.character(OncotypeRScutoffs[iCut])]),
-        col="red", lty=2)
-text(x=OncotypeRScutoffs, y=nnt[as.character(OncotypeRScutoffs)],
-     srt=90, adj=c(0,1), xpd=NA, col='red', " OncotypeDX")
-points(TailorXRScutoffs, nnt[as.character(TailorXRScutoffs)],
-       col='blue', type="h", lty=1, lwd=2)
-text(x=TailorXRScutoffs[2], y=nnt[as.character(TailorXRScutoffs)][2],
-     srt=90, adj=c(0, 1), xpd=NA, col='blue', " TailorX")
-text(x=9, y=100,
-     srt=90, adj=c(0, 1), xpd=NA, col='blue', " TailorX")
-for(iCut in 1:2)
-  lines(c(-10, TailorXRScutoffs[iCut]),
-        rep(times=2, nnt[as.character(TailorXRScutoffs[iCut])]),
-        col="blue", lty=2)
-'%&%' = function(a, b) paste0(a,b)
-legend("topright",
-       legend=c(
-         "Number needed to treat",
-         "One patient who benefits",
-         "",
-         "Oncotype DX intermediate risk",
-         "  RS Boundaries " %&%  paste(OncotypeRScutoffs, collapse=", ") ,
-         "  NNT Boundaries "  %&% paste(OncotypeNNTrange, collapse=", ") ,
-         "",
-         "TailorX intermediate risk",
-         "  RS Boundaries " %&%  paste(TailorXRScutoffs, collapse=", ") ,
-         "  NNT Boundaries "  %&% paste(TailorXNNTrange, collapse=", ")
-       ),
-       lty=c(1, 1, 0, 0, 1, 2, 0, 0, 1, 2),
-       text.col= c("darkgreen", "green", "white",
-                   "red", "red", "red", "white",
-                   "blue", "blue", "blue", "white"),
-       col= c("darkgreen", "green", "white",
-                   "red", "red", "red", "white",
-                   "blue", "blue", "blue", "white"),
-       lwd = c(4, 6, 0, 0, 2, 2, 0, 0, 2, 2)
-)
-title("NNT by Oncotype DX RS")
-rect(0, 0, 50, 1, col = 'green')  # the patient who benefits
-
-
-rect(0, 0, 50, 1, col = 'black')
-
-######   AERiskTable ####
-
-rect(xleft = 17.5, ybottom = 1, xright = 18.5, ytop = RiskOfGrade4 * nnt[argmin(v = RSvector, target = 18)], col = 'red')
-
-AERiskTable = cbind(  c( 10, 20, 70),  cbind(c(15, 25, 60)) )  ## WRONG NUMBERS!
-dimnames(AERiskTable) <- list( c("G4", "G3", "OK"),  c("hema", "cardiac"))
-### Remember to remove the helped patient!  NNT-1.
-
-
-########
-########
 RSsampleBtoT = rbinom(length(RSsampleBenefit), 1, RSsampleBenefit)
 prevalence = sum(RSsampleBtoT)/length(RSsampleBtoT)  ### 3% benefit
-
-boxplot(split(RSsample, RSsampleBtoT))
-stupidBarPlot(split(RSsample, RSsampleBtoT),
-              groupNames=c("Did not recur", "Recurred"), ylab= "RS", xlab="Outcome")
-smartBarPlot(split(RSsample, RSsampleBtoT), boxfill="#FF000033",
-             pointcol="grey",
-             groupNames=c("Did not recur", "Recurred"), ylab= "RS", xlab="Outcome")
-
-
-# Predicting recurrence if TAM group.  ####
-ROCplots(data=data.frame(
-  class=tenYearDFS$Recur,
-  X=tenYearDFS$RS) [tenYearDFS$group=="TAM", ],
-  #  NNTlower = OncotypeNNTrange[2], NNTupper = OncotypeNNTrange[1],
-  #  whichPlots=c("pv")
-  #  whichPlots=c("density", "raw", "ROC", "pv", "nnt", "nntRange")
-  NNTlower=NA,   whichPlots="ROC"
-)
-
-
-# Predicting benefit from +CHEMO   ####
-ROCplots(data=data.frame(
-  class=(1==rbinom(PaikSampleSize, 1, RSsampleBenefit)),
-  X=tenYearDFS$RS) [tenYearDFS$group=="TAM", ],
-  #  NNTlower = OncotypeNNTrange[2], NNTupper = OncotypeNNTrange[1],
-  #  whichPlots=c("pv")
-  #  whichPlots=c("density", "raw", "ROC", "pv", "nnt", "nntRange")
-  NNTlower=NA,   whichPlots="ROC"
-)
-
 
 
 RecurDiff = diff(
   laply(split(tenYearDFS$Recur,tenYearDFS$group), diff)
 )
 
-ROCplots(data=data.frame(
-  class=(1:length(RSsample) %in% whichBenefitted),
-  X=RSsample),
-  NNTlower=6,   whichPlots="ROC"
-)
 
 benefitTable = table( RSsample %in% theseBenefitted,
                       cut(RSsample, c(0, OncotypeRScutoffs, Inf )))
-
-sensitivity30 = benefitTable["TRUE", "(30,Inf]"]/ sum(benefitTable["TRUE", ])
-specificity30 = 1 - benefitTable["FALSE", "(30,Inf]"]/ sum(benefitTable["FALSE", ])
-points(pch="O", x=1-specificity30, y=sensitivity30, col="red")
-text(labels="x0=30", x=1-specificity30, y=sensitivity30, adj=c(1.3,0),col="red")
-points(pch="O", x=1-specificity30, y=sensitivity30, col="red")
-text(labels="x0=30", x=1-specificity30, y=sensitivity30, adj=c(1.3,0),col="red")
-
-sensitivity17 = 1 - benefitTable["TRUE", "(0,17]"]/ sum(benefitTable["TRUE", ])
-specificity17 = benefitTable["FALSE", "(0,17]"]/ sum(benefitTable["FALSE", ])
-points(pch="O", x=1-specificity17, y=sensitivity17, col="red")
-text(labels="x0=17", x=1-specificity17, y=sensitivity17, adj=c(1.3,0),col="red")
-points(pch="O", x=1-specificity17, y=sensitivity17, col="red")
-text(labels="x0=17", x=1-specificity17, y=sensitivity17, adj=c(1.3,0),col="red")
-
-ROCplots(data=data.frame(
-  class=(1:length(RSsample) %in% whichBenefitted),
-  X=RSsample),
-  NNTlower=NA,   whichPlots="pv",
-  title="My PV plot"
-)
-ppv30 = benefitTable["TRUE", "(30,Inf]"]/ sum(benefitTable[ , "(30,Inf]"])
-npv30 = 1 - benefitTable["FALSE", "(30,Inf]"]/ sum(benefitTable[ ,  "(30,Inf]"])
-points(pch="O", x=npv30, y=ppv30, col="red")
-text(labels="x0=30", x=1-npv30, y=ppv30, adj=c(1.3,0),col="red")
-points(pch="O", x=1-npv30, y=ppv30, col="red")
-text(labels="x0=30", x=1-npv30, y=ppv30, adj=c(1.3,0),col="red")
-
-ppv17 = 1 - benefitTable["TRUE", "(0,17]"]/ sum(benefitTable["TRUE", ])
-npv17 = benefitTable["FALSE", "(0,17]"]/ sum(benefitTable["FALSE", ])
-points(pch="O", x=1-npv17, y=ppv17, col="red")
-text(labels="x0=17", x=1-npv17, y=ppv17, adj=c(1.3,0),col="red")
-points(pch="O", x=1-npv17, y=ppv17, col="red")
-text(labels="x0=17", x=1-npv17, y=ppv17, adj=c(1.3,0),col="red")
-
-
-##### Pr(benefit | would recur, RS)  increases with RS. ####
-
-with(tenYearDFS_long %>% subset(., group=="TAM"), {
-  plot(RS, benefit / predicted,
-       xlim=c(0,50), ylab='Pr(benefit | would recur)')
-  abline(v=c(OncotypeRScutoffs, 50),
-         h=print((benefit / predicted )[argmin(RS, c(OncotypeRScutoffs, 50))]), col="red")
-  print((benefit )[argmin(RS, c(OncotypeRScutoffs, 50))])
-
-})
 
 
