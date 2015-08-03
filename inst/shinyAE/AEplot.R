@@ -11,7 +11,7 @@ AEplot = function(RSinput = 30){
   symbols(x=rep(0, 7), y=7:1, inches=F,
           xlim=c(-ceiling(max(boxwidths)), ceiling(max(boxwidths))) * 0.75,
           rectangles = cbind(boxwidths, 1), bg = c("green", boxcolors), 
-          #axes=F, 
+          axes=F, 
           xlab="", ylab="")
   options(opts)
   "%except%" <-  function (vector, condition) vector[match(vector, condition, 0) == 0]
@@ -23,11 +23,12 @@ AEplot = function(RSinput = 30){
            y0 = verticalsY - 1/2, y1 = verticalsY + 1/2
   )
   text(x = boxwidths/2, y=7:1,
-       c("benefitted", "no AE", "mild", "moderate", "severe", "life-threatening", "died"),
+       c("Benefitted", "No AE", "Mild", "Moderate", "Severe", "Life-threatening", "Died"),
        pos=4 , xpd=NA)
   text(x = - boxwidths/2, y=7:1, round(boxwidths, 1),
        pos=2 )
-  title(paste0("RS = ", RSinput, "  NNT = ", round(nnt[RSinput])))
+  title(paste0("Outcomes for ", round(nnt[RSinput]), " patients treated, if 1 benefits\n", 
+               "RS = ", RSinput, "  NNT = ", round(nnt[RSinput])))
 }
 # 
 # for(RSinput in c(OncotypeRScutoffs, TailorXRScutoffs))
