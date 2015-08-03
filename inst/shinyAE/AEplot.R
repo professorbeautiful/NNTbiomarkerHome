@@ -1,18 +1,22 @@
 #### Adverse event NNT bars ####
 #### For CMFT, from table 5 of fisher1997.
+#### For Supplement 2, setting the plot box small (342x 272) seems to work.
 
-AEplot = function(RSinput = 30){
+AEplot = function(RSinput = 30, makeTitle=FALSE){
+  boxcolors = colorRampPalette(c("lightgrey", "red"))(6)
+
   if(is.null(RSinput))
     RSinput = 48
-  par(mai=c(0,0,1,0))
+  par.save = par(mai=c(0,0,0.5,0.5))
   aeProb = c(2.9,15,57,20,5,0.1)
   boxwidths = c(1, (nnt[RSinput] - 1) * aeProb / 100)
   opts = options(warn=-1)
   symbols(x=rep(0, 7), y=7:1, inches=F,
           xlim=c(-ceiling(max(boxwidths)), ceiling(max(boxwidths))) * 0.75,
-          rectangles = cbind(boxwidths, 1), bg = c("green", boxcolors), 
-          #axes=F, 
+          rectangles = cbind(boxwidths, 1), bg = c("green", boxcolors),
+          axes=F,
           xlab="", ylab="")
+  par(par.save)
   options(opts)
   "%except%" <-  function (vector, condition) vector[match(vector, condition, 0) == 0]
   verticalsX = lapply(boxwidths[-1], function(bw)
@@ -23,12 +27,16 @@ AEplot = function(RSinput = 30){
            y0 = verticalsY - 1/2, y1 = verticalsY + 1/2
   )
   text(x = boxwidths/2, y=7:1,
-       c("benefitted", "no AE", "mild", "moderate", "severe", "life-threatening", "died"),
+       c("benefitted", "no adverse event", "mild AE", "moderate", "severe AE", "life-threatening AE",
+         "fatal toxicity"),
        pos=4 , xpd=NA)
   text(x = - boxwidths/2, y=7:1, round(boxwidths, 1),
-       pos=2 )
-  title(paste0("RS = ", RSinput, "  NNT = ", round(nnt[RSinput])))
+       pos=2 , xpd=NA)
+  if(makeTitle)  title(paste0("RS = ", RSinput, "  NNT = ", round(nnt[RSinput])))
+  print(paste0("RS = ", RSinput, "  NNT = ", round(nnt[RSinput])))
+  print(boxwidths)
 }
-# 
-# for(RSinput in c(OncotypeRScutoffs, TailorXRScutoffs))
-#   AEplot(RSinput)
+#
+#for(RSinput in c(OncotypeRScutoffs, TailorXRScutoffs))
+for(RSinput in c(17,30,10,25))
+  AEplot(RSinput)
