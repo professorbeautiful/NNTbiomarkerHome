@@ -35,7 +35,7 @@ BenefitPlot <- function (
                   "would have benefitted: " %&% length(theseBenefitted)
                   %&% "/" %&% PaikSampleSize),
          col = c(TAMcolor, TAM_CHEMOcolor, Benefitcolor), pch=c("T","C", ""), lwd=c(3,3, 3))
-  text(c(5, 21, 35), c(0.25, 0.25, 0.25),
+  graphics::text(c(5, 21, 35), c(0.25, 0.25, 0.25),
        c(
          benefitTable[2,1]  %&% "/" %&% benefitTable[1,1],
          benefitTable[2,2]  %&% "/" %&% benefitTable[1,2],

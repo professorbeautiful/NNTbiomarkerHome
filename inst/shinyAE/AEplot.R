@@ -26,11 +26,11 @@ AEplot = function(RSinput = 30, makeTitle=FALSE){
   segments(x0= unlist(verticalsX),
            y0 = verticalsY - 1/2, y1 = verticalsY + 1/2
   )
-  text(x = boxwidths/2, y=7:1,
+  graphics::text(x = boxwidths/2, y=7:1,
        c("benefitted", "no adverse event", "mild AE", "moderate", "severe AE", "life-threatening AE",
          "fatal toxicity"),
        pos=4 , xpd=NA)
-  text(x = - boxwidths/2, y=7:1, round(boxwidths, 1),
+  graphics::text(x = - boxwidths/2, y=7:1, round(boxwidths, 1),
        pos=2 , xpd=NA)
   if(makeTitle)
     title(paste0("Outcomes for ",
