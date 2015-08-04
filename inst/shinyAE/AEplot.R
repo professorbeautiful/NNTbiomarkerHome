@@ -5,7 +5,7 @@
 AEplot = function(RSinput = 30, makeTitle=FALSE){
 
   if( ! identical(ls(pattern="Paik_nnt", pos=1), 1) )
-    source("inst/Paik-fit.R")
+    source("inst/Paik-fit.R", local=TRUE)
 
   boxcolors = colorRampPalette(c("lightgrey", "red"))(6)
 
