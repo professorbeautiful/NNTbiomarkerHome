@@ -20,7 +20,9 @@
     .installFromGithubNNTbiomarker()
   apps = app
   for (app in apps) {
-    setwd(paste0("inst/", app))
+    cat("wd is " %&% getwd() %&% "\n")
+    cat("wd changing to " %&% "inst/" %&% app %&% "\n")
+    setwd("inst/" %&% app)
     tryCatch({
       require("shinyapps")
       deployApp()
