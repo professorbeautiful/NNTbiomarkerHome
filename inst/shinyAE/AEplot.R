@@ -3,6 +3,10 @@
 #### For Supplement 2, setting the plot box small (342x 272) seems to work.
 
 AEplot = function(RSinput = 30, makeTitle=FALSE){
+
+  if( ! identical(ls(pattern="Paik_nnt", pos=1), 1) )
+    source("inst/Paik-fit.R")
+
   boxcolors = colorRampPalette(c("lightgrey", "red"))(6)
 
   if(is.null(RSinput))
