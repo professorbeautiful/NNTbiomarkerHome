@@ -28,7 +28,7 @@
       deployApp()
     },
     finally={
-      cat("shinyapps::showLogs(appDir = 'inst/", app, "')\n")
+      cat("shinyapps::showLogs(appDir = 'inst/" %&% app %&% "')\n")
       setwd("../..")}
     )
   }
@@ -36,6 +36,6 @@
 
 .runDeployed = function(app="shinyElicit"){
   system("open https://trials.shinyapps.io/" %&% app)
-  cat("shinyapps::showLogs(appDir = 'inst/", app, "')\n")
+  cat("shinyapps::showLogs(appDir = 'inst/" %&% app %&% "')\n")
 }
 
