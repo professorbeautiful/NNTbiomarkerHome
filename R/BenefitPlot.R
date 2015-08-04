@@ -16,7 +16,7 @@ BenefitPlot <- function (
                         pch="" #,pch=c("C","T")[1 + (tenYearDFS$group=="TAM")])
   ))
   points(x=tenYearDFS$RS,
-         predict(lm_tenYearDFS),
+         predict(lm_TenYearDFS),
          pch=c("C","T")[1 + (tenYearDFS$group=="TAM")],
          col=ifelse(tenYearDFS$group=="TAM", TAMcolor, TAM_CHEMOcolor) )
   lines(lwd=3, RSvector, predicted_tenYearDFS[tenYearDFS_long$group=='TAM'],
