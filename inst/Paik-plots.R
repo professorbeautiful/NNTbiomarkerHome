@@ -13,13 +13,16 @@ set.seed(benefitPlotOutput$.Random.seed)
 
 # library(magrittr)
 # library(plyr)
-with(tenYearDFS_long %>% subset(., group=="TAM"), {
+
+par(mai=c(1,1,2,1))
+with(tenYearDFS_long %>% subset(., group=="TAM_CHEMO"), {
   plot(RS, benefit / predicted,
        xlim=c(0,50), ylab='Pr(benefit | would recur)')
   abline(v=c(OncotypeRScutoffs, 50),
          h=print((benefit / predicted )[argmin(RS, c(OncotypeRScutoffs, 50))]), col="red")
   print((benefit )[argmin(RS, c(OncotypeRScutoffs, 50))])
-
+#   [1] 0.4053006 0.8855322 1.5891365
+#   [1] 0.02481807 0.07211056 0.20559292
 })
 
 
@@ -33,11 +36,6 @@ plot(RSvector, nnt,   xaxs="i",   yaxs="i", ##  log='y',
      col=Benefitcolor,
      xlab="Recurrence score", ylab="Number needed to treat")
 
-argmin = function(v, target=0)
-  sapply(target, function(target)which(abs(v-target) == min(abs(v-target))[1]))
-
-RSforNNTupper = argmin(nnt, OncotypeNNTrange[1])
-RSforNNTlower = argmin(nnt, OncotypeNNTrange[2])
 # points(tenYearDFS_long$RS[c(RSforNNTupper, RSforNNTlower)],
 #        c(NNTupper, NNTlower),
 #        col='darkgreen', type="h", lty=2, lwd=2)
