@@ -23,7 +23,7 @@ Description: Helps a clinical trial team  discuss
     retrospective case-controls studies.
 License: GPL-3
 Imports: shiny, xtable, stringr, magrittr, mvbutils, ggplot2, plyr
-Collate: aaa.R ifVerboseCat.R sesp-pv-NNT.R achievable.se.sp.R binom.confint.R NNTintervals.R run.R ROCplots.R smartBoxPlot.R BenefitPlot.R
+Collate: aaa.R ifVerboseCat.R sesp-pv-NNT.R achievable.se.sp.R binom.confint.R NNTintervals.R run.R ROCplots.R smartBoxPlot.R BenefitPlot.R argmin.R
 Suggests: knitr, testthat (>= 0.8.1), knitr (>= 1.6),
         rmarkdown
 VignetteBuilder: knitr
