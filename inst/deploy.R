@@ -9,6 +9,7 @@
 # ERROR: sub-architecture 'x86_64' is not installed
 # Solution remove the soft links especially the third one.
 
+### NOTE:  do not include "inst" in the argument.
 
 .installFromGithubNNTbiomarker = function()
   devtools::install_github("professorbeautiful/NNTbiomarkerHome", build_vignettes=TRUE)
@@ -20,6 +21,8 @@
     .installFromGithubNNTbiomarker()
   apps = app
   for (app in apps) {
+    if(substr(app, 1, 5) == "inst/")
+      warning(".deploy: do not include 'inst' in app name.")
     cat("wd is " %&% getwd() %&% "\n")
     cat("wd changing to " %&% "inst/" %&% app %&% "\n")
     setwd("inst/" %&% app)
