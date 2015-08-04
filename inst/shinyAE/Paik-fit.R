@@ -110,8 +110,8 @@ benefitTable = table( RSsample %in% theseBenefitted,
                       cut(RSsample, c(0, OncotypeRScutoffs, Inf )))
 
 
-RSforNNTupper = argmin(nnt, OncotypeNNTrange[1])
-RSforNNTlower = argmin(nnt, OncotypeNNTrange[2])
+RSforNNTupper = NNTbiomarker::argmin(nnt, OncotypeNNTrange[1])
+RSforNNTlower = NNTbiomarker::argmin(nnt, OncotypeNNTrange[2])
 
 #### NUMBER NEEDED TO TREAT   ####
 
