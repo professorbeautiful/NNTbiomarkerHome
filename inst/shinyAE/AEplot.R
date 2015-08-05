@@ -35,7 +35,8 @@ AEplot = function(RSinput = 30, makeTitle=FALSE){
        pos=2 , xpd=NA)
   if(makeTitle)
     title(paste0("Outcomes for ",
-                 round(nnt[RSinput]), " patients, if all are treated, and 1 benefits\n",
+                 round(nnt[RSinput]), " patients, \n",
+                 "if all are treated, and 1 benefits\n",
                  "RS = ", RSinput, "  NNT = ", round(nnt[RSinput])))
   print(paste0("RS = ", RSinput, "  NNT = ", round(nnt[RSinput])))
   print(boxwidths)
