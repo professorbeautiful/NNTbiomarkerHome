@@ -12,7 +12,7 @@ AEplot = function(RSinput = 30, makeTitle=FALSE){
   aeProb = c(2.9,15,57,20,5,0.1)
   boxwidths = c(1, (nnt[RSinput] - 1) * aeProb / 100)
   opts = options(warn=-1)
-  symbols(x=rep(0, 7), y=7:1, inches=F,
+  symbols(x=rep(0, 7), y=1:7, inches=F,
           xlim=c(-ceiling(max(boxwidths)), ceiling(max(boxwidths))) * 0.75,
           rectangles = cbind(boxwidths, 1), bg = c("green", boxcolors),
           axes=F,
@@ -23,15 +23,15 @@ AEplot = function(RSinput = 30, makeTitle=FALSE){
   verticalsX = lapply(boxwidths[-1], function(bw)
     if(bw <= 1)  numeric(0)  else  -floor(bw/2):floor(bw/2)
   )
-  verticalsY = rep(6:1, times=sapply(verticalsX, length))
+  verticalsY = rep(1:6, times=sapply(verticalsX, length))
   segments(x0= unlist(verticalsX),
-           y0 = verticalsY - 1/2, y1 = verticalsY + 1/2
+           y0 = verticalsY + 1/2, y1 = verticalsY + 3/2
   )
-  graphics::text(x = boxwidths/2, y=7:1,
+  graphics::text(x = boxwidths/2, y=1:7,
        c("benefitted", "no adverse event", "mild AE", "moderate", "severe AE", "life-threatening AE",
          "fatal toxicity"),
        pos=4 , xpd=NA)
-  graphics::text(x = - boxwidths/2, y=7:1, round(boxwidths, 1),
+  graphics::text(x = - boxwidths/2, y=1:7, round(boxwidths, 1),
        pos=2 , xpd=NA)
   if(makeTitle)
     title(paste0("Outcomes for ",
