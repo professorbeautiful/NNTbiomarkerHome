@@ -108,18 +108,18 @@ ROCplots(data=data.frame(
 # Predicting benefit from +CHEMO   ####
 ROCplots(data=data.frame(
   class=(1==rbinom(PaikSampleSize, 1, RSsampleBenefit)),
-  X=tenYearDFS$RS) [tenYearDFS$group=="TAM", ],
+  X=RSsampleBenefit),
   #  NNTlower = OncotypeNNTrange[2], NNTupper = OncotypeNNTrange[1],
   #  whichPlots=c("pv")
   #  whichPlots=c("density", "raw", "ROC", "pv", "nnt", "nntRange")
-  NNTlower=NA,   whichPlots="ROC"
+  NNTlower=14, NNTupper=40,   whichPlots="ROC"
 )
 
 #### ROC curves ####
 ROCplots(data=data.frame(
   class=(1:length(RSsample) %in% whichBenefitted),
   X=RSsample),
-  NNTlower=6,   whichPlots="ROC"
+  NNTlower=14, NNTupper=40,   whichPlots="ROC"
 )
 
 sensitivity30 = benefitTable["TRUE", "(30,Inf]"]/ sum(benefitTable["TRUE", ])
