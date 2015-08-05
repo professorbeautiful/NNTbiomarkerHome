@@ -31,7 +31,7 @@ skisloplot <- function (RSinput= 30, ytop = 100) {
   points(x = RSinput, y = nnt[RSinput + 1], type = "h", lwd = 3, col = "CornflowerBlue")
   graphics::text(x = RSinput, y = nnt[RSinput + 1], "RS", col = "CornflowerBlue",
                  cex = 2, adj = c(0,0))
-  legendDF = data.frame(legend = c("NNT", "User selected RS", "Benefitted", "No AE", "Mild", "Moderate", "Severe", "Life-threatening", "Died", "-------"),
+  legendDF = data.frame(legend = c("NNT", "User-selected RS", "Benefitted", "No AE", "Mild", "Moderate", "Severe", "Life-threatening", "Died", "-------"),
                         colors = c("black", "CornflowerBlue", "green", boxcolors, "white"),
                         lwd = 9,
                         stringsAsFactors = FALSE
