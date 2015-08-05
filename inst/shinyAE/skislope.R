@@ -30,12 +30,16 @@ skisloplot <- function (RSinput= 30, ytop = 100) {
 
   points(x = RSinput, y = nnt[RSinput + 1], type = "h", lwd = 3, col = "CornflowerBlue")
   graphics::text(x = RSinput, y = nnt[RSinput + 1], "RS", col = "CornflowerBlue",
-       cex = 2, adj = c(0,0))
-
-  legend("topright", legend =
-           c("NNT", "User selected RS", "Benefitted", "No AE", "Mild", "Moderate", "Severe", "Life-threatening", "Died"),
-          text.col = c("black", "CornflowerBlue", "green", boxcolors), cex=1.2,
-          lwd=9, col = c("black", "CornflowerBlue", "green", boxcolors)
-         )
+                 cex = 2, adj = c(0,0))
+  legendDF = data.frame(legend = c("NNT", "User selected RS", "Benefitted", "No AE", "Mild", "Moderate", "Severe", "Life-threatening", "Died"),
+                        colors = c("black", "CornflowerBlue", "green", boxcolors),
+                        lwd = 9
+  )
+  legendDF = legendDF[ c(2, 1, 9:3), ]
+  legend("topright", legend = legendDF$legend,
+         cex=1,
+         text.col = legendDF$colors,
+         lwd=9, col = legendDF$colors
+  )
   ### Remember to remove the helped patient!  NNT-1.
 }
