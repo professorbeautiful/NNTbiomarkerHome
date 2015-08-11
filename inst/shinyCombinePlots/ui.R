@@ -18,37 +18,37 @@ shinyUI(fluidPage(
       #href="../doc/Using_the_NNTbiomarker_package.html", rel="help", target="_blank",
       #href="http://www.github.org/professorbeautiful/NNTbiomarkerHome/man/Using_the_NNTbiomarker_package.html",
       fluidRow(
-               column(3,
-                      style="background:yellow",
-                      strong(em("Click for information:",
-                                                       style="color:darkgreen")))
-             ,
-             column(1, style="background:yellow",
-                    actionButton(inputId = "Info", label="",
-                                    style="background:lightgreen",
-                                    icon=icon("info-sign", lib="glyphicon")))
-             )
-           )
+        column(3,
+               style="background:yellow",
+               strong(em("Click for information:",
+                         style="color:darkgreen")))
+        ,
+        column(1, style="background:yellow",
+               actionButton(inputId = "Info", label="",
+                            style="background:lightgreen",
+                            icon=icon("info-sign", lib="glyphicon")))
+      )
+    )
     )
   ),
   hr(),
   fluidRow(style="text-align:center",
-    #           column(4, sliderInput("NNTlower", label = "NNTlower",
-    #                                  value=7, min = 1, max=100, step=1)),
-    #           column(4, sliderInput("prevalence", label = "prevalence = Pr(BestToAct) = 1/NNT",
-    #                                  value=0.1, min = 0, max=1, step=0.05)),
-    #           column(4, sliderInput("NNTupper", label = "NNTupper",
-    #                                  value=17, min = 10, max=100, step=1))
-    column(1, HTML("&nbsp;")),
-    column(2, numericInput("NNTpos", label = "",
-                           value=2, min = 1, step=0.1)),
-    column(2, numericInput("NNTlower", label = "",
-                           value=7, min = 1,  step=0.1)),
-    column(2, numericInput("prevalence", label = "",
-                           value=0.1, min = 0, max=1, step=0.01)),
-    column(2, numericInput("NNTupper", label = "",
-                           value=17, min = 2, step=0.1)),
-    column(2, numericInput("NNTneg", value=30, label = "", min = 1, step=0.1))
+           #           column(4, sliderInput("NNTlower", label = "NNTlower",
+           #                                  value=7, min = 1, max=100, step=1)),
+           #           column(4, sliderInput("prevalence", label = "prevalence = Pr(BestToAct) = 1/NNT",
+           #                                  value=0.1, min = 0, max=1, step=0.05)),
+           #           column(4, sliderInput("NNTupper", label = "NNTupper",
+           #                                  value=17, min = 10, max=100, step=1))
+           column(1, HTML("&nbsp;")),
+           column(2, numericInput("NNTpos", label = "",
+                                  value=2, min = 1, step=0.1)),
+           column(2, numericInput("NNTlower", label = "",
+                                  value=7, min = 1,  step=0.1)),
+           column(2, numericInput("prevalence", label = "",
+                                  value=0.1, min = 0, max=1, step=0.01)),
+           column(2, numericInput("NNTupper", label = "",
+                                  value=17, min = 2, step=0.1)),
+           column(2, numericInput("NNTneg", value=30, label = "", min = 1, step=0.1))
   ),
   fluidRow(style="font-weight:bold; text-align:center",
            column(1, HTML("&nbsp;")),
@@ -100,56 +100,72 @@ shinyUI(fluidPage(
         ),
         column(6,
                h3("Anticipated results:"),
-               h3(style="font-style:oblique; text-indent:50px", "Prospective study"),
-               h4(style="text-indent:100px", "Data"),
-               fluidRow(
-                 column(3,
-                        numericInput("Npositives",
-                                     label = " #positive",
-                                     value=30)
-                 ),
-                 column(3,
-                        numericInput("NtruePositives",
-                                     label = " #TRUE positive",
-                                     value=15)
-                 ),
-                 column(3,
-                        numericInput("Nnegatives",
-                                     label = " #negative",
-                                     value=30)
-                 ),
-                 column(3,
-                        numericInput("NtrueNegatives",
-                                     label = " #TRUE negative",
-                                     value=15)
-                 )
+               div(class="well container-fluid",
+                   h3(style="font-style:oblique; text-indent:50px", "Prospective study"),
+                   fluidRow(
+                     column(2, h4(style=
+                                  "text-indent:60px; position: relative; top: 50%;
+                                  transform: translateY(-50%)",
+                                  "Data")),
+                     column(10,
+                            fluidRow(
+                              column(2, ""),
+                              column(3, numericInput("Npositives",
+                                                     label = " #positive",
+                                                     value=30)),
+                              column(4,  numericInput("NtruePositives",
+                                                      label = " #TRUE positive",
+                                                      value=15))
+                            ),
+                            fluidRow(
+                              column(2, ""),
+                              column(3, numericInput("Nnegatives",
+                                                     label = " #negative",
+                                                     value=30)),
+                              column(4, numericInput("NtrueNegatives",
+                                                     label = " #TRUE negative",
+                                                     value=29))
+                            )
+                     )
+                   ),
+                   h4(style="text-indent:60px", "Predictive intervals (95%)"),
+                   fluidRow(column(9, offset=3,
+                                   tableOutput("intervalsProspective")))
                ),
-               h4(style="text-indent:100px", "Predictive intervals (95%)"),
-               fluidRow(column(8, offset=3,
-                               tableOutput("intervalsProspective"))),
                br(),
-               h3(style="font-style:oblique; text-indent:50px", "Retrospective study"),
-               h4(style="text-indent:100px", "Data"),
-               fluidRow(
-                 column(3,
-                        numericInput("Ncases",
-                                     label = "#cases",
-                                     value=30)),
-                 column(3,
-                        numericInput("NposCases",
-                                     label = "#positive cases",
-                                     value=15)),
-                 column(3,
-                        numericInput("Ncontrols",
-                                     label = "#controls",
-                                     value=30)),
-                 column(3,
-                        numericInput("NnegControls",
-                                     label = "#negative controls",
-                                     value=28)),
-                 h4(style="text-indent:100px", "Predictive intervals (95%)"),
-                 fluidRow(column(8, offset=3,
-                                 tableOutput("intervalsRetrospective")))
+
+
+               div(class="well container-fluid",
+                   h3(style="font-style:oblique; text-indent:50px", "Retrospective study"),
+                   fluidRow(
+                     column(2, h4(style=
+                                    "text-indent:60px; position: relative; top: 50%;
+                              transform: translateY(-50%); vertical-align:center",
+                                  "Data")),
+                     column(10,
+                            fluidRow(
+                              column(2, ""),
+                              column(3, numericInput("Ncases",
+                                                     label = "#cases",
+                                                     value=30)),
+                              column(4, numericInput("NposCases",
+                                                     label = "#positive cases",
+                                                     value=15))
+                            ),
+                            fluidRow(
+                              column(2, ""),
+                              column(3, numericInput("Ncontrols",
+                                                     label = "#controls",
+                                                     value=30)),
+                              column(4, numericInput("NnegControls",
+                                                     label = "#negative controls",
+                                                     value=28))
+                            )
+                     )
+                   ),
+                   h4(style="text-indent:60px", "Predictive intervals (95%)"),
+                   fluidRow(column(9, offset=3,
+                                   tableOutput("intervalsRetrospective")))
                )
         )
       )

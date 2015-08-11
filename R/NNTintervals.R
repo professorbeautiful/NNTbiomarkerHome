@@ -51,7 +51,7 @@ NNTintervalsProspective = function(
   result = cbind(NNTposPI, NNTnegPI, ppvPI, npvPI)
   result = rbind(c(NNTpos, NNTneg, ppv, npv), result)
   dimnames(result)[[2]] = c("NNTpos", "NNTneg", "PPV", "NPV")
-  dimnames(result)[[1]] = c("observed", "lower boundary", "upper boundary")
+  dimnames(result)[[1]] = c("estimates", "lower boundary", "upper boundary")
   result = result[ c(2,1,3), ]
   return(result)
 }
@@ -209,7 +209,7 @@ NNTintervalsRetrospective = function(
   )
   result = rbind(c(NNThat, snHat, spHat), result)
   dimnames(result)[[2]] = c("NNTpos", "NNTneg", "sensitivity", "specificity")
-  dimnames(result)[[1]] = c("observed", "lower boundary", "upper boundary")
+  dimnames(result)[[1]] = c("estimates", "lower boundary", "upper boundary")
   result = result[c(2,1,3), ]
   return(result)
   # plot(NNTpos, NNTneg, log="y", pch=".", cex=0.1 , col=c("black", "green")[1+(NNTpos < NNTneg)])
