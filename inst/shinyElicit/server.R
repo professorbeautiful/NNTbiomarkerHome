@@ -1,5 +1,6 @@
 ####  shinyElicit server
 appName = "shinyElicit"
+cat("Launching ", appName, "\n")
 
 require("shiny")
 require("xtable")

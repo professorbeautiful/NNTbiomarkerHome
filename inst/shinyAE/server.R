@@ -1,3 +1,6 @@
+appName = "shinyAE"
+cat("Launching ", appName, "\n")
+
 library(shiny)
 
 # options(shiny.error=recover)

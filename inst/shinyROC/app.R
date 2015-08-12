@@ -1,5 +1,6 @@
 #####  shinyROC ui
 appName = "shinyROC"
+cat("Launching ", appName, "\n")
 
 ui = shinyUI(fluidPage(
   tags$head(tags$script(HTML('

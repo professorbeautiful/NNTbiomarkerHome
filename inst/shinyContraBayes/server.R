@@ -2,6 +2,7 @@
 #require("NNTbiomarker")
 
 appName = "shinyContraBayes"
+cat("Launching ", appName, "\n")
 
 shinyServer(function(input, output, session) {
   rValues = reactiveValues()

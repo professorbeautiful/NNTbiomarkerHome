@@ -1,5 +1,5 @@
-####  shinyElicit server
-appName = "shinyElicit"
+appName = "shinyCombinePlots"
+cat("Launching ", appName, "\n")
 
 shinyServerFunction =
   function(input, output, session) {
