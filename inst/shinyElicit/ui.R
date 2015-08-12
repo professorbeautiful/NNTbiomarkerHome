@@ -29,7 +29,7 @@ shinyUI(fluidPage(
   actionButton(inputId = "reportButton",
                label = "When all steps are Done, you can click here for a report. (In Progress)"),
   div(style="background:darkGrey",
-      checkboxInput(inputId='stepTableCheckbox', value=FALSE,
+      checkboxInput(inputId='stepTableCheckbox', value=TRUE,
                     label=em(strong("NNT design table of stepping stones"))),
       conditionalPanel('input.stepTableCheckbox',
                        actionButton(inputId = "autoFill", label="autoFill for testing"),
@@ -37,13 +37,14 @@ shinyUI(fluidPage(
       )
   ),
   hr(),
+  textInput(inputId = "biomarkerReportTitle", label = "Report Title", width = "100%"),
   div(style="position:relative;overflow:scroll;height:1200px;background:lightgrey",
       sectionHeader(1,
                     div(style="vertical-align:middle;font-size:150%",
                         HTML(stringr::str_dup("&nbsp;", 15)),
                         "Intended beneficiaries", tags$textarea(id = "who"),
                         HTML(stringr::str_dup("&nbsp;", 15)),
-                        " Decision choices (two)", tags$textarea(id = "options" )
+                        " Decision choices (two, on separate lines)", tags$textarea(id = "options" )
                     )),
       sectionHeader(2, div(
         fluidRow(

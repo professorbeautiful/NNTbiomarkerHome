@@ -45,12 +45,14 @@ shinyServerFunction =
       assign("obs" %&% number,
              observe({
                newValue <- input[["stepStatus" %&% number]]
-               catn("Toggling stepStatus" %&% number %&% " = " %&% newValue)
-               isolate({ # necessary, or else crash!
-                 rValues$stepsTable[number, "Done?"] = newValue
-                 catn("New value in stepsTable: ",
-                      rValues$stepsTable[number, "Done?"] )
-               })
+               if( ! is.null(newValue)) {
+                 catn("Toggling stepStatus" %&% number %&% " = " %&% newValue)
+                 isolate({ # necessary, or else crash!
+                   rValues$stepsTable[number, "Done?"] = newValue
+                   catn("New value in stepsTable: ",
+                        rValues$stepsTable[number, "Done?"] )
+                 })
+               }
              }
              )
       )
@@ -68,15 +70,17 @@ shinyServerFunction =
 
     observe({
       if(input$who == "" | input$options == "")
-        disableActionButton("stepStatus1", session)
+        try(disableActionButton("stepStatus1", session))
     })
     observe({
-      if(!all(sapply(1:nrow(stepsTableInitial),
-                     function(n) "Done"==
+      try(
+        if(!all(sapply(1:nrow(stepsTableInitial),
+                       function(n) "Done"==
                        input[["stepStatus" %&% n]])))
-        disableActionButton("reportButton", session)
-      else
-        enableActionButton("reportButton", session)
+          disableActionButton("reportButton", session)
+        else
+          enableActionButton("reportButton", session)
+      )
     })
 
     source("plotDiscomfort.R", local=TRUE)
@@ -141,7 +145,7 @@ shinyServerFunction =
       cat("==> autoFillObserver\n")
       if(wasClicked(input$autoFill) ) {
         updateTextInput(session, "who", value="My Patients")
-        updateTextInput(session, "options", value="To be; Not to be")
+        updateTextInput(session, "options", value="To be\nNot to be")
         for(stepNum in 1:7)
           updateRadioButtons(session, "stepStatus" %&% stepNum, selected="Done")
       }
@@ -151,8 +155,15 @@ shinyServerFunction =
 
       ### Only react when the reportButton is clicked.
       if(wasClicked(input$reportButton)) {
-        knit2html("Steps-example.Rmd")
-        browseURL("Steps-example.html")
+        cat("input$options = ", capture.output(input$options), '\n')
+        Option_1 <<- strsplit(input$options, "\n")[[1]] [1]
+        Option_2 <<- strsplit(input$options, "\n")[[1]] [2]
+        cat('getOption("markdown.HTML.options")',
+            capture.output(getOption("markdown.HTML.options")), '\n')
+        cat('getOption("markdown.extensions")',
+            capture.output(getOption("markdown.extensions")), '\n')
+        knit2html("Steps.Rmd")
+        browseURL("Steps.html")
       }
       # Ideally, simulate click on "markdownAnchor". or as a form?
 
