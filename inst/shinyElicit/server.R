@@ -128,6 +128,35 @@ shinyServerFunction =
     }
     #, height=280
     )
+    wasClicked =  function(button) {
+      if(exists("input"))
+        if(!is.null(button) ) {
+          if(button > 0) {
+            return(TRUE)
+          }
+        }
+      return(FALSE)
+    }
+    autoFillObserver = observe({
+      cat("==> autoFillObserver\n")
+      if(wasClicked(input$autoFill) ) {
+        updateTextInput(session, "who", value="My Patients")
+        updateTextInput(session, "options", value="To be; Not to be")
+        for(stepNum in 1:7)
+          updateRadioButtons(session, "stepStatus" %&% stepNum, selected="Done")
+      }
+    })
+    assembleReportObserver = observe({
+      cat("==> assembleReportObserver\n")
+
+      ### Only react when the reportButton is clicked.
+      if(wasClicked(input$reportButton)) {
+        knit2html("Steps-example.Rmd")
+        browseURL("Steps-example.html")
+      }
+      # Ideally, simulate click on "markdownAnchor". or as a form?
+
+    })
   }
 #debug(shinyServerFunction)
 shinyServer(func=shinyServerFunction)

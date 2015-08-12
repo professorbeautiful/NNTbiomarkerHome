@@ -11,6 +11,7 @@ shinyUI(fluidPage(
     '))),
   uiOutput("debugTools"),
   h1("Biomarker validation study design support"),
+  a(href="Steps-example.html", target="_blank", "", id="markdownAnchor"),
   a(
     href="Using_the_NNTbiomarker_package.htm", rel="help", target="_blank",
     #href="../doc/Using_the_NNTbiomarker_package.html", rel="help", target="_blank",
@@ -31,6 +32,7 @@ shinyUI(fluidPage(
       checkboxInput(inputId='stepTableCheckbox', value=FALSE,
                     label=em(strong("NNT design table of stepping stones"))),
       conditionalPanel('input.stepTableCheckbox',
+                       actionButton(inputId = "autoFill", label="autoFill for testing"),
                        tableOutput("steps")
       )
   ),
