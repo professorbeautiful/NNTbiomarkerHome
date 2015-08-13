@@ -25,8 +25,10 @@ shinyUI(fluidPage(
     )
   ),
   hr(),
-  actionButton(inputId = "reportButton",
-               label = "When all steps are Done, you can click here for a report. (In Progress)"),
+  a(href="Steps.html", target="_blank",
+    actionButton(inputId = "reportButton",
+                 label = "When all steps are Done, you can click here for a report. (In Progress)")
+  ),
   div(style="background:darkGrey",
       checkboxInput(inputId='stepTableCheckbox', value=TRUE,
                     label=em(strong("NNT design table of stepping stones"))),

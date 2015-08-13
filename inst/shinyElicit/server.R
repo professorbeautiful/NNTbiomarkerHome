@@ -145,6 +145,8 @@ shinyServerFunction =
     autoFillObserver = observe({
       cat("==> autoFillObserver\n")
       if(wasClicked(input$autoFill) ) {
+        updateTextInput(session, "reportTitle",
+                        value="DEMO")
         updateTextInput(session, "objective",
                         value="Prognosis of cutaneous T cell
                         lymphoma (CTCL). In early stages of CTCL, patients (Stages IA-IIA)
@@ -184,8 +186,11 @@ shinyServerFunction =
             capture.output(getOption("markdown.HTML.options")), '\n')
         cat('getOption("markdown.extensions")',
             capture.output(getOption("markdown.extensions")), '\n')
-        knit2html("Steps.Rmd")
-        browseURL("Steps.html")
+        knit2html("www/Steps.Rmd", output = "www/Steps.html")
+        # browseURL("Steps.html") ### Fails at shinyapp.io.
+        #window.open("Steps.html"); # JS works if file is in www folder.
+        print(getwd())
+        print(dir())
       }
       # Ideally, simulate click on "markdownAnchor". or as a form?
 
