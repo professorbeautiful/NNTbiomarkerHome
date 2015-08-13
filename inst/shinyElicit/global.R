@@ -49,8 +49,13 @@ completedToggle = function(number) {
   )
 }
 
-sectionHeader = function(number, content) {
-  div(#class = "well container-fluid",
+env_sectionHeader <- new.env()
+env_sectionHeader$number = 0
+
+sectionHeader = function(content) {
+  number = env_sectionHeader$number = env_sectionHeader$number + 1
+  return(
+    div(#class = "well container-fluid",
       style="border: 2px solid;
         padding: 10px;
         background: #dddddd;
@@ -65,6 +70,7 @@ sectionHeader = function(number, content) {
            completedToggle(number),
            hr()
       )
+    )
   )
 }
 

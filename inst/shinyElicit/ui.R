@@ -38,14 +38,24 @@ shinyUI(fluidPage(
   hr(),
   textInput(inputId = "biomarkerReportTitle", label = "Report Title", width = "100%"),
   div(style="position:relative;overflow:scroll;height:1200px;background:lightgrey",
-      sectionHeader(1,
-                    div(style="vertical-align:middle;font-size:150%",
-                        HTML(stringr::str_dup("&nbsp;", 15)),
-                        "Intended beneficiaries", tags$textarea(id = "who"),
-                        HTML(stringr::str_dup("&nbsp;", 15)),
-                        " Decision choices (two, on separate lines)", tags$textarea(id = "options" )
-                    )),
-      sectionHeader(2, div(
+      sectionHeader(
+        div(style="vertical-align:middle;font-size:150%",
+            HTML(stringr::str_dup("&nbsp;", 15)),
+            "Objectives", tags$textarea(id = "objective")
+        )),
+      sectionHeader(
+        div(style="vertical-align:middle;font-size:150%",
+            HTML(stringr::str_dup("&nbsp;", 15)),
+            "Intended beneficiaries", tags$textarea(id = "who"),
+            HTML(stringr::str_dup("&nbsp;", 15)),
+            " Decision choices (two, on separate lines)", tags$textarea(id = "options" )
+        )),
+      sectionHeader(
+        div(style="vertical-align:middle;font-size:150%",
+            HTML(stringr::str_dup("&nbsp;", 15)),
+            "Clinical benefit hoped for", tags$textarea(id = "benefit")
+        )),
+      sectionHeader( div(
         fluidRow(
           #column(0, HTML("&nbsp;")),
 #           column(4, sliderInput("NNTlower", label = "NNTlower",
@@ -64,7 +74,7 @@ shinyUI(fluidPage(
         plotOutput(outputId = "plotDiscomfort",
                    height='200px')
       )),
-      sectionHeader(3, div(
+      sectionHeader( div(
         fluidRow(
           column(2, HTML("&nbsp;")),
           column(5, numericInput("NNTpos", label = "NNTpos, must be smaller than NNTlower",
@@ -74,21 +84,18 @@ shinyUI(fluidPage(
         plotOutput(outputId = "plotNNTgoals",
                    height='250px')
       )),
-      sectionHeader(4, div(
-        "DELETE ME"
-      )),
-      sectionHeader(5,  div(
+      sectionHeader(  div(
         "Positive predictive value = 1/NNTpos = ",
         textOutput("PPVderived"),
         br(),
         "Negative predictive value = 1 - 1/NNTneg = ",
         textOutput("NPVderived")
       )),
-      sectionHeader(6,
+      sectionHeader(
                     numericInput("samplesize", label = "Prospective study sample size",
                                  value=30, min = 10, max=1000, step = 1)
       ),
-      sectionHeader(7, div(
+      sectionHeader( div(
         h3("Required sensitivity and specificity for a retrospective study."),
         h2("Select the prevalence; hover mouse on plot for calculations."),
         numericInput("prevalence", label = "prevalence",
@@ -108,6 +115,6 @@ shinyUI(fluidPage(
                         h3("Anticipated results (TODO)")
                  )
         )
-      ))  ### end 7
+      ))
   ) # end scroll pane
 ))

@@ -1,31 +1,26 @@
-`r input$biomarkerReportTitle`
+#  `r input$biomarkerReportTitle`
 
-***Step 1. Clinical scenario*:** The purpose of the biomarker test is to Prognosis of cutaneous T cell
-lymphoma (CTCL). In early stages of CTCL, patients (Stages IA-IIA)
-usually do well and have slowly progressive disease, which does not
-require aggressive therapy associated with substantial side effects.
-However, about 15% of these patients have unexpected progressive course
-and rapid demise.
+***Step 1. Clinical scenario*:** 
+`r Objective`
 
 
 ***Step 2.  Principal goal:*** To identify, among `r input$who`, who should receive 
 **`r Option_1`** and who should receive **`r Option_2`**.
 
-***Step 3.  Clinical benefit:*** A biomarker progression risk model
-that is able to classify patients into high and low risk groups will
-enable personalized and more aggressive therapy for the patients at
-highest risk for progression.
+***Step 3.  Clinical benefit:*** `r Benefit`
 
-***Step 4. Classification performance needed:*** Regarding more
-aggressive therapy upfront, the PI stipulates that the classifier will
+***Step 4. Classification performance needed:*** 
+We can achieve this benefit 
+if the NNT among test-positive patients, *NNT<sub>Pos</sub>*, is less than *NNT<sub>Lower</sub>*  = `r NNTlower`, 
+and 
+if the NNT among test-negative patients, *NNT<sub>Neg</sub>*, is greater than *NNT<sub>Upper</sub>*  = `r NNTupper`.
+
+Therefore we choose target
+Within the range between`r NNTlower` and `r NNTupper`, the NNT would be 
+The PI stipulates that the classifier will
 have clinical utility if the “number needed to treat” (*NNT*) is less
-than *NNT<sub>Lower</sub>* = 2 in the test-positive patients, and greater than
-*NNT<sub>Upper</sub>* = 30 in the test-negative patients. Then 2 patients testing
-positive will need to receive aggressive treatment upfront in order to
-treat one patient who otherwise would suffer later rapid progressive
-CTCL, while in the test-negative patients one would have to treat an
-unacceptably high 30 patients to treat one patient in advance of
-progressive CTCL. This performance should suffice to create a clinical
+than *NNT<sub>Lower</sub>* = `r NNTlower` in the test-positive patients, and greater than
+*NNT<sub>Upper</sub>* = `r NNTupper` in the test-negative patients. This performance should suffice to create a clinical
 consensus supporting using the test for clinical decisions.
 
 ***Step 5. Prospective study requirements***: The values
@@ -36,7 +31,7 @@ recruit 40 patients in this early-stage group, over 3 years, with a
 minimum of 2 years follow-up thereafter. If the test divides the 40
 patients into roughly 25% positive and 75% negative, and the estimates
 match the hoped-for values 2 and 30, the confidence intervals would be
-19% to 81% for *PPV*, and 83% to 100% for *NPV*, or equivalently^24^
+19% to 81% for *PPV*, and 83% to 100% for *NPV*, or equivalently
 1.23 to 5.35 for *NNT<sub>Pos</sub>*, and 5.81 to 1180 for *NNT<sub>Neg</sub>*. The very
 wide confidence interval for *PPV* is due to the low sample size and low
 prevalence combined with the low value for *NNT<sub>Pos</sub>*, which is strongly

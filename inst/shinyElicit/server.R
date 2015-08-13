@@ -144,9 +144,23 @@ shinyServerFunction =
     autoFillObserver = observe({
       cat("==> autoFillObserver\n")
       if(wasClicked(input$autoFill) ) {
-        updateTextInput(session, "who", value="My Patients")
-        updateTextInput(session, "options", value="To be\nNot to be")
-        for(stepNum in 1:7)
+        updateTextInput(session, "objective",
+                        value="Prognosis of cutaneous T cell
+                        lymphoma (CTCL). In early stages of CTCL, patients (Stages IA-IIA)
+                        usually do well and have slowly progressive disease, which does not
+                        require aggressive therapy associated with substantial side effects.
+                        However, about 15% of these patients have unexpected progressive course
+                        and rapid demise.")
+        updateTextInput(session, "who",
+                        value="CTCL patients in Stages IA-IIA")
+        updateTextInput(session, "options",
+                        value="Watchful waiting\nAggressive treatment")
+        updateTextInput(session, "benefit",
+                        value="A biomarker progression risk model
+                      that is able to classify patients into high and low risk groups will
+                      enable personalized and more aggressive therapy for the patients at
+                      highest risk for progression.")
+        for(stepNum in 1:env_sectionHeader$number)
           updateRadioButtons(session, "stepStatus" %&% stepNum, selected="Done")
       }
     })
@@ -155,9 +169,16 @@ shinyServerFunction =
 
       ### Only react when the reportButton is clicked.
       if(wasClicked(input$reportButton)) {
+        Objective = input$objective
         cat("input$options = ", capture.output(input$options), '\n')
         Option_1 <<- strsplit(input$options, "\n")[[1]] [1]
         Option_2 <<- strsplit(input$options, "\n")[[1]] [2]
+        NNTlower <<- input$NNTlower
+        NNTupper <<- input$NNTupper
+        NNTpos <<- input$NNTpos
+        NNTneg <<- input$NNTneg
+        Benefit <<- input$benefit
+
         cat('getOption("markdown.HTML.options")',
             capture.output(getOption("markdown.HTML.options")), '\n')
         cat('getOption("markdown.extensions")',
