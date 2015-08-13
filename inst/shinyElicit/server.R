@@ -5,6 +5,7 @@ cat("Launching ", appName, "\n")
 require("shiny")
 require("xtable")
 require("NNTbiomarker")
+require("knitr")
 
 shinyServerFunction =
   function(input, output, session) {
