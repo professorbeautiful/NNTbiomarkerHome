@@ -1,7 +1,7 @@
 Package: NNTbiomarker
 Type: Package
 Title: Calculate Design Parameters for Biomarker Validation Studies
-Version: 0.40
+Version: 0.41
 Date: 2015-08-12
 Author: Roger Day
 Maintainer: Roger Day <day01@pitt.edu>
@@ -25,6 +25,5 @@ License: GPL-3
 Imports: shiny, xtable, stringr, magrittr, mvbutils, ggplot2, plyr
 Collate: aaa.R ifVerboseCat.R sesp-pv-NNT.R achievable.se.sp.R binom.confint.R
     NNTintervals.R run.R ROCplots.R smartBoxPlot.R BenefitPlot.R argmin.R zzz.R
-Suggests: knitr, testthat (>= 0.8.1), knitr (>= 1.6),
-        rmarkdown
+Suggests: testthat (>= 0.8.1), knitr (>= 1.6),rmarkdown
 VignetteBuilder: knitr
