@@ -1,24 +1,20 @@
-***Step 1. *C*linical scenario*:** Prognosis of cutaneous T cell
+***Step 1. Clinical scenario*:** Prognosis of cutaneous T cell
 lymphoma (CTCL). In early stages of CTCL, patients (Stages IA-IIA)
 usually do well and have slowly progressive disease, which does not
 require aggressive therapy associated with substantial side effects.
 However, about 15% of these patients have unexpected progressive course
 and rapid demise.
 
-```{r}
-Option_1 = strsplit(input$options, "\n")[[1]]
-Option_2 = strsplit(input$options, "\n")[[2]]
-```
 
-***Step 2***. ***Principal goal:*** To identify, among `r input$who`, who should receive 
-`r Option_1` and who should receive `r Option_2`.
+***Step 2.  Principal goal:*** To identify, among CTCL patients, who should receive 
+**intensive treatment** and who should receive **standard treatment**.
 
-***Step 3*.** ***Clinical benefit:*** A biomarker progression risk model
+***Step 3.  Clinical benefit:*** A biomarker progression risk model
 that is able to classify patients into high and low risk groups will
 enable personalized and more aggressive therapy for the patients at
 highest risk for progression.
 
-***Step 4*. *Classification performance needed:*** Regarding more
+***Step 4. Classification performance needed:*** Regarding more
 aggressive therapy upfront, the PI stipulates that the classifier will
 have clinical utility if the “number needed to treat” (*NNT*) is less
 than *NNT~Lower~* = 2 in the test-positive patients, and greater than
@@ -30,7 +26,7 @@ unacceptably high 30 patients to treat one patient in advance of
 progressive CTCL. This performance should suffice to create a clinical
 consensus supporting using the test for clinical decisions.
 
-***Step 5*. *Prospective study requirements***: The values
+***Step 5. Prospective study requirements***: The values
 *NNT~Lower~*= 2 and *NNT~Upper~*= 30 correspond to the positive
 predictive value *PPV* = 50% = 1/*NNT~Lower~*, and the negative
 predictive value *NPV* = 97% = 1 – 1/*NNT~Upper~*. We will be able to
@@ -46,7 +42,7 @@ weighted towards avoiding unnecessary aggressive therapy. To obtain a
 more accurate and independent estimate of *PPV* , we also plan a
 retrospective study.
 
-***Step 6*. *Retrospective study requirements:*** Combining *PPV* and
+***Step 6. Retrospective study requirements:*** Combining *PPV* and
 *NPV* with an incidence of rapid progression of 15%, the required
 sensitivity (*SN*) and specificity (*SP*) are 83.3% and 85.3%,
 respectively (contra-Bayes Theorem). To get a sense of the accuracy of

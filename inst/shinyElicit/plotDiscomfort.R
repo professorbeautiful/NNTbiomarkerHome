@@ -17,7 +17,7 @@ plotDiscomfort = function(
   barY = 3; barHeight = 1
   YtriangleUp = 4
   YnntPosNeg = 5
-  rightSideLimit = max(NNTneg * 1.15, NNTneg + 3)
+  rightSideLimit = max(NNTneg * 1.15, NNTneg + 3, NNTupper * 1.15, NNTupper + 3)
   par( mar=c(0.01,0.01,0.01,0.01) #mgp=c(0,0,0)
        #oma=c(0,0,0,0) # does nothing
        #omd=c(0,0,0,0) # fig margins too wide

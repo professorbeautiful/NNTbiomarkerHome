@@ -1,55 +1,102 @@
 #  `r input$biomarkerReportTitle`
+-----
 
-***Step 1. Clinical scenario*:** 
-`r Objective`
+### Step 1. `r stepsTableInitial[1, "SteppingStone"]`:
+
+- `r stepsTableInitial[1,"Question"]`
+
+`r ClinicalScenario`. 
 
 
-***Step 2.  Principal goal:*** To identify, among `r input$who`, who should receive 
-**`r Option_1`** and who should receive **`r Option_2`**.
 
-***Step 3.  Clinical benefit:*** `r Benefit`
+### Step 2.  `r stepsTableInitial[2, "SteppingStone"]` :
 
-***Step 4. Classification performance needed:*** 
-We can achieve this benefit 
+- `r stepsTableInitial[2,"Question"]`
+
+The biomarker is intended to help `r input$who`,
+by identifying who should receive 
+**`r input$Option_Treat`** and who should receive **`r input$Option_Wait`**.
+
+
+### Step 3. `r stepsTableInitial[3, "SteppingStone"]`:
+
+- `r stepsTableInitial[3,"Question"]`
+
+Currently, the proportion of patients who should receive prevalence is *number needed to treat* to help one (*NNT*) is 
+The biomarker test will be useful can create a clinical
+consensus supporting using the test for clinical decisions. 
 if the NNT among test-positive patients, *NNT<sub>Pos</sub>*, is less than *NNT<sub>Lower</sub>*  = `r NNTlower`, 
 and 
 if the NNT among test-negative patients, *NNT<sub>Neg</sub>*, is greater than *NNT<sub>Upper</sub>*  = `r NNTupper`.
 
-Therefore we choose target
-Within the range between`r NNTlower` and `r NNTupper`, the NNT would be 
-The PI stipulates that the classifier will
-have clinical utility if the “number needed to treat” (*NNT*) is less
-than *NNT<sub>Lower</sub>* = `r NNTlower` in the test-positive patients, and greater than
-*NNT<sub>Upper</sub>* = `r NNTupper` in the test-negative patients. This performance should suffice to create a clinical
+Therefore we choose targets *NNT<sub>Pos</sub>* = `r input$NNTpos`  and  *NNT<sub>Neg</sub>* = `r input$NNTneg`.
+This performance should suffice to create a clinical
 consensus supporting using the test for clinical decisions.
+These values correspond to *positive predictive value = PPV* = `r 1/input$NNTpos`, 
+and *negative predictive value = NPV* = `r 1-1/input$NNTneg`.
 
-***Step 5. Prospective study requirements***: The values
-*NNT<sub>Lower</sub>*= 2 and *NNT<sub>Upper</sub>*= 30 correspond to the positive
-predictive value *PPV* = 50% = 1/*NNT<sub>Lower</sub>*, and the negative
-predictive value *NPV* = 97% = 1 – 1/*NNT<sub>Upper</sub>*. We will be able to
-recruit 40 patients in this early-stage group, over 3 years, with a
-minimum of 2 years follow-up thereafter. If the test divides the 40
-patients into roughly 25% positive and 75% negative, and the estimates
-match the hoped-for values 2 and 30, the confidence intervals would be
-19% to 81% for *PPV*, and 83% to 100% for *NPV*, or equivalently
-1.23 to 5.35 for *NNT<sub>Pos</sub>*, and 5.81 to 1180 for *NNT<sub>Neg</sub>*. The very
-wide confidence interval for *PPV* is due to the low sample size and low
-prevalence combined with the low value for *NNT<sub>Pos</sub>*, which is strongly
-weighted towards avoiding unnecessary aggressive therapy. To obtain a
-more accurate and independent estimate of *PPV* , we also plan a
-retrospective study.
+### Step 4.  `r stepsTableInitial[4, "SteppingStone"]`:
 
-***Step 6. Retrospective study requirements:*** Combining *PPV* and
-*NPV* with an incidence of rapid progression of 15%, the required
-sensitivity (*SN*) and specificity (*SP*) are 83.3% and 85.3%,
-respectively (contra-Bayes Theorem). To get a sense of the accuracy of
+- `r stepsTableInitial[4,"Question"]`
+
+If the biomarker test achieves these predictive values,
+the benefit to patients will be `r input$SpecificBenefit`.  
+
+### Step 5. `r stepsTableInitial[5, "SteppingStone"]`:
+
+- `r stepsTableInitial[5, "Question"]`
+
+The retrospective study will 
+recruit `r input$NpatientsProspective` patients.
+`r input$follow_up`. 
+If the test divides the `r input$NpatientsProspective` 
+patients into roughly 
+`r input$percentPositive`% positive and 
+`r 100 - input$percentPositive`% negative, 
+and if the estimates
+match the hoped-for values 
+*NNT<sub>Pos</sub>* = `r input$NNTpos`  and  *NNT<sub>Neg</sub>* = `r input$NNTneg`, 
+then the confidence intervals would be
+(`r round(digits=3, rValues$PPV_ProspectiveInterval)`) for *PPV*, and 
+(`r round(digits=3, rValues$NPV_ProspectiveInterval)`) for *NPV*, or equivalently
+(`r round(digits=3, rValues$NNTpos_ProspectiveInterval)`)  for *NNT<sub>Pos</sub>*, and 
+(`r round(digits=3, rValues$NNTneg_ProspectiveInterval)`) for *NNT<sub>Neg</sub>*. 
+
+`r input$ProspectiveStudyNotes`
+
+### Step 6. `r stepsTableInitial[6, "SteppingStone"]`:
+
+- `r stepsTableInitial[6,"Question"]`
+
+
+The proportion of patients `r input$BestToTreatDescription` is assumed to be 
+`r round(100*input$prevalence)`%.
+Combining that with the target *PPV* and
+*NPV*, the required
+sensitivity (*SN*) and specificity (*SP*) are `r rValues$sensitivityPercent`% and `r rValues$specificityPercent`%,
+respectively (contra-Bayes Theorem). 
+To get a sense of the accuracy of
 anticipated estimates in the retrospective (case/control) portion of the
-study, we consider anticipated results for samples sizes 22 cases (the
-entire complement of early stage CTCL who rapidly progressed) and 40
-controls. For example, if the estimates *SN*=18/22 = 82% and
-*SP*=34/40=85% are observed, then the corresponding confidence intervals
-will be 60%–95% for *SN*, and 70%–94% for *SP*, and Bayes predictive
-intervals will be (1.4, 2.7) for *NNT<sub>Pos</sub>* , and (16.4, 87.8) for
-*NNT<sub>Neg</sub>* . (These intervals derive from assuming independent Jeffreys
+study, we consider anticipated results for samples sizes `r input$samplesizeCases` cases 
+and `r input$samplesizeControls`
+controls. For example, if the estimates 
+*SN* = `r round(input$samplesizeCases* rValues$sensitivity)`/`r input$samplesizeCases` 
+=  `r round(100*input$samplesizeCases* rValues$sensitivity/input$samplesizeCases)` % and
+*SP* = `r round(input$samplesizeControls* rValues$specificity)`/`r input$samplesizeControls` 
+=  `r round(100*input$samplesizeControls* rValues$specificity/input$samplesizeControls)`  % 
+are observed, then the corresponding confidence intervals
+will be 
+(`r round(digits=3, rValues$Se_RetrospectiveInterval)`)
+for *SN*, and 
+(`r round(digits=3, rValues$Sp_RetrospectiveInterval)`)
+for *SP*.
+For *NNT<sub>Pos</sub>* and for *NNT<sub>Neg</sub>*,
+the Bayes predictive
+intervals will be 
+(`r round(digits=3, rValues$NNTpos_RetrospectiveInterval)`)
+for *NNT<sub>Pos</sub>* , and 
+(`r round(digits=3, rValues$NNTneg_RetrospectiveInterval)`)
+for *NNT<sub>Neg</sub>* . 
+(These predictive intervals derive from assuming independent Jeffreys
 priors for *SN* and *SP*, sampling from joint independent posteriors
 incorporating the anticipated results, and applying Bayes theorem).

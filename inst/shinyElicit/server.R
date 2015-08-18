@@ -14,6 +14,7 @@ shinyServerFunction =
     #source("conveniences.R", local=TRUE)
     source("debugTools.R", local=TRUE)
     source("contraBayesPlot.R", local=TRUE)
+    source("report.R", local=TRUE)
 
 
     observe({
@@ -32,16 +33,17 @@ shinyServerFunction =
     })
     rValues = reactiveValues(
       stepsTable = stepsTableInitial )
+#     stepsTable = data.frame(stringsAsFactors = FALSE,
+#                             `Done?` = character(0),
+#                             `Stepping stone` = character(0), Question = character(0)
+#     )
+#
 
     output$steps = renderTable({
       #catn("Calling renderTable on stepsTable");
       rValues$stepsTable
     })
 
-    #  for(number in 1:nrow(stepsTableInitial)) {
-    #     output[["completedText" %&% number]] =
-    #       renderText({ rValues$stepsTable[number, "Done?"]
-    #                    })
     obs = function(number) {
       assign("obs" %&% number,
              observe({
@@ -49,9 +51,9 @@ shinyServerFunction =
                if( ! is.null(newValue)) {
                  catn("Toggling stepStatus" %&% number %&% " = " %&% newValue)
                  isolate({ # necessary, or else crash!
-                   rValues$stepsTable[number, "Done?"] = newValue
+                   rValues$stepsTable[number, "Completed?"] = newValue
                    catn("New value in stepsTable: ",
-                        rValues$stepsTable[number, "Done?"] )
+                        rValues$stepsTable[number, "Completed?"] )
                  })
                }
              }
@@ -70,7 +72,7 @@ shinyServerFunction =
     ### ### must assign, or else only the last will take.
 
     observe({
-      if(input$who == "" | input$options == "")
+      if(input$who == "" | input$Option_Treat == "" | input$Option_Wait == "")
         try(disableActionButton("stepStatus1", session))
     })
     observe({
@@ -113,6 +115,8 @@ shinyServerFunction =
 #     })
     output$plotDiscomfort = renderPlot({
       plotDiscomfort(drawPosNeg=FALSE,
+                     NNTpos = input$NNTpos,
+                     NNTneg = input$NNTneg,
                      NNTlower = input$NNTlower,
                      NNTupper = input$NNTupper)
     }
@@ -124,6 +128,74 @@ shinyServerFunction =
     NPVderived = reactive({1 - 1/input$NNTneg})
     output$NPVderived = renderText({NPVderived() })
 
+    ## Prospective design:
+
+    observe({
+      cat("PROSPECTIVE INTERVALS (entering)\n")
+      if( ! identical(input$NpatientsProspective, numeric(0))) {
+        sampleSize = print(input$NpatientsProspective)
+        Npositives = print((input$percentPositive/100 * sampleSize))
+        Nnegatives = print(sampleSize - Npositives)
+        NtruePositives = print( PPVderived() * Npositives)
+        NtrueNegatives = print( NPVderived() * Nnegatives)
+        prev = input$prevalence
+        ProspectiveIntervals = NNTintervalsProspective(
+            Npositives = round(Npositives),
+            Nnegatives = round(Nnegatives),
+            NtruePositives = round(NtruePositives),
+            NtrueNegatives = min(Nnegatives - 1, round(NtrueNegatives)),
+            prev = prev
+          )
+        print(str(rValues$ProspectiveIntervals))
+        rValues$ProspectiveIntervals = ProspectiveIntervals
+      }
+      try({
+        rValues$PPV_ProspectiveInterval = rValues$ProspectiveIntervals[
+          c("lower boundary", "upper boundary"), "PPV"]
+        rValues$NPV_ProspectiveInterval = rValues$ProspectiveIntervals[
+          c("lower boundary", "upper boundary"), "NPV"]
+        rValues$NNTpos_ProspectiveInterval = rValues$ProspectiveIntervals[
+          c("lower boundary", "upper boundary"), "NNTpos"]
+        rValues$NNTneg_ProspectiveInterval = rValues$ProspectiveIntervals[
+          c("lower boundary", "upper boundary"), "NNTneg"]
+      })
+    })
+
+#    output$PPVconfidenceInterval = renderText({rValues$})
+
+###### Retrospective design ####
+
+    observe({
+      try({
+        sesp = sesp.from.NNT(
+          NNTpos = input$NNTpos,
+          NNTneg = input$NNTneg,
+          prev = input$prevalence
+        )
+        rValues$sensitivity = sesp["se"]
+        rValues$specificity = sesp["sp"]
+        rValues$sensitivityPercent = round(100 * rValues$sensitivity)
+        rValues$specificityPercent = round(100 * rValues$specificity)
+        rValues$NposCases = round(input$samplesizeCases* rValues$sensitivity)
+        rValues$NposControls = round(input$samplesizeControls * (1-rValues$specificity))
+
+        rValues$RetrospectiveIntervals = NNTintervalsRetrospective(
+          Ncases = input$samplesizeCases,
+          Ncontrols = input$samplesizeControls,
+          NposCases = rValues$NposCases,
+          NposControls = rValues$NposControls,
+          prev = input$prevalence)
+        rValues$Se_RetrospectiveInterval = rValues$RetrospectiveIntervals[
+          c("lower boundary", "upper boundary"), "sensitivity"]
+        rValues$Sp_RetrospectiveInterval = rValues$RetrospectiveIntervals[
+          c("lower boundary", "upper boundary"), "specificity"]
+        rValues$NNTpos_RetrospectiveInterval = rValues$RetrospectiveIntervals[
+          c("lower boundary", "upper boundary"), "NNTpos"]
+        rValues$NNTneg_RetrospectiveInterval = rValues$RetrospectiveIntervals[
+          c("lower boundary", "upper boundary"), "NNTneg"]
+      })
+    })
+
     output$plotNNTgoals = renderPlot({
       plotDiscomfort(drawPosNeg=TRUE,
                      NNTlower = input$NNTlower,
@@ -133,6 +205,8 @@ shinyServerFunction =
     }
     #, height=280
     )
+
+
     wasClicked =  function(button) {
       if(exists("input"))
         if(!is.null(button) ) {
@@ -142,59 +216,6 @@ shinyServerFunction =
         }
       return(FALSE)
     }
-    autoFillObserver = observe({
-      cat("==> autoFillObserver\n")
-      if(wasClicked(input$autoFill) ) {
-        updateTextInput(session, "biomarkerReportTitle",
-                        value="DEMO report")
-        updateTextInput(session, "objective",
-                        value="Prognosis of cutaneous T cell
-                        lymphoma (CTCL). In early stages of CTCL, patients (Stages IA-IIA)
-                        usually do well and have slowly progressive disease, which does not
-                        require aggressive therapy associated with substantial side effects.
-                        However, about 15% of these patients have unexpected progressive course
-                        and rapid demise.")
-        updateTextInput(session, "who",
-                        value="CTCL patients in Stages IA-IIA")
-        updateTextInput(session, "options",
-                        value="Watchful waiting\nAggressive treatment")
-        updateTextInput(session, "benefit",
-                        value="A biomarker progression risk model
-                      that is able to classify patients into high and low risk groups will
-                      enable personalized and more aggressive therapy for the patients at
-                      highest risk for progression.")
-        for(stepNum in 1:env_sectionHeader$number)
-          updateRadioButtons(session, "stepStatus" %&% stepNum, selected="Done")
-      }
-    })
-    assembleReportObserver = observe({
-      cat("==> assembleReportObserver\n")
-
-      ### Only react when the reportButton is clicked.
-      if(wasClicked(input$reportButton)) {
-        Objective = input$objective
-        cat("input$options = ", capture.output(input$options), '\n')
-        Option_1 <<- strsplit(input$options, "\n")[[1]] [1]
-        Option_2 <<- strsplit(input$options, "\n")[[1]] [2]
-        NNTlower <<- input$NNTlower
-        NNTupper <<- input$NNTupper
-        NNTpos <<- input$NNTpos
-        NNTneg <<- input$NNTneg
-        Benefit <<- input$benefit
-
-        cat('getOption("markdown.HTML.options")',
-            capture.output(getOption("markdown.HTML.options")), '\n')
-        cat('getOption("markdown.extensions")',
-            capture.output(getOption("markdown.extensions")), '\n')
-        knit2html("www/Steps.Rmd", output = "www/Steps.html")
-        # browseURL("Steps.html") ### Fails at shinyapp.io.
-        #window.open("Steps.html"); # JS works if file is in www folder.
-        print(getwd())
-        print(dir())
-      }
-      # Ideally, simulate click on "markdownAnchor". or as a form?
-
-    })
   }
 #debug(shinyServerFunction)
 shinyServer(func=shinyServerFunction)

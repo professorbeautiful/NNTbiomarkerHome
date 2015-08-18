@@ -52,8 +52,10 @@ completedToggle = function(number) {
 env_sectionHeader <- new.env()
 env_sectionHeader$number = 0
 
-sectionHeader = function(content) {
+sectionHeader = function(#steppingStoneLabel, question,
+                        content) {
   number = env_sectionHeader$number = env_sectionHeader$number + 1
+  #rValues$stepsTable[number, ] = c(`Stepping stone` = steppingStoneLabel, Question = question)
   return(
     div(#class = "well container-fluid",
       style="border: 2px solid;
@@ -62,7 +64,7 @@ sectionHeader = function(content) {
         border-top-left-radius: 2em",
       list(hr(),
            h2(paste0('(', number, ') ',
-                     stepsTableInitial[number, "Stepping stone"])),
+                     stepsTableInitial[number, "SteppingStone"])),
            h3("Question " %&% number, ": ",
               stepsTableInitial[number, "Question"]),
            div(style="margin-bottom:0.5cm",
