@@ -4,6 +4,7 @@ cat("Launching ", appName, "\n")
 shinyServerFunction =
   function(input, output, session) {
     thisSession <<- session
+    rValues = reactiveValues()
 
     #source("conveniences.R", local=TRUE)
     source("debugTools.R", local=TRUE)
