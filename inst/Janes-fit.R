@@ -159,7 +159,6 @@ mean(janesDataSmooth$X < 42)
 ## Conditional NNT's
 nnt = 1/benefit
 nnt[nnt <= 0] = 1000
-argmin = function(v, target=0) which(abs(v-target) == min(abs(v-target))[1])
 xvalues[argmin(nnt,50)]
 xvalues[argmin(nnt,10)]
 abline(h=xvalues[argmin(nnt,50)], lwd=2)
