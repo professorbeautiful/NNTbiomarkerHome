@@ -8,7 +8,7 @@
 #' @param NNTupper Subjective input. If NNT > NNTupper, the decision is clearly to Wait.
 #' @param N For simulated data: sample size
 #' @param prev For simulated data: Prevalence
-#' @param diffInSd For simulated data: Difference: E(X | group=1) - E(X | group=0),measured in units of S.D (common to the 2 groups).
+#' @param diffInSD For simulated data: Difference: E(X | group=1) - E(X | group=0),measured in units of S.D (common to the 2 groups).
 #' @param ... Extra arguments for a plot. Do not supply unless length(whichPlots)==1.
 #' @details  The plots display the values achievable by changing the cutoff, in comparison with the desired values as determined by NNTlower and NNTupper.
 #' The "whichPlots" options are as follows:
