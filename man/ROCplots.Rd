@@ -21,9 +21,9 @@ ROCplots(data, whichPlots = c("density", "raw", "ROC", "pv", "nnt",
 
 \item{prev}{For simulated data: Prevalence}
 
-\item{...}{Extra arguments for a plot. Do not supply unless length(whichPlots)==1.}
+\item{diffInSD}{For simulated data: Difference: E(X | group=1) - E(X | group=0),measured in units of S.D (common to the 2 groups).}
 
-\item{diffInSd}{For simulated data: Difference: E(X | group=1) - E(X | group=0),measured in units of S.D (common to the 2 groups).}
+\item{...}{Extra arguments for a plot. Do not supply unless length(whichPlots)==1.}
 }
 \description{
 A variety of ROC-related plots for a binary target and a single continuous predictor.
