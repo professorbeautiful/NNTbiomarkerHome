@@ -1,0 +1,48 @@
+---
+title: "SmartBarPlot"
+author: "Roger Day"
+date: "July 1, 2015"
+output: html_document
+runtime: shiny
+---
+
+## Shiny Presentation
+
+This R Markdown presentation is made interactive using Shiny. The viewers of the presentation can change the assumptions underlying what's presented and see the results immediately. 
+
+To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
+
+## Slide with Interactive Plot
+
+```{r, echo=FALSE}
+source("RSdump.R")
+library("shinyjs")
+inputPanel(
+   colourInput("pickerId", "this is the label", value = "white", showColour = c("both", "text",
+   "background"), allowTransparent = TRUE, "transparentText")
+  ,
+  shiny::textInput("dotColorID", "color of dots", "grey")
+
+  )
+
+renderPlot({
+  smartBarPlot(split(RSsample, RSsampleBtoT), boxfill="#FF000033",
+             pointcol=input$dotColorID,
+             groupNames=c("Did not recur", "Recurred"), ylab= "RS", xlab="Outcome")
+
+})
+```
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Slide with R Code and Output
+
+```{r}
+summary(cars)
+```
+
+
