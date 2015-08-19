@@ -1,5 +1,6 @@
 ##  For source'ing in server.R, and using in ui.R via uiOutput("debugTools")
 ## We begin with some convenient assignments and function.
+if(interactive())
 {
   thisSession <<- session
   reactiveValuesForDebugTools = reactiveValues()
@@ -15,31 +16,34 @@
   #  assign("%&%",  function (a, b) paste(a, b, sep = ""))
   catn = function(...) cat(..., "\n")
   #  `%>%` = magrittr::`%>%`
-}
-# Here begins the good stuff.
-output$evaluatedOutputR = renderUI({
-  if(wasClicked(input$evalButtonR)) {
-    cat("evaluatedOutputR\n")
-    evalString = isolate(input$evalStringR)
-    result = capture.output(eval(parse(text=evalString)))
-    result = gsub("\"", "'", result)
-    cat("R code  is ", evalString, "\n")
-    cat("R code result is ", result, "\n")
-    div(tags$script(
-      paste0(
-        'alert("', result, '");', collapse="\n"
-      )))
-#       div(
-#         paste(collapse="<br>",
-#               gsub(" ", "&nbsp;", capture.output(eval(parse(text=evalString)))))
-#         ))
-## You have to isolate input$evalStringR; otherwise each character typed calls this callback.
-## The following might be useful later for up-arrowing through past expressions.
-#   if(is.null(reactiveValuesForDebugTools$evalStringHistory))
-#     reactiveValuesForDebugTools$evalStringHistory = character(0)
-#  reactiveValuesForDebugTools$evalStringHistory = c(reactiveValuesForDebugTools$evalStringHistory, evalString)
-  }
-})
+
+  # Here begins the good stuff.
+  output$evaluatedOutputR = renderUI({
+    if(wasClicked(input$evalButtonR)) {
+      cat("evaluatedOutputR\n")
+      evalString = gsub('"', "'", isolate(input$evalStringR)) # replace all DQ with SQ.
+      cat("R code evalString is ", evalString, "\n")
+      result = capture.output(eval(parse(text=evalString)))
+      print(str(result))
+      result = paste(unlist(result), collapse = "\\n")
+      result = gsub("<", "\\<", result)
+      result = gsub(">", "\\>", result)
+      print(str(result))
+      cat("R code result is ", result, "\n")
+      div(tags$script(
+        paste0(  'alert("', result, '");')
+      ))
+      #       div(
+      #         paste(collapse="<br>",
+      #               gsub(" ", "&nbsp;", capture.output(eval(parse(text=evalString)))))
+      #         ))
+      ## You have to isolate input$evalStringR; otherwise each character typed calls this callback.
+      ## The following might be useful later for up-arrowing through past expressions.
+      #   if(is.null(reactiveValuesForDebugTools$evalStringHistory))
+      #     reactiveValuesForDebugTools$evalStringHistory = character(0)
+      #  reactiveValuesForDebugTools$evalStringHistory = c(reactiveValuesForDebugTools$evalStringHistory, evalString)
+    }
+  })
 
   outputPreambleJS <<- 'window.Shiny.shinyapp.$bindings.'
   # EXAMPLE:  window.Shiny.shinyapp.$bindings.selTxt.firstChild.nodeValue
@@ -98,6 +102,20 @@ output$evaluatedOutputR = renderUI({
     paste("trace=", input$traceCheckbox)
   })   #### OK this works now.
 
+  observe({
+    if(! is.null(input$errorOptionCheckbox)) {
+      #     errorFunction = ifelse(input$errorOptionCheckbox,
+      #                            (function () recover() ),
+      #                            (function () .rs.breakOnError(userOnly = FALSE) ))
+      #    print(errorFunction)
+      if(input$errorOptionCheckbox==TRUE)
+        eval(options(shiny.error = (function () recover() )),
+             envir=.GlobalEnv)
+      else
+        eval(options(shiny.error = (function () .rs.breakOnError(userOnly = FALSE) )),
+             envir=.GlobalEnv)
+    }
+  })
 
   output$debugTools = renderUI({
     div(style="background:darkGrey",
@@ -109,17 +127,23 @@ output$evaluatedOutputR = renderUI({
         conditionalPanel(
           'input.debugToolsCheckbox',
           fluidRow(
-            column(2,
+            column(1,
                    tagAppendAttributes(style="color: blue",
                                        checkboxInput(inputId="traceCheckbox",
                                                      value=FALSE,
                                                      label=textOutput("shiny.trace.text")
                                        ))),
+            column(1,
+                   tagAppendAttributes(style="color: blue",
+                                       checkboxInput(inputId="errorOptionCheckbox",
+                                                     value=FALSE,
+                                                     label="shiny.error: recover?")
+                   )),
             column(4,  #class='well container-fluid',
                    # tagAppendAttributes(
+                   "R code", HTML("&rarr;") ,
                    span(style="color:red; vertical-align='center'",
-                     "R code", HTML("&rarr;") ,
-                   tags$textarea(id = "evalStringR", value="'getwd()'") ),
+                        tags$textarea(id = "evalStringR", value="'getwd()'") ),
                    actionButton("evalButtonR",
                                 HTML("<font color='red'> evaluate R</font>"),
                                 #style='text-align:"right"; color:white',
@@ -129,22 +153,22 @@ output$evaluatedOutputR = renderUI({
             ,
             column(6,
                    column(8,
-                   span(style="color:red; vertical-align='top'",
-                        "JS code", HTML("&rarr;") ),
-                   tags$textarea(id = "evalStringJS",
-                                 value="'JS code here'") ,
-                   actionButton("evalButtonJS",
-                                HTML("<font color='red'> evaluate JS</font>")
-                                #  style="display: flex; justify-content:flex-end;")
-                                # Cool! Too bad it doesn't work.
-                   ) ),
+                          "JS code", HTML("&rarr;") ,
+                          span(style="color:red; vertical-align='top'",
+                               tags$textarea(id = "evalStringJS",
+                                             value="'JS code here'") ),
+                          actionButton("evalButtonJS",
+                                       HTML("<font color='red'> evaluate JS</font>")
+                                       #  style="display: flex; justify-content:flex-end;")
+                                       # Cool! Too bad it doesn't work.
+                          ) ),
                    column(4,
-                     checkboxInput(inputId="prependOutputPreambleToggle",
-                                   value=FALSE,
-                                   label="prepend\nOutputPreamble")
-                     , checkboxInput(inputId="prependInputPreambleToggle",
-                                     value=FALSE,
-                                     label="prepend\nInputPreamble")
+                          checkboxInput(inputId="prependOutputPreambleToggle",
+                                        value=FALSE,
+                                        label="prepend\nOutputPreamble")
+                          , checkboxInput(inputId="prependInputPreambleToggle",
+                                          value=FALSE,
+                                          label="prepend\nInputPreamble")
                    ),
                    uiOutput(outputId='JSevaluation')
             )
@@ -152,4 +176,4 @@ output$evaluatedOutputR = renderUI({
         )
     )
   })
-
+}
