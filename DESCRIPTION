@@ -24,6 +24,6 @@ Description: Helps a clinical trial team  discuss
 License: GPL-3
 Imports: shiny, xtable, stringr, magrittr, mvbutils, ggplot2, plyr
 Collate: aaa.R ifVerboseCat.R sesp-pv-NNT.R achievable.se.sp.R binom.confint.R
-    NNTintervals.R run.R ROCplots.R smartBoxPlot.R BenefitPlot.R argmin.R plotDiscomfort.R zzz.R
-Suggests: testthat (>= 0.8.1), knitr (>= 1.6),rmarkdown
+    NNTintervals.R run.R ROCplots.R smartBoxPlot.R argmin.R plotDiscomfort.R zzz.R
+Suggests: testthat (>= 0.8.1), knitr (>= 1.6), rmarkdown, ggplot2, plyr
 VignetteBuilder: knitr

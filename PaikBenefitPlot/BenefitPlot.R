@@ -2,6 +2,8 @@
 BenefitPlot <- function (
   sampleSize=PaikSampleSize) {
 
+  source(file = "inst/Paik-fit.R", local=TRUE)
+
   initial.Random.seed = .Random.seed
 
   TAMcolor = 'red'

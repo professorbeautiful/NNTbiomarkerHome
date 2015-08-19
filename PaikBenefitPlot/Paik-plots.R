@@ -1,7 +1,7 @@
 ##  These plots require sourceing Paik-fit first.
 
 if( ! identical(ls(pattern="Paik_nnt", pos=1), 1) )
-  source("inst/Paik-fit.R")
+  source("Paik-fit.R", local=TRUE)
 
 # set.seed(benefitPlotOutput$.Random.seed)
 benefitPlotOutput = BenefitPlot()
@@ -58,7 +58,6 @@ for(iCut in 1:2)
   lines(c(-10, TailorXRScutoffs[iCut]),
         rep(times=2, nnt[as.character(TailorXRScutoffs[iCut])]),
         col="blue", lty=2)
-'%&%' = function(a, b) paste0(a,b)
 legend("topright",
        legend=c(
          "Number needed to treat",
