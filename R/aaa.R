@@ -8,6 +8,13 @@ printFunctionBody = function(f)
 
 ### Convenience utilities borrowed from mvbutils
 
+#' \%&\% string concatenation
+#'
+#' From mvbutils
+#' @param a a string
+#' @param b another string
+#' @return paste0(a, b)
+#'
 `%&%` = function (a, b)
         paste(a, b, sep = "")
 

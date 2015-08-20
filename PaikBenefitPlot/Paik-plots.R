@@ -15,7 +15,7 @@ set.seed(benefitPlotOutput$.Random.seed)
 # library(plyr)
 
 par(mai=c(1,1,2,1))
-with(tenYearDFS_long %>% subset(., group=="TAM_CHEMO"), {
+with(subset(tenYearDFS_long, group=="TAM_CHEMO"), {
   plot(RS, benefit / predicted,
        xlim=c(0,50), ylab='Pr(benefit | would recur)')
   abline(v=c(OncotypeRScutoffs, 50),
