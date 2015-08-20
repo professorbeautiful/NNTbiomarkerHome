@@ -18,5 +18,3 @@ importFrom("graphics", "axis", "legend", "lines", "par", "plot",
 importFrom("stats", "density", "pbinom", "qbeta", "quantile", "rbeta",
             "rbinom", "rnorm", "uniroot")
 importFrom("utils", "menu")
-
-
