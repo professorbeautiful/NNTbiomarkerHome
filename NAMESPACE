@@ -12,4 +12,11 @@ importFrom(xtable, xtable)
 import(shiny)
 importFrom(magrittr, '%>%')
 importFrom(mvbutils, '%&%')
+importFrom("grDevices", "rgb")
+importFrom("graphics", "axis", "legend", "lines", "par", "plot",
+            "points", "polygon", "rect", "rug")
+importFrom("stats", "density", "pbinom", "qbeta", "quantile", "rbeta",
+            "rbinom", "rnorm", "uniroot")
+importFrom("utils", "menu")
+
 
