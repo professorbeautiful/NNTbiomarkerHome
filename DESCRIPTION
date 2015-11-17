@@ -1,8 +1,8 @@
 Package: NNTbiomarker
 Type: Package
 Title: Calculate Design Parameters for Biomarker Validation Studies
-Version: 0.29.11
-Date: 2015-08-20
+Version: 0.30
+Date: 2015-11-17
 Author: Roger Day
 Maintainer: Roger Day <day01@pitt.edu>
 Description: Helps a clinical trial team  discuss
