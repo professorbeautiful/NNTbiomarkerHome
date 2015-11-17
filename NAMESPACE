@@ -12,6 +12,7 @@ importFrom(xtable, xtable)
 import(shiny)
 importFrom(magrittr, '%>%')
 importFrom(mvbutils, '%&%')
+export("%&%")
 importFrom("grDevices", "rgb")
 importFrom("graphics", "axis", "legend", "lines", "par", "plot",
             "points", "polygon", "rect", "rug")
