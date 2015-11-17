@@ -6,6 +6,7 @@
 #'
 
 run = function(shinyDir) {
+  options(shiny.port=6661)
   if(missing(shinyDir)) {
      shinyDirs = dir(pattern = "^shiny",
                path = file.path(find.package("NNTbiomarker")))
