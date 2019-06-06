@@ -8,7 +8,8 @@ library(shiny)
 shinyServer(function(input, output, session) {
 
   thisSession <<- session
-
+  rValues = reactiveValues()
+  
   source("skislope.R", local=TRUE)
   source("AEplot.R", local=TRUE)
 
@@ -38,22 +39,26 @@ shinyServer(function(input, output, session) {
                        session = thisSession,
                        value = TailorXRScutoffs[2])
   })
+  
+  observeEvent(eventExpr = input$skislope_click, handlerExpr = {
+    if(is.null(input$skislope_click))
+      RSarg = 49
+    else RSarg = input$skislope_click$x
+    RSarg = round(max(RSarg, 5))
+    cat("============  Setting input$skislope_click: ", unlist(input$skislope_click),
+        " ======\n")
+     updateNumericInput(session = thisSession, inputId = 'RSchosen', value = RSarg)
 
+  })
+  observeEvent(eventExpr = input$RSchosen, handlerExpr = {
+    rValues$RSselected = input$RSchosen
+  })
   output$skislope = renderPlot({
-#     if(is.null(input$skislope_click))
-#       RSarg = 49
-#     else RSarg = input$skislope_click$x
-#     RSarg = round(max(RSarg, 5))
-#     cat("============  Setting rV$RSclicked: ", rV$RSclicked,
-#         " ======\n")
-#     isolate({
-#       rV$RSclicked = RSarg
-#     })
-    skisloplot(input$RSchosen, input$ytop)
+    skisloplot(rValues$RSselected, input$ytop)
   })
 
   output$AEstack = renderPlot({
-    AEplot(input$RSchosen, makeTitle=TRUE)
+    AEplot(rValues$RSselected, makeTitle=TRUE)
   })
 
 #   observe({
