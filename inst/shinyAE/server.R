@@ -45,12 +45,12 @@ shinyServer(function(input, output, session) {
       RSarg = 49
     else RSarg = input$skislope_click$x
     RSarg = round(max(RSarg, 5))
-    cat("============  Setting rV$RSclicked: ", rValues$RSclicked,
+    cat("============  Setting input$skislope_click: ", unlist(input$skislope_click),
         " ======\n")
      updateNumericInput(session = thisSession, inputId = 'RSchosen', value = RSarg)
 
   })
-  observeEvent('input$RSchosen', {
+  observeEvent(eventExpr = input$RSchosen, handlerExpr = {
     rValues$RSselected = input$RSchosen
   })
   output$skislope = renderPlot({
